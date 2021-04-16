@@ -49,10 +49,7 @@ for i=1:size(splines_space,1)
         offset = 2^(resolution.x - p.refinementLevel_space);
         splines_space(i, offset+1:end) = splines_space(i-1, 1:end-offset);
         splines_2_space(i, offset+1:end) = splines_2_space(i-1, 1:end-offset);
-    end
-    
-    
-    
+    end 
 end
 
 if (p.T_space == p.T_time)

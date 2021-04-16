@@ -70,25 +70,24 @@ for refinementLevel_space = space_refinement
         
         problemConfiguration.refinementLevel_space = refinementLevel_space;
         problemConfiguration.refinementLevel_time = refinementLevel_time;
-           
-       fprintf('Creating problem...') 
-       problem = create1DWaveProblem(problemConfiguration);
-       fprintf(' Done!\n') 
-       
-       % Specify a function handle for the pcg methods
+        
+        fprintf('Creating problem...')
+        problem = create1DWaveProblem(problemConfiguration);
+        fprintf(' Done!\n')
+        
+        % Specify a function handle for the pcg methods
         funA=@(X)( problem.M_space * X * problem.Q_time' ...
-                + problem.A_space' * X * problem.D_time' ...
-                + problem.A_space * X * problem.D_time ...
-                + problem.Q_space * X * problem.M_time');
-%             
-
+            + problem.A_space' * X * problem.D_time' ...
+            + problem.A_space * X * problem.D_time ...
+            + problem.Q_space * X * problem.M_time');
+        
         for ii=1:3 % Test all three solutions
             
             %% Sove the linear equation system
-                    
+            
             rhsfull=reshape(problem.rhs, [numel(problem.rhs) 1]);
             rhsfull=rhsfull/norm(rhsfull);
-  
+            
             switch ii
                 case 1
                     % Product operator preconditioner
@@ -125,7 +124,7 @@ for refinementLevel_space = space_refinement
                     [uu,ss,vv]=svds(problem.rhs,1);
                     rhs1=uu(:,1)*sqrt(ss(1,1));
                     rhs2=vv(:,1)*sqrt(ss(1,1));
-%                    path(path,'./valeria/')
+                    %                    path(path,'./valeria/')
                     tolG=tolerance;
                     info=1;
                     tt=tic;

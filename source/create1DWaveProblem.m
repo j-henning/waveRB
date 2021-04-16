@@ -147,7 +147,7 @@ if ~isempty(p.f_time)
         
     end
     
-    % Calculate some additional values
+     % Calculate some additional values
      p.nsol_time = length(p.T_time) - p.bSplineOrder_time;
      p.nsol_space = length(p.T_space) - p.bSplineOrder_space;
      p.dim_time =  p.nsol_time-(p.offset_time_ansatz(1)+p.offset_time_ansatz(2));
