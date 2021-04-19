@@ -3,7 +3,9 @@ close all
 clc
 
 addpath('../splines');
+addpath('../splines/Utilities');
 addpath('../solvers');
+
 
 
 %% Specify all needed input data
