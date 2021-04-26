@@ -2,9 +2,13 @@ clear
 close all
 clc
 
+addpath('../splines');
+addpath('../splines/Utilities');
+addpath('../solvers');
 addpath('../Toolkit-Splines');
 addpath('../Toolkit-Splines/Utilities');
 addpath('../Solvers');
+
 
 % 
 % load('2DreferenceSol.mat');
@@ -27,9 +31,19 @@ f_space_y = {@(y) 0*y};
 u0_x = @(x) x* (x < 0.5) + (1-x).*(x > 0.5); u0_y = @(y)  y* (y < 0.5) + (1-y).*(y > 0.5);
 u1_x = @(x) 0*x; u1_y = @(y) 0 *y;
 u_analytical = @(x,y,t) 0.*t.*x.*y; % Not known
-inital_conditions = true;
+initial_conditions = true;
 
 % Example 3
+% f_time = {@(t) 0*t};
+% f_space_x = {@(x) 0*x};
+% f_space_y = {@(y) 0*y};
+% u0_x = @(x) 1 * (x > 0.25).* (x < 0.75);
+% u0_y = @(y) 1 * (y > 0.25).* (y < 0.75);
+% u1_x = @(x) 0*x;
+% u1_y = @(y) 0*y;
+% initial_conditions = true;
+
+% Example 4
 % f_time = {@(t) t; @(t) t.^2.*cos(2*pi*t);};
 % f_space_x = {@(x) x, @(x) x.^2};
 % f_space_y = {@(y) y.^2, @(y) y};
@@ -38,7 +52,7 @@ inital_conditions = true;
 % inital_conditions = false;
 % u_analytical = @(x,y,t) 0.*t.*x.*y; % Not known
 
-% Example 3
+% Example 5
 % ctime = 5;
 % cspace = 5;
 % f_time = {@(t) (2-ctime^2*t^2).*sin(ctime*t)+4*ctime*t.*cos(ctime*t), ...
@@ -75,27 +89,23 @@ laplace = false;
 splineOrder = 3; % at least four if laplace is true, otherwise at least 2
 
 %% Define the resolutions to test
-space_refinements = 1:5;
-time_refinements = 1:6;
+level = 9;
 
 % Define the resolution for the L2 error calculation (and plotting)
-x = linspace(0,1, 2^8+1);
-y = linspace(0,1, 2^8+1);
-Kref = 2^8+1;
+x = linspace(0,1, 2^level+1);
+y = linspace(0,1, 2^level+1);
+K = 2^ level + 1; % Number of time steps
 
 % Compute the analytical solution
-[X, Y,  T] = ndgrid(x, y, linspace(0,1,Kref));
-%sol_ref = u_analytical(X, Y, T);
-% sol_ref = solRef;
 
-for refinement_space = 8%space_refinements
-    for refinement_time = 8%time_refinements
+for refinement_space = level
+    for refinement_time = level
         fprintf('Space refinement: %d, Time refinement: %d\n', ...
             refinement_space, refinement_time);
         
-        K = 2^ refinement_time; % Number of time steps
+        
         tau = 1 / (K-1);
-        sol = zeros(length(x), length(y), K);
+        sol_ana = zeros(length(x), length(y), K);
         
         T_space_test = InitUniNodes(refinement_space, splineOrder);
         T_space_ansatz = InitUniNodes(refinement_space, splineOrder);
@@ -223,7 +233,7 @@ for refinement_space = 8%space_refinements
         
         %% Calculation of u0 and u1
         
-        if inital_conditions
+        if initial_conditions
             tempXu0 = zeros(ntest-sum(test_offset),1);
             tempXu1 = zeros(ntest-sum(test_offset),1);
             for j=1+test_offset(1):ntest-test_offset(2)
@@ -382,8 +392,8 @@ for refinement_space = 8%space_refinements
                     
                     spline = reshape(spline, ...
                         [length(space_x_indices), length(space_y_indices)]);
-                    sol(space_x_indices, space_y_indices, k) = ...
-                        sol(space_x_indices, space_y_indices, k) + ...
+                    sol_ana(space_x_indices, space_y_indices, k) = ...
+                        sol_ana(space_x_indices, space_y_indices, k) + ...
                         u_full(i,j,k) * spline;
                     
                 end
@@ -391,14 +401,6 @@ for refinement_space = 8%space_refinements
         end
         
         toc
-        
-        
-        % Linearaly interpolate the solution to match Kref time steps
-        [X, Y, T] = ndgrid(x, y, linspace(0,1, K));
-        [Xq, Yq, Tq] = ndgrid(x, y, linspace(0,1, Kref));
-        solInt = interpn(X,Y,T,sol,Xq,Yq,Tq);
-        
-        l2error(refinement_space, refinement_time) = sqrt(mean((solInt-sol_ref).^2, 'all'));
     end
 end
 
@@ -436,4 +438,5 @@ end
 % writetable(table(space_refinement,times, l2error), ...
 %            '../data/2Dexample2-timestepping','Delimiter',' ')
 
+save('data/2D-example2.mat', 'sol_ana', '-v7.3')
 

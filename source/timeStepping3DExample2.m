@@ -2,62 +2,56 @@ clear
 close all
 clc
 
-addpath('../Toolkit-Splines');
-addpath('../Toolkit-Splines/Utilities');
-addpath('../Solvers');
+addpath('../splines');
+addpath('../splines/Utilities');
+addpath('../solvers');
 
-% load('3DreferenceSol')
 
 
 %% Define the example
 % Example 1
-mm = 3; nn = 2; oo = 1;
-f_time = {@(t) 2+ 0.*t; @(t) (t.^2)*(mm^2 + nn^2 + oo^2)*(pi^2)};
-f_space_x = {@(x) sin(mm*pi*x); @(x) sin(mm*pi*x)};
-f_space_y = {@(y) sin(nn*pi*y); @(y) sin(nn*pi*y)};
-f_space_z = {@(z) sin(oo*pi*z); @(z) sin(oo*pi*z)};
-u_analytical = @(x,y,z,t) t.^2 .* sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z);
-inital_conditions = false;
+% mm = 3; nn = 2; oo = 1;
+% f_time = {@(t) 2+ 0.*t; @(t) (t.^2)*(mm^2 + nn^2 + oo^2)*(pi^2)};
+% f_space_x = {@(x) sin(mm*pi*x); @(x) sin(mm*pi*x)};
+% f_space_y = {@(y) sin(nn*pi*y); @(y) sin(nn*pi*y)};
+% f_space_z = {@(z) sin(oo*pi*z); @(z) sin(oo*pi*z)};
+% u_analytical = @(x,y,z,t) t.^2 .* sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z);
+% initial_conditions = false;
 
 % Example 2
+f_time = {@(t) 0*t};
+f_space_x = {@(x) 0*x};
+f_space_y = {@(y) 0*y};
+f_space_z = {@(z) 0*z};
+u0_x = @(x) x * (x < 0.5) + (1-x).*(x > 0.5);
+u0_y = @(y) y * (y < 0.5) + (1-y).*(y > 0.5);
+u0_z = @(z) z * (z < 0.5) + (1-z).*(z > 0.5);
+u1_x = @(x) 0*x;
+u1_y = @(y) 0*y;
+u1_z = @(z) 0*z;
+u_analytical = @(x,y,z,t) 0.*t.*x.*y.*z; % Not known
+initial_conditions = true;
+path = '3D-example2';
+
+
+% Example 3
 % f_time = {@(t) 0*t};
 % f_space_x = {@(x) 0*x};
 % f_space_y = {@(y) 0*y};
 % f_space_z = {@(z) 0*z};
-% u0_x = @(x) x * (x < 0.5) + (1-x).*(x > 0.5);
-% u0_y = @(y) y * (y < 0.5) + (1-y).*(y > 0.5);
-% u0_z = @(z) z * (z < 0.5) + (1-z).*(z > 0.5);
+% u0_x = @(x) 1 * (x > 0.25) .* (x < 0.75);
+% u0_y = @(y) 1 * (y > 0.25) .* (y < 0.75);
+% u0_z = @(y) 1 * (z > 0.25) .* (z < 0.75);
 % u1_x = @(x) 0*x;
 % u1_y = @(y) 0*y;
 % u1_z = @(z) 0*z;
 % u_analytical = @(x,y,z,t) 0.*t.*x.*y.*z; % Not known
-% inital_conditions = true;
-% load('..\3D-example2.mat')
-% sol_ref = solRef;
+% initial_conditions = true;
+% path = '3D-example3';
 
 
 
-% Example 3
-% ctime = 5;
-% cspace = 5;
-% f_time = {@(t) (2-ctime^2*t^2).*sin(ctime*t)+4*ctime*t.*cos(ctime*t), ...
-%     @(t) t.^2.*sin(ctime*t)};
-% f_space = {@(x) sin(cspace*pi*x), @(x) cspace^2*pi^2*sin(cspace*pi*x)};
-% u0 = @(x) 0.*x;
-% u1 = @(x) 0.*x;
-% u_analytical = @(x,t) t.^2 .* sin(ctime*t).* sin(cspace*pi*x);
-% dAlemebert = false;
 
-
-
-% Example 4
-% f_time = {@(t) 0*t};
-% f_space_x = {@(x) 0*x};
-% f_space_y = {@(y) 0*y};
-% u0_x = @(x) sin(pi*x); u0_y = @(y) sin(pi*y);
-% u1_x = @(x) 0*x; u1_y = @(y) 0 *y;
-% u_analytical = @(x,y,t) 0.*t.*x.*y; % Not known
-% inital_conditions = true;
 
 
 
@@ -66,37 +60,34 @@ laplace = false;
 splineOrder = 3; % at least four if laplace is true, otherwise at least 3
 
 %% Define the resolutions to test
-space_refinements = 1:4;
-time_refinements = 1:6;
-
+refinements = (1:6)';
 
 
 % Define the resolution for the L2 error calculation (and plotting)
-x = linspace(0,1, 2^6+1);
-y = linspace(0,1, 2^6+1);
-z = linspace(0,1, 2^6+1);
-Kref = 2^6+1;
+x = linspace(0,1, 2^7+1);
+y = linspace(0,1, 2^7+1);
+z = linspace(0,1, 2^7+1);
+Kref = 2^7+1;
 
 % Compute the analytical solution
-[X, Y, Z,  T] = ndgrid(x, y, z, linspace(0,1,Kref));
-sol_ref = u_analytical(X, Y, Z, T);
+load(path)
 
-% sol_ref = solRef;
+times = zeros(size(refinements));
+l2error = zeros(size(refinements));
 
 
-for refinement_space = 1:4%space_refinements
-    for refinement_time = refinement_space%time_refinements
+for refinement = refinements'
         fprintf('#######################################\n')
-        fprintf('Space refinement: %d, Time refinement: %d\n', ...
-            refinement_space, refinement_time);
+        fprintf('Space refinement: %d\n', ...
+            refinement);
         fprintf('#######################################\n')
         
-        K = 2^ refinement_time; % Number of time steps
+        K = 2^ refinement; % Number of time steps
         tau = 1 / (K-1);
         sol = zeros(length(x), length(y), length(z), K);
         
-        T_space_test = InitUniNodes(refinement_space, splineOrder);
-        T_space_ansatz = InitUniNodes(refinement_space, splineOrder);
+        T_space_test = InitUniNodes(refinement, splineOrder);
+        T_space_ansatz = InitUniNodes(refinement, splineOrder);
         
         %% Calculation of the space matrices
         fprintf('Calculating matrices...')
@@ -185,29 +176,7 @@ for refinement_space = 1:4%space_refinements
         
         fprintf(' Done.\n')
         
-        %   Uncomment if you want to check the eigenvalues
-%                         figure
-%                         subplot(1,3,1)
-%                         E = eig(full(M));
-%                         plot(real(E), imag(E), '*'), grid on
-%                         title('Eigenvalues of M')
-%         
-%                         subplot(1,3,2)
-%                         E = eig(full(A));
-%                         plot(real(E), imag(E), '*'), grid on
-%                         title('Eigenvalues of A')
-%                         
-%                         
-%                         subplot(1,3,3)
-%                         E = eig(full(M + tau * tau / 4 * A));
-%                         plot(real(E), imag(E), '*'), grid on
-%                         title('Eigenwerte von M + tau*tau / 4 A')
-%                         drawnow
-%                         
-%                         return
-%         
-        
-        
+    
         
         
         
@@ -255,7 +224,7 @@ for refinement_space = 1:4%space_refinements
         %% Calculation of u0 and u1
         fprintf('Calculating u0 and u1...')
         
-        if inital_conditions
+        if initial_conditions
             tempXu0 = zeros(ntest-sum(test_offset),1);
             tempXu1 = zeros(ntest-sum(test_offset),1);
             for j=1+test_offset(1):ntest-test_offset(2)
@@ -332,7 +301,7 @@ for refinement_space = 1:4%space_refinements
         
         % Calculate the other steps:
         for k=3:K
-            disp(num2str(k))
+            fprintf('Timestep %d / %d\n', k, K)
             Fpp = Fvals(:,k-2); % penultimate time step
             Fp = Fvals(:,k-1); % last time step
             F = Fvals(:,k); % current time step
@@ -358,7 +327,7 @@ for refinement_space = 1:4%space_refinements
             end
         end
         fprintf(' Done.\n')
-        times(refinement_space, refinement_time) = toc;
+        times(refinement) = toc;
         
         %% Get the solution
         fprintf('Get the solution...')
@@ -461,59 +430,9 @@ for refinement_space = 1:4%space_refinements
                 [Xq, Yq, Zq, Tq] = ndgrid(x, y, z, linspace(0,1, Kref));
                 solInt = interpn(X, Y, Z, T, sol,...
                     Xq, Yq, Zq, Tq);
-%     solInt = sol(:,:,:,end);
+
         
-        l2error(refinement_space, refinement_time) = sqrt(mean((solInt-sol_ref).^2, 'all'));
-    end
+        l2error(refinement) = sqrt(mean((solInt-sol_ana).^2, 'all'));
+         t = table(refinements, times, l2error)
+            writetable(t, 'data/3Dexample2-Timestepping', 'Delimiter',' ');
 end
-% figure
-% semilogy(space_refinements, l2error(space_refinements,:), 'o--', 'LineWidth', 2)
-% xlabel('Space refinement', 'Interpreter', 'Latex', 'FontSize', 20)
-% ylabel('$L_2$ error', 'Interpreter', 'Latex', 'FontSize', 20)
-% title('3D wave equation - Laplace case',  'Interpreter', 'Latex', 'FontSize', 20)
-% grid on
-% legend('Time refinement = 1','Time refinement = 2','Time refinement = 3',...
-%     'Time refinement = 4','Time refinement = 5','Time refinement = 6',...
-%     'Time refinement = 7')
-% 
-% figure
-% semilogy(space_refinements, times_gmres(space_refinements,:), 'o--', 'LineWidth', 2)
-% xlabel('Space refinement', 'Interpreter', 'Latex', 'FontSize', 20)
-% ylabel('Solving time $[s]$', 'Interpreter', 'Latex', 'FontSize', 20)
-% title('3D wave equation - Laplace case',  'Interpreter', 'Latex', 'FontSize', 20)
-% grid on
-% legend('Time refinement = 1','Time refinement = 2','Time refinement = 3',...
-%     'Time refinement = 4','Time refinement = 5','Time refinement = 6',...
-%     'Time refinement = 7')
-% 
-% figure
-% semilogy(time_refinements, times_gmres(:,time_refinements), 'o--', 'LineWidth', 2)
-% xlabel('Time refinement', 'Interpreter', 'Latex', 'FontSize', 20)
-% ylabel('Solving time $[s]$', 'Interpreter', 'Latex', 'FontSize', 20)
-% title('3D wave equation - Laplace case',  'Interpreter', 'Latex', 'FontSize', 20)
-% grid on
-% legend('Space refinement = 1' , 'Space refinement = 2','Space refinement = 3',...
-%     'Space refinement = 4','Space refinement = 5')
-% 
-% figure
-% for i=1:100
-% s = surf(squeeze(solInt(25,:,:,i)));
-% s.EdgeAlpha = 0;
-% title('Numerical solution')
-% drawnow
-% pause(0.5)
-% end
-
-
-% figure
-% loglog(reshape(l2error, [], 1), reshape(times_gmres, [], 1), '*'), grid on
-% xlabel('L2 Error')
-% ylabel('CPU Time')
-
-%% Write the whole data into files
-
-refinement = space_refinements';
-error = diag(l2error);
-time = diag(times);
-writetable(table(refinement,time, error), ...
-            '../data/3Dexample1-timestepping','Delimiter',' ')

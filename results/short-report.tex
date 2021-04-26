@@ -1,0 +1,298 @@
+
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{fullpage}
+\usepackage{listings}
+\usepackage{float}
+
+% math
+\usepackage{mathtools}
+\usepackage{amsthm}
+
+% math fonts
+\usepackage{amssymb}
+\usepackage{dsfont}
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz,pgfplots}
+
+\pgfplotsset{compat=newest}
+
+
+\setlength\parindent{0pt}
+
+\begin{document}
+We tested\footnote{Executed on the BwUniCluster 2.0 on instances with 64GB of RAM on two Cores of an Intel Xeon Gold 6230. For each method we set a time limit of 12 hours to solve all discretizations of a problem. } our methods against a classical time stepping approach. To get a fair comparison, we have implemented a Crank-Nicolson scheme which utilizes the sparseness of the space matrices via an CG method. 
+
+For sufficient smooth examples, we were not able to beat the performance of the time stepping method due to the quadratic $L_2$ convergence of this method - in contrast to our observed linear convergence in the space-time setting. For less smooth examples, the numerical results are more diverse. We want to report some results in 2D and 3D, as the 1D case is mostly of academic nature.
+
+\section*{2D - Example 1}
+We first want to consider the case $\Omega = [0,1]^2$ and $t \in (0, 1]$ where the right hand side and the initial speed $u_1$ is zero and the initial dilation is given by
+\begin{align*}
+u_0(x,y) = \tilde{u}_0(x) \tilde{u}_0(y) \quad \text{with}\;
+\tilde{u}_0(s) = \begin{cases}
+s \quad s < 0.5 \\
+1-s \quad s \geq 0.5
+\end{cases}
+\end{align*} 
+The solution is therefore continuous, but not continuous differentiable. We start with one spline in each space and time dimension and call a refinement a doubling of the number of splines in each dimension (thus halving $h_\text{max}$). Therefore, the space matrices grow with $\mathcal{O}(2^{2n})$ with the number of refinements and the time matrices grow with $\mathcal{O}(2^{n})$.
+
+In this case, the solution obtained by the Galerkin method does not converge, even though the Galerkin method reaches the desired $10^{-10}$ threshold for the backward error. All the other methods do converge. The inexact preconditioned CG methods take in general more time, but are more memory friendly. The inexact preconditioned CG Lyapunov method did not finish more than 5 refinements in the 12 hour time limit. The time stepping method shows a slightly greater convergence speed and takes less time.
+
+\begin{tikzpicture}[xscale=.8,yscale=.8]
+	\begin{semilogyaxis}[title={2D Example 1: $L_2$ convergence},
+			xlabel={Number of refinements},
+			ylabel={$L_2$ error},
+			grid=major,
+			ymax=1e2,
+			legend style={at={(1,1)},xshift=2cm,yshift=-0.2cm,anchor=north east,nodes=right}
+			]	
+	% CG Optimal
+	\addplot+ [blue,very thick,mark=x] table [x=refinements, y=errorCGopt] {data/2Dexample3-CG-opt-exact-1-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Optimal}
+	\addplot+ [blue,dotted,very thick,mark=x] table [x=refinements, y=errorCGopt] {data/2Dexample3-CG-opt-exact-0-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Optimal (inexact)}
+	% CG Lyapunov
+	\addplot+ [Green,very thick,mark=o] table [x=refinements, y=errorCGlyap] {data/2Dexample3-CG-lyap-exact-1-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Lyapunov}
+	\addplot+ [Green,dotted,very thick,mark=o] table [x=refinements, y=errorCGlyap] {data/2Dexample3-CG-lyap-exact-0-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Lyapunov (inexact)}
+	% Galerkin
+	\addplot+ [red,very thick,mark=*] table [x=refinements, y=errorGalerkin] {data/2Dexample3-Galerkin-1-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{Galerkin}
+	\addplot+ [YellowOrange,very thick,mark=*] table [x=refinements, y=errorGalerkin] {data/2Dexample2-GalerkinNEW-1-maxIt-1000-tolerance-1e-10.txt};
+	\addlegendentry{Galerkin (New)}
+	% Timestepping
+	\addplot+ [black,very thick,mark=diamond] table [x=refinement, y=error] {data/2Dexample3-timestepping.txt};
+	\addlegendentry{Timestepping}
+	\end{semilogyaxis}
+\end{tikzpicture}
+\begin{tikzpicture}[xscale=.8,yscale=.8]
+	\begin{semilogyaxis}[title={2D Example 1: Walltimes},
+			xlabel={Number of refinements},
+			ylabel={Wall time $[s]$},
+			grid=major,
+			legend style={at={(0,1)},xshift=0.2cm,yshift=-0.2cm,anchor=north west,nodes=right			}
+			]	
+	% CG Optimal
+	\addplot+ [blue,very thick,mark=x] table [x=refinements, y=timeCGopt] {data/2Dexample3-CG-opt-exact-1-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{CG Optimal}
+	\addplot+ [blue,dotted,very thick,mark=x] table [x=refinements, y=timeCGopt] {data/2Dexample3-CG-opt-exact-0-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{CG Optimal (inexact)}
+	% CG Lyapunov
+	\addplot+ [Green,very thick,mark=o] table [x=refinements, y=timeCGlyap] {data/2Dexample3-CG-lyap-exact-1-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{CG Lyapunov}
+	\addplot+ [Green,dotted,very thick,mark=o] table [x=refinements, y=timeCGlyap] {data/2Dexample3-CG-lyap-exact-0-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{CG Lyapunov (inexact)}
+	% Galerkin
+	\addplot+ [red,very thick,mark=*] table [x=refinements, y=timeGalerkin] {data/2Dexample3-Galerkin-1-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{Galerkin}
+\addplot+ [YellowOrange,very thick,mark=*] table [x=refinements, y=timeGalerkin] {data/2Dexample2-GalerkinNEW-1-maxIt-1000-tolerance-1e-10.txt};
+%	\addlegendentry{Galerkin (New)}
+	% Timestepping
+	\addplot+ [black,very thick,mark=diamond] table [x=refinement, y=time] {data/2Dexample3-Timestepping.txt};
+%	\addlegendentry{Timestepping}
+	\end{semilogyaxis}
+\end{tikzpicture}
+\section*{2D - Example 2}
+A discontinuous solution can be obtained by setting the right hand side and the initial speed again to zero and choosing
+\begin{align*}
+u_0(x,y) = \hat{u}_0(x) \hat{u}_0(y) \quad \text{with}\;
+\tilde{u}_0(s) = \begin{cases}
+1 \quad s \in [0.25, 0.75]\\
+0 \quad \text{otherwise}
+\end{cases}
+\end{align*} 
+
+The Galerkin method does now, in contrast to the previous example, converge. The $L_2$ error is still larger than the error for the time stepping solution, but the walltimes are very similar. The Galerkin method can therefore be considered as an alternative to the classical time stepping schema. The other methods show similar behaviours as before.
+
+\begin{tikzpicture}[xscale=.8,yscale=.8]
+	\begin{semilogyaxis}[title={2D Example 2: $L_2$ convergence},
+			xlabel={Number of refinements},
+			ylabel={$L_2$ error},
+			grid=major,
+			ymax=1e1,
+			xmax = 12,
+			legend style={at={(1,1)},xshift=2cm,yshift=-0.2cm,anchor=north east,nodes=right}
+			]	
+	% CG Optimal
+	\addplot+ [blue,very thick,mark=x] table [x=refinements, y=errorCGopt] {data/2Dexample2-CG-opt-exact-1-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Optimal}
+	\addplot+ [blue,dotted,very thick,mark=x] table [x=refinements, y=errorCGopt] {data/2Dexample2-CG-opt-exact-0-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Optimal (inexact)}
+	% CG Lyapunov
+	\addplot+ [Green,very thick,mark=o] table [x=refinements, y=errorCGlyap] {data/2Dexample2-CG-lyap-exact-1-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Lyapunov}
+	\addplot+ [Green,dotted,very thick,mark=o] table [x=refinements, y=errorCGlyap] {data/2Dexample2-CG-lyap-exact-0-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Lyapunov (inexact)}
+	% Galerkin
+	\addplot+ [red,very thick,mark=*] table [x=refinements, y=errorGalerkin] {data/2Dexample2-Galerkin-1-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{Galerkin}
+	\addplot+ [YellowOrange,very thick,mark=*] table [x=refinements, y=errorGalerkin] {data/2Dexample3-GalerkinNEW-1-maxIt-1000-tolerance-1e-10.txt};
+	\addlegendentry{Galerkin (New)}
+	% Timestepping
+	\addplot+ [black,very thick,mark=diamond] table [x=refinement, y=error] {data/2Dexample2-timestepping.txt};
+	\addlegendentry{Timestepping}
+	\end{semilogyaxis}
+\end{tikzpicture}
+\begin{tikzpicture}[xscale=.8,yscale=.8]
+	\begin{semilogyaxis}[title={2D Example 2: Walltimes},
+			xlabel={Number of refinements},
+			ylabel={Wall time $[s]$},
+			grid=major,
+			legend style={at={(0,1)},xshift=0.2cm,yshift=-0.2cm,anchor=north west,nodes=right}
+			]	
+	% CG Optimal
+	\addplot+ [blue,very thick,mark=x] table [x=refinements, y=timeCGopt] {data/2Dexample2-CG-opt-exact-1-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{CG Optimal}
+	\addplot+ [blue,dotted,very thick,mark=x] table [x=refinements, y=timeCGopt] {data/2Dexample2-CG-opt-exact-0-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{CG Optimal (inexact)}
+	% CG Lyapunov
+	\addplot+ [Green,very thick,mark=o] table [x=refinements, y=timeCGlyap] {data/2Dexample2-CG-lyap-exact-1-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{CG Lyapunov}
+	\addplot+ [Green,dotted,very thick,mark=o] table [x=refinements, y=timeCGlyap] {data/2Dexample2-CG-lyap-exact-0-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{CG Lyapunov (inexact)}
+	% Galerkin
+	\addplot+ [red,very thick,mark=*] table [x=refinements, y=timeGalerkin] {data/2Dexample2-Galerkin-1-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{Galerkin}
+\addplot+ [YellowOrange,very thick,mark=*] table [x=refinements, y=timeGalerkin] {data/2Dexample3-GalerkinNEW-1-maxIt-1000-tolerance-1e-10.txt};
+	%\addlegendentry{Galerkin (New)}
+	% Timestepping
+	\addplot+ [black,very thick,mark=diamond] table [x=refinement, y=time] {data/2Dexample2-Timestepping.txt};
+%	\addlegendentry{Timestepping}
+	\end{semilogyaxis}
+\end{tikzpicture}
+
+
+
+\section*{3D - Example 1}
+In 3D, we consider $\Omega = [0,1]^3$ and $t \in (0, 1]$ and continue the examples in three dimensions. In the first example, we therefore choose $u_0(x,y,z) = \tilde{u}_0(x)\tilde{u}_0(y)\tilde{u}_0(z)$. Now, the space matrices grow with $\mathcal{O}(2^{3n})$, resulting in much larger matrices.
+
+As in 2D, the Galerkin method diverges again. All the other methods do converge, but the CG methods take multiple magnitudes longer than the time stepping method and produce larger $L_2$ errors.
+
+\begin{tikzpicture}[xscale=.8,yscale=.8]
+	\begin{semilogyaxis}[title={3D Example 1: $L_2$ convergence},
+			xlabel={Number of refinements},
+			ylabel={$L_2$ error},
+			grid=major,
+			legend style={at={(1,1)},xshift=2cm,yshift=-0.2cm,anchor=north east,
+			nodes=right}
+			]	
+	% CG Optimal
+	\addplot+ [blue,very thick,mark=x] table [x=refinements, y=errorCGopt] {data/3Dexample2-CG-opt-exact-1-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Optimal}
+	\addplot+ [blue,dotted,very thick,mark=x] table [x=refinements, y=errorCGopt] {data/3Dexample2-CG-opt-exact-0-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Optimal (inexact)}
+	% CG Lyapunov
+	\addplot+ [Green,very thick,mark=o] table [x=refinements, y=errorCGlyap] {data/3Dexample2-CG-lyap-exact-1-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Lyapunov}
+	\addplot+ [Green,dotted,very thick,mark=o] table [x=refinements, y=errorCGlyap] {data/3Dexample2-CG-lyap-exact-0-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Lyapunov (inexact)}
+	% Galerkin
+	\addplot+ [red,very thick,mark=*] table [x=refinements, y=errorGalerkin] {data/3Dexample2-Galerkin-1-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{Galerkin}
+\addplot+ [YellowOrange,very thick,mark=*] table [x=refinements, y=errorGalerkin] {data/3Dexample2-GalerkinNEW-1-maxIt-1000-tolerance-1e-10.txt};
+	\addlegendentry{Galerkin (New)}
+	% Timestepping
+	\addplot+ [black,very thick,mark=diamond] table [x=refinement, y=error] {data/3Dexample2-timestepping.txt};
+	\addlegendentry{Timestepping}
+	\end{semilogyaxis}
+\end{tikzpicture}
+\begin{tikzpicture}[xscale=.8,yscale=.8]
+	\begin{semilogyaxis}[title={3D Example 1: Walltimes},
+			xlabel={Number of refinements},
+			ylabel={Wall time $[s]$},
+			grid=major
+			]	
+	% CG Optimal
+	\addplot+ [blue,very thick,mark=x] table [x=refinements, y=timeCGopt] {data/3Dexample2-CG-opt-exact-1-maxIt-100-tolerance-1e-10.txt};
+	%\addlegendentry{CG Optimal}
+	\addplot+ [blue,dotted,very thick,mark=x] table [x=refinements, y=timeCGopt] {data/3Dexample2-CG-opt-exact-0-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{CG Optimal (inexact)}
+	% CG Lyapunov
+	\addplot+ [Green,very thick,mark=o] table [x=refinements, y=timeCGlyap] {data/3Dexample2-CG-lyap-exact-1-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{CG Lyapunov}
+	\addplot+ [Green,dotted,very thick,mark=o] table [x=refinements, y=timeCGlyap] {data/3Dexample2-CG-lyap-exact-0-maxIt-100-tolerance-1e-10.txt};
+	%\addlegendentry{CG Lyapunov (inexact)}
+	% Galerkin
+	\addplot+ [red,very thick,mark=*] table [x=refinements, y=timeGalerkin] {data/3Dexample2-Galerkin-1-maxIt-100-tolerance-1e-10.txt};
+	%\addlegendentry{Galerkin}
+	\addplot+ [YellowOrange,very thick,mark=*] table [x=refinements, y=timeGalerkin] {data/3Dexample2-GalerkinNEW-1-maxIt-1000-tolerance-1e-10.txt};
+%	\addlegendentry{Galerkin (New)}
+	% Timestepping
+	\addplot+ [black,very thick,mark=diamond] table [x=refinement, y=time] {data/3Dexample2-Timestepping.txt};
+%	\addlegendentry{Timestepping}
+	\end{semilogyaxis}
+\end{tikzpicture}
+
+
+\section*{3D - Example 2}
+For the second example we choose all values as above and set $u_0(x,y,z) = \hat{u}_0(x)\hat{u}_0(y)\hat{u}_0(z)$.
+
+All the methods behave similarly to the first 3D example. The Galerkin method does in particular again diverge. 
+
+\begin{tikzpicture}[xscale=.8,yscale=.8]
+	\begin{semilogyaxis}[title={3D Example 2: $L_2$ convergence},
+			xlabel={Number of refinements},
+			ylabel={$L_2$ error},
+			grid=major,
+			legend style={at={(1,1)},xshift=2cm,yshift=-0.2cm,anchor=north east,
+			nodes=right}
+			]	
+	% CG Optimal
+	\addplot+ [blue,very thick,mark=x] table [x=refinements, y=errorCGopt] {data/3Dexample3-CG-opt-exact-1-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Optimal}
+	\addplot+ [blue,dotted,very thick,mark=x] table [x=refinements, y=errorCGopt] {data/3Dexample3-CG-opt-exact-0-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Optimal (inexact)}
+	% CG Lyapunov
+	\addplot+ [Green,very thick,mark=o] table [x=refinements, y=errorCGlyap] {data/3Dexample3-CG-lyap-exact-1-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Lyapunov}
+	\addplot+ [Green,dotted,very thick,mark=o] table [x=refinements, y=errorCGlyap] {data/3Dexample3-CG-lyap-exact-0-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{CG Lyapunov (inexact)}
+	% Galerkin
+	\addplot+ [red,very thick,mark=*] table [x=refinements, y=errorGalerkin] {data/3Dexample3-Galerkin-1-maxIt-100-tolerance-1e-10.txt};
+	\addlegendentry{Galerkin}
+	\addplot+ [YellowOrange,very thick,mark=*] table [x=refinements, y=errorGalerkin] {data/3Dexample3-GalerkinNEW-1-maxIt-1000-tolerance-1e-10.txt};
+	\addlegendentry{Galerkin (New)}
+	% Timestepping
+	\addplot+ [black,very thick,mark=diamond] table [x=refinement, y=error] {data/3Dexample3-timestepping.txt};
+	\addlegendentry{Timestepping}
+	\end{semilogyaxis}
+\end{tikzpicture}
+\begin{tikzpicture}[xscale=.8,yscale=.8]
+	\begin{semilogyaxis}[title={3D Example 2: Walltimes},
+			xlabel={Number of refinements},
+			ylabel={Wall time $[s]$},
+			grid=major
+			]	
+	% CG Optimal
+	\addplot+ [blue,very thick,mark=x] table [x=refinements, y=timeCGopt] {data/3Dexample3-CG-opt-exact-1-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{CG Optimal}
+	\addplot+ [blue,dotted,very thick,mark=x] table [x=refinements, y=timeCGopt] {data/3Dexample3-CG-opt-exact-0-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{CG Optimal (inexact)}
+	% CG Lyapunov
+	\addplot+ [Green,very thick,mark=o] table [x=refinements, y=timeCGlyap] {data/3Dexample3-CG-lyap-exact-1-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{CG Lyapunov}
+	\addplot+ [Green,dotted,very thick,mark=o] table [x=refinements, y=timeCGlyap] {data/3Dexample3-CG-lyap-exact-0-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{CG Lyapunov (inexact)}
+	% Galerkin
+	\addplot+ [red,very thick,mark=*] table [x=refinements, y=timeGalerkin] {data/3Dexample3-Galerkin-1-maxIt-100-tolerance-1e-10.txt};
+%	\addlegendentry{Galerkin}
+\addplot+ [YellowOrange,very thick,mark=*] table [x=refinements, y=timeGalerkin] {data/3Dexample3-GalerkinNEW-1-maxIt-1000-tolerance-1e-10.txt};
+%	\addlegendentry{Galerkin (New)}
+	% Timestepping
+	\addplot+ [black,very thick,mark=diamond] table [x=refinement, y=time] {data/3Dexample3-Timestepping.txt};
+%	\addlegendentry{Timestepping}
+	\end{semilogyaxis}
+\end{tikzpicture}
+
+
+
+
+
+
+
+
+
+
+\end{document}

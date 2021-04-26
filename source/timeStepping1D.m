@@ -12,12 +12,12 @@ addpath('../Solvers');
 
 %% Define the example
 % Example 1
-% f_time = {@(t) 2+0*t, @(t) t.^2};
-% f_space = {@(x) sin(2*pi*x), @(x) 4*pi^2*sin(2*pi*x)};
-% u0 = @(x) 0.*x;
-% u1 = @(x) 0.*x;
-% u_analytical = @(x,t) t.^2 .* sin(2*pi*x);
-% dAlemebert = false;
+f_time = {@(t) 2+0*t, @(t) t.^2};
+f_space = {@(x) sin(2*pi*x), @(x) 4*pi^2*sin(2*pi*x)};
+u0 = @(x) 0.*x;
+u1 = @(x) 0.*x;
+u_analytical = @(x,t) t.^2 .* sin(2*pi*x);
+dAlemebert = false;
 
 % Example 2
 % f_time = {@(t) 0*t};
@@ -28,12 +28,12 @@ addpath('../Solvers');
 % dAlemebert = true;
 
 % Example 3
-f_time = {@(t) 0*t};
-f_space = {@(x) 0*x};
-u0 = @(x) (x > 0.25 &&  x < 0.75);
-u1 = @(x) 0.*x;
-u_analytical = @(x,t) 0;
-dAlemebert = true;
+% f_time = {@(t) 0*t};
+% f_space = {@(x) 0*x};
+% u0 = @(x) (x > 0.25 &&  x < 0.75);
+% u1 = @(x) 0.*x;
+% u_analytical = @(x,t) 0;
+% dAlemebert = true;
 
 
 % Example 3

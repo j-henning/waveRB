@@ -7,7 +7,7 @@ if p.has_analytical_solution
         linspace(0,1, size(sol,4)));
     sol_ana = p.u_analytical(X,Y,Z,T);
 else % Load the desired solution
-    error('Not yet implemented!')
+    load(p.referenceSolutionPath)
 end
 err = sqrt(mean( (sol-sol_ana).^2, 'all'));
 end

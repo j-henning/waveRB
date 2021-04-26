@@ -1,3 +1,8 @@
 *.mat
 *.pdf
 *.asv
+*.pdf
+*.aux
+*.log
+*.gz
+*.bak
