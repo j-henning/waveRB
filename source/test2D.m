@@ -1,4 +1,4 @@
-function [] = test2D(example, method, maxRefinement, tolerance, maxIt, exactFlag)
+function [] = test2D(example, method, maxRefinement, tolerance, toleranceRes, maxIt, exactFlag)
 
 addpath('../splines');
 addpath('../splines/Utilities');
@@ -134,7 +134,8 @@ for refinement = 1:maxRefinement
             tt=tic;
             [U, iterCGopt(refinement)]= ...
                 pcg_fun4(funA,rhsfull,0*rhsfull,problem,maxIt,tolerance,...
-                size(problem.M_space,1),size(problem.M_time,2),exactFlag);
+                toleranceRes, size(problem.M_space,1), ...
+                size(problem.M_time,2),exactFlag);
             U_cg_optimal=U(:)*norm(problem.rhs(:));
             timeCGopt(refinement) = toc(tt);
             
@@ -155,14 +156,17 @@ for refinement = 1:maxRefinement
             writetable(t, ...
                 strcat('data/2Dexample', num2str(example), '-CG-opt-exact-', ...
                 num2str(exactFlag), '-maxIt-', num2str(maxIt), ...
-                '-tolerance-', num2str(tolerance)),'Delimiter',' ')
+                '-tolerance-', num2str(tolerance), '-toleranceRes-', ...
+                num2str(toleranceRes), '.txt'),'Delimiter',' ')
         case 2
             % Lyap operator preconditioner
             fprintf('Starting CG lyaponov\n')
             problem.precond='lyap';
             tt=tic;
             [U, iterCGlyap(refinement)]=...
-                pcg_fun4(funA,rhsfull,0*rhsfull,problem,maxIt,tolerance,size(problem.M_space,1),size(problem.M_time,2),exactFlag);
+                pcg_fun4(funA,rhsfull,0*rhsfull,problem,maxIt, ...
+                tolerance,toleranceRes, size(problem.M_space,1), ...
+                size(problem.M_time,2),exactFlag);
             timeCGlyap(refinement) = toc(tt);
             U_cg_lyap=U(:)*norm(problem.rhs(:));
             
@@ -183,7 +187,8 @@ for refinement = 1:maxRefinement
             writetable(t, ...
                 strcat('data/2Dexample', num2str(example), '-CG-lyap-exact-', ...
                 num2str(exactFlag), '-maxIt-', num2str(maxIt), ...
-                '-tolerance-', num2str(tolerance)),'Delimiter',' ')
+                '-tolerance-', num2str(tolerance), '-toleranceRes-', ...
+                num2str(toleranceRes), '.txt'),'Delimiter',' ')
         case 3
             % Galerkin
             fprintf('Starting Galerkin\n')
@@ -200,7 +205,8 @@ for refinement = 1:maxRefinement
                 Galerkin3(problem.M_space,2*problem.A_space, ...
                 problem.Q_space,problem.Q_time, ...
                 (problem.D_time+problem.D_time')/2, ...
-                problem.M_time,rhs1,rhs2,maxIt,tolerance,info);
+                problem.M_time,rhs1,rhs2,maxIt,tolerance,toleranceRes, ...
+                info);
             timeGalerkin(refinement) = toc(tt);
             U=X1*X2';
             U_galerkin = U(:);
@@ -221,47 +227,8 @@ for refinement = 1:maxRefinement
             writetable(t, ...
                 strcat('data/2Dexample', num2str(example), '-Galerkin-', ...
                 num2str(exactFlag), '-maxIt-', num2str(maxIt), ...
-                '-tolerance-', num2str(tolerance)),'Delimiter',' ')
-            
-            case 4
-            % Galerkin
-            fprintf('Starting Galerkin\n')
-            [uu,ss,vv]=svds(problem.rhs,1);
-            rhs1=uu(:,1)*sqrt(ss(1,1));
-            rhs2=vv(:,1)*sqrt(ss(1,1));
-            
-            
-            %      path(path,'./valeria/')
-            
-            info=0;
-            tt=tic;
-            [X1,X2,restot,iterGalerkin(refinement)]= ...
-                Galerkin3NEW(problem.M_space,2*problem.A_space, ...
-                problem.Q_space,problem.Q_time, ...
-                (problem.D_time+problem.D_time')/2, ...
-                problem.M_time,rhs1,rhs2,maxIt,tolerance,tolerance,info);
-            timeGalerkin(refinement) = toc(tt);
-            U=X1*X2';
-            U_galerkin = U(:);
-            [~, solvingErrorGalerkin(refinement)] = ...
-                calculate2DSolvingError(problem, U_galerkin);
-            
-            fprintf('Refinement: %d, Time to solve: %f\n', ...
-                refinement,  timeGalerkin(refinement))
-        
-            fprintf('Testing the galerkin solution\n');
-            sol = get2Dsolution(problem, U_galerkin, resolution);
-            
-            errorGalerkin(refinement) = calculate2DL2Error(problem, sol);
-            
-            % Write everything in a file in case the whole script does
-            % not finish
-            t = table(refinements,iterGalerkin, timeGalerkin, errorGalerkin, solvingErrorGalerkin)
-            writetable(t, ...
-                strcat('data/2Dexample', num2str(example), '-GalerkinNEW-', ...
-                num2str(exactFlag), '-maxIt-', num2str(maxIt), ...
-                '-tolerance-', num2str(tolerance)),'Delimiter',' ')
-            
+                '-tolerance-', num2str(tolerance), '-toleranceRes-', ...
+                num2str(toleranceRes), '.txt'),'Delimiter',' ')        
     end
 end
 end

@@ -1,4 +1,4 @@
-function [X1,X2,restot, iter]=Galerkin3(A1,B1,C1,A2,B2,C2,rhs1,rhs2,maxit,tol,info)
+function [X1,X2,restot, iter]=Galerkin3(A1,B1,C1,A2,B2,C2,rhs1,rhs2,maxit,tol,tol_rel,info)
 % function [X1,X2,restot]=Galerkin3(A1,B1,C1,A2,B2,C2,rhs1,rhs2,maxit,tol)
 % Solve
 %        A1 X A2 + B1 X B2 + C1 X C2  = rhs1 rhs2'
@@ -7,7 +7,13 @@ function [X1,X2,restot, iter]=Galerkin3(A1,B1,C1,A2,B2,C2,rhs1,rhs2,maxit,tol,in
 % we impose a Galerkin condition on the residual, namely we impose the
 % residual to be orthogonal to the space we construct
 
-%format short e;
+format short e;
+norm_init=sqrt(trace(rhs2'*rhs2)*(rhs1'*rhs1));
+%VS
+%normterm=norm(A1,'fro')*norm(A2,'fro')+norm(B1,'fro')*norm(B2,'fro')+...
+%    norm(C1,'fro')*norm(C2,'fro');
+normterm=norm(A1,'fro')+norm(B1,'fro')+norm(C1,'fro');
+
 V=orth(rhs1);
 W=orth(rhs2);
 A1r=zeros((maxit+1)*size(rhs1,2));
@@ -75,9 +81,12 @@ for k=1:maxit
        %A1r=V'*A1*V; B1r=V'*(B1*V); C1r=V'*(C1*V); 
 
        % increase right space
+if k <= size(W,2)
        Wnew = [(-A2-sigmanew2*C2)\W(:,k),(-B2-sqrt(sigmanew2)*C2)\W(:,k)];
        Wnew = Wnew - W*(W'*Wnew); Wnew = Wnew - W*(W'*Wnew);
-       [uu,ss,vv] = svd(Wnew,0); ns=sum(diag(ss)/ss(1,1)>tol_trunc); Wnew=uu(:,1:ns);
+       [uu,ss,vv] = svd(Wnew,0); 
+if ss(1,1)>tol_trunc,
+          ns=sum(diag(ss)/ss(1,1)>tol_trunc); Wnew=uu(:,1:ns);
        
        % compute the projection of the coefficient matrices
        p2=size(Wnew,2);
@@ -94,6 +103,8 @@ for k=1:maxit
        C2r(p2old+1:p2old+p2,p2old+1:p2old+p2)=(Wnew'*C2)*Wnew;
        
        W = [W, Wnew];
+end
+end
        nW=size(W,2);
        p2old=nW;
        
@@ -106,18 +117,21 @@ for k=1:maxit
        Y = reshape(y,nV,nW);
 
        % compute the residual norm
-       fact1=[A1*(V*Y),B1*(V*Y),C1*(V*Y),-rhs1];
+       VY=V*Y;
+       fact1=[A1*(VY),B1*(VY),C1*(VY),-rhs1];
        [~,R1]=qr(fact1,0);
        fact2=[A2'*W,B2'*W,C2'*W,rhs2];
        [~,R2]=qr(fact2,0);
        
-       res_bw=norm(R1*R2','fro')/(norm(Y,'fro')*norm(A1,'fro')*norm(A2,'fro')+norm(rhs1)*norm(rhs2));
+       %res_bw=norm(R1*R2','fro')/(norm(Y,'fro')*norm(A1,'fro')*norm(A2,'fro')+norm_init);
+       res_bw=norm(R1*R2','fro')/(2*norm(Y,'fro')*normterm+norm_init);
+           res_rel=norm(R1*R2','fro')/norm_init;
        if info
-           res_rel=norm(R1*R2','fro')/(norm(rhs1)*norm(rhs2));
+%[norm_init,norm(R1*R2','fro'),norm(Y,'fro'),normterm]
            disp([k,res_rel,res_bw,sigmanew1,sigmanew2,nV,nW])
        end
        
-       if res_bw < tol
+       if res_bw < tol && res_rel<tol_rel
            break
        end
 

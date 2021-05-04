@@ -33,6 +33,6 @@ echo "Number of cores allocated to job:     $MOAB_PROCCOUNT"
 module load math/matlab/R2020a
 
 # Start a Matlab program
-matlab -nodisplay -r "test2D(3,1,8,1e-10,100,1)" >  2D-Opt-exact-example3.out 2>&1
+matlab -nodisplay -r "test2D(3,1,8,1e-10,1e-2,1000,1)" >  2D-Opt-exact-example3.out 2>&1
 
 exit

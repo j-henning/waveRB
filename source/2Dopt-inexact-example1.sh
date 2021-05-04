@@ -3,7 +3,7 @@
 ########## Begin MOAB/Slurm header ##########
 #
 # Give job a reasonable name
-#SBATCH -J 2D-Galerkin-example2
+#SBATCH -J 2D-opt-inexact-example1
 #
 # Request number of nodes and CPU cores per node for job
 #SBATCH --nodes=1
@@ -33,6 +33,6 @@ echo "Number of cores allocated to job:     $MOAB_PROCCOUNT"
 module load math/matlab/R2020a
 
 # Start a Matlab program
-matlab -nodisplay -r "test2D(2,3,8,1e-10,1e-2,1000,1)" >  2D-Galerkin-example2.out 2>&1
+matlab -nodisplay -r "test2D(1,1,8,1e-10,1e-2,1000,0)" >  2D-Opt-inexact-example1.out 2>&1
 
 exit
