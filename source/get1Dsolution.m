@@ -1,6 +1,12 @@
 % Evaluates the solution of a problem on with the desired resolution at all
 % query points in space and time on [0,1] x [0,1]
 function [sol] = get1Dsolution(p, U,  resolution)
+mu = 1;
+if isfield(p, 'mu')
+    mu = p.mu;
+end
+
+
 x = linspace(0, 1, 2^resolution.x + 1);
 t = linspace(0, 1, 2^resolution.t + 1);
 
@@ -89,9 +95,9 @@ else
 end
 
 for i=1:size(u_full,1) % every space node in x
-    if mod(i, size(u_full,1)/8) == 0
-        disp(['Plotting preparation: ' num2str(i / size(u_full,1) * 100) '%'])
-    end
+%     if mod(i, size(u_full,1)/8) == 0
+%         disp(['Plotting preparation: ' num2str(i / size(u_full,1) * 100) '%'])
+%     end
     spline_x = splines_space(i,:);
     spline_x_2 = splines_2_space(i,:);
     space_x_indices = min(find(spline_x, 1, 'first'), find(spline_x_2, 1, 'first')):...
@@ -113,7 +119,7 @@ for i=1:size(u_full,1) % every space node in x
         
         % Build the whole spline
         spline = kron(spline_t_2, spline_x) ...
-            - kron(spline_t, spline_x_2);
+            - kron(spline_t, mu * spline_x_2);
         
         spline = reshape(spline, ...
             [length(space_x_indices),  length(time_indices)]);

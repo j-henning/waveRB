@@ -1,6 +1,10 @@
 % Gets a problem configuration and creates a problem with all matrices, the
 % right hand side and various variables for retrieving the solution 
 function [p] = create1DWaveProblem(pC)
+mu = 1;
+if isfield(pC, 'mu')
+    mu = pC.mu;
+end
 
 p = pC; % Copy all values from the problem configuration into the problem
 p.T_time = InitUniNodes(p.refinementLevel_time, p.bSplineOrder_time);
@@ -41,7 +45,9 @@ p.T_space = InitUniNodes(p.refinementLevel_space, p.bSplineOrder_space);
 % offset_sol_space = [1, 1];
 % offset_test_space = [1, 1];
 
-p.Q_space = StiffMat(p.T_space, ... % Tsol
+
+
+p.Q_space = mu^2 * StiffMat(p.T_space, ... % Tsol
     p.T_space, ... % Ttest
     p.bSplineOrder_space, ... %ksol
     p.bSplineOrder_space, ... %ktest
@@ -62,7 +68,7 @@ p.M_space = StiffMat(p.T_space, ... % Tsol
 
 
 % A_space also known as N_space
-p.A_space = -StiffMat(p.T_space, ... % Tsol
+p.A_space = -mu * StiffMat(p.T_space, ... % Tsol
     p.T_space, ... % Ttest
     p.bSplineOrder_space, ... %ksol
     p.bSplineOrder_space, ... %ktest

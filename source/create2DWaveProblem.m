@@ -1,6 +1,10 @@
 % Gets a problem configuration and creates a problem with all matrices, the
 % right hand side and various variables for retrieving the solution
 function [p] = create2DWaveProblem(pC)
+mu = 1;
+if isfield(pC, 'mu')
+    mu = pC.mu;
+end
 
 p = pC; % Copy all values from the problem configuration into the problem
 p.T_time = InitUniNodes(p.refinementLevel_time, p.bSplineOrder_time);
@@ -73,12 +77,12 @@ p.A_space_local = StiffMat(p.T_space, ... % Tsol
 
 
 
-p.Q_space = kron(p.Q_space_local, p.M_space_local) + kron(p.A_space_local, p.A_space_local') ...
+p.Q_space = mu^2 * (kron(p.Q_space_local, p.M_space_local) + kron(p.A_space_local, p.A_space_local') ...
     + kron(p.A_space_local', p.A_space_local) ...
-    + kron(p.M_space_local, p.Q_space_local);
+    + kron(p.M_space_local, p.Q_space_local));
 
 p.M_space = kron(p.M_space_local, p.M_space_local);
-p.A_space = -kron(p.A_space_local, p.M_space_local) - kron(p.M_space_local, p.A_space_local);
+p.A_space = mu *( -kron(p.A_space_local, p.M_space_local) - kron(p.M_space_local, p.A_space_local));
 
 %% rhs
 if length(p.f_time) ~= length(p.f_space_x) || length(p.f_time) ~= length(p.f_space_y)
@@ -166,7 +170,6 @@ if ~isempty(p.f_time)
         
         for j=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
             g1 = @(y) p.u_1_y(y) .* Ndiff(p.T_space, p.bSplineOrder_space,0,j,y);
-            % TODO: CHECK MISSING - sign 
             g2 = @(y) p.u_0_y(y) .* Ndiff(p.T_space, p.bSplineOrder_space,0,j,y);
             for step = 0:p.bSplineOrder_space-1
                 rhs_y_1(j-p.offset_space_test(1)) = rhs_y_1(j-p.offset_space_test(1)) ...

@@ -207,7 +207,7 @@ for refinementLevel_space = space_refinement
                 %                 grid on
                 %             end
             end
-            toc
+ 
             
             
             if l2error

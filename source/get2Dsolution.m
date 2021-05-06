@@ -5,6 +5,11 @@ if resolution.x ~= resolution.y
     error('x and y resolution should be the same for performance reasons!')
 end
 
+mu = 1;
+if isfield(p, 'mu')
+    mu = p.mu;
+end
+
 x = linspace(0, 1, 2^resolution.x + 1);
 y = linspace(0, 1, 2^resolution.y + 1);
 t = linspace(0, 1, 2^resolution.t + 1);
@@ -99,9 +104,9 @@ end
 
 
 for i=1:size(u_full,1) % every space node in x
-    if mod(i, size(u_full,1)/8) == 0
-        disp(['Plotting preparation: ' num2str(i / size(u_full,1) * 100) '%'])
-    end
+%     if mod(i, size(u_full,1)/8) == 0
+%         disp(['Plotting preparation: ' num2str(i / size(u_full,1) * 100) '%'])
+%     end
     spline_x = splines_space(i,:);
     spline_x_2 = splines_2_space(i,:);
     space_x_indices = min(find(spline_x, 1, 'first'), find(spline_x_2, 1, 'first')):...
@@ -139,7 +144,7 @@ for i=1:size(u_full,1) % every space node in x
             
             if  k < 5 || k > size(u_full,3) - 5
                 spline = kron(spline_t_2, temp1) ...
-                    - kron(spline_t, temp2);
+                    - mu * kron(spline_t, temp2);
                 
                 
                 spline = reshape(spline, ...
