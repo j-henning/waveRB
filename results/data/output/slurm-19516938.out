@@ -1,0 +1,23 @@
+Submit Directory:                     
+Working Directory:                    /home/ul/ul_student/ul_ovt77/masterarbeit/benchmarks/source
+Running on host                       uc2n528
+Job id:                               
+Job name:                             
+Number of nodes allocated to job:     
+Number of cores allocated to job:     
+/var/spool/slurmd/job19516938/slurm_script: line 36: 2309017 Killed                  matlab -nodisplay -r "test3D(1,1,6,1e-10,1e-2,1000,1)" > 3D-Opt-exact-example1.out 2>&1
+
+============================= JOB FEEDBACK =============================
+
+NodeName=uc2n528
+Job ID: 19516938
+Cluster: uc2
+User/Group: ul_ovt77/ul_student
+State: FAILED (exit code 137)
+Nodes: 1
+Cores per node: 2
+CPU Utilized: 12:48:32
+CPU Efficiency: 94.58% of 13:32:36 core-walltime
+Job Wall-clock time: 06:46:18
+Memory Utilized: 43.18 GB
+Memory Efficiency: 69.09% of 62.50 GB

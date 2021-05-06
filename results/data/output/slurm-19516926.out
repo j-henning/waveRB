@@ -1,0 +1,22 @@
+Submit Directory:                     
+Working Directory:                    /home/ul/ul_student/ul_ovt77/masterarbeit/benchmarks/source
+Running on host                       uc2n464
+Job id:                               
+Job name:                             
+Number of nodes allocated to job:     
+Number of cores allocated to job:     
+
+============================= JOB FEEDBACK =============================
+
+NodeName=uc2n464
+Job ID: 19516926
+Cluster: uc2
+User/Group: ul_ovt77/ul_student
+State: COMPLETED (exit code 0)
+Nodes: 1
+Cores per node: 2
+CPU Utilized: 00:04:43
+CPU Efficiency: 37.14% of 00:12:42 core-walltime
+Job Wall-clock time: 00:06:21
+Memory Utilized: 7.53 GB
+Memory Efficiency: 12.04% of 62.50 GB

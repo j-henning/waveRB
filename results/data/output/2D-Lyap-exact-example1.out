@@ -1,0 +1,228 @@
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2020 The MathWorks, Inc.
+                  R2020a (9.8.0.1323502) 64-bit (glnxa64)
+                             February 25, 2020
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+Creating problem... Done!
+
+
+Size of the time matrices: 2 x 2
+Size of the space matrices: 4 x 4
+Starting CG lyaponov
+pcg (lyap)
+
+Dim space: 4 time: 2 .  CG its 2  backward error 4.382684e-18
+Refinement: 1, Time to solve: 0.214989
+Testing the cg_lyap solution
+Plotting preparation: 25%
+Plotting preparation: 50%
+Plotting preparation: 75%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterCGlyap    timeCGlyap    errorCGlyap    solvingErrorCGlyap
+    ___________    __________    __________    ___________    __________________
+
+         1             2          0.21499        0.20195          2.7038e-16    
+         2             0                0              0                   0    
+         3             0                0              0                   0    
+         4             0                0              0                   0    
+         5             0                0              0                   0    
+         6             0                0              0                   0    
+         7             0                0              0                   0    
+         8             0                0              0                   0    
+
+Creating problem... Done!
+
+
+Size of the time matrices: 4 x 4
+Size of the space matrices: 16 x 16
+Starting CG lyaponov
+pcg (lyap)
+
+Dim space: 16 time: 4 .  CG its 4  backward error 3.746813e-16
+Refinement: 2, Time to solve: 0.010632
+Testing the cg_lyap solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterCGlyap    timeCGlyap    errorCGlyap    solvingErrorCGlyap
+    ___________    __________    __________    ___________    __________________
+
+         1             2           0.21499       0.20195          2.7038e-16    
+         2             4          0.010632       0.15232          2.1489e-14    
+         3             0                 0             0                   0    
+         4             0                 0             0                   0    
+         5             0                 0             0                   0    
+         6             0                 0             0                   0    
+         7             0                 0             0                   0    
+         8             0                 0             0                   0    
+
+Creating problem... Done!
+
+
+Size of the time matrices: 8 x 8
+Size of the space matrices: 64 x 64
+Starting CG lyaponov
+pcg (lyap)
+
+Dim space: 64 time: 8 .  CG its 8  backward error 3.016408e-14
+Refinement: 3, Time to solve: 0.016392
+Testing the cg_lyap solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterCGlyap    timeCGlyap    errorCGlyap    solvingErrorCGlyap
+    ___________    __________    __________    ___________    __________________
+
+         1             2           0.21499       0.20195          2.7038e-16    
+         2             4          0.010632       0.15232          2.1489e-14    
+         3             8          0.016392      0.099275          2.5009e-11    
+         4             0                 0             0                   0    
+         5             0                 0             0                   0    
+         6             0                 0             0                   0    
+         7             0                 0             0                   0    
+         8             0                 0             0                   0    
+
+Creating problem... Done!
+
+
+Size of the time matrices: 16 x 16
+Size of the space matrices: 256 x 256
+Starting CG lyaponov
+pcg (lyap)
+
+Dim space: 256 time: 16 .  CG its 13  backward error 7.032416e-12
+Refinement: 4, Time to solve: 0.084434
+Testing the cg_lyap solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterCGlyap    timeCGlyap    errorCGlyap    solvingErrorCGlyap
+    ___________    __________    __________    ___________    __________________
+
+         1              2          0.21499       0.20195          2.7038e-16    
+         2              4         0.010632       0.15232          2.1489e-14    
+         3              8         0.016392      0.099275          2.5009e-11    
+         4             13         0.084434      0.059238          2.1973e-07    
+         5              0                0             0                   0    
+         6              0                0             0                   0    
+         7              0                0             0                   0    
+         8              0                0             0                   0    
+
+Creating problem... Done!
+
+
+Size of the time matrices: 32 x 32
+Size of the space matrices: 1024 x 1024
+Starting CG lyaponov
+pcg (lyap)
+
+Dim space: 1024 time: 32 .  CG its 13  backward error 4.367448e-12
+Refinement: 5, Time to solve: 1.196176
+Testing the cg_lyap solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterCGlyap    timeCGlyap    errorCGlyap    solvingErrorCGlyap
+    ___________    __________    __________    ___________    __________________
+
+         1              2          0.21499       0.20195          2.7038e-16    
+         2              4         0.010632       0.15232          2.1489e-14    
+         3              8         0.016392      0.099275          2.5009e-11    
+         4             13         0.084434      0.059238          2.1973e-07    
+         5             13           1.1962      0.031902          5.9349e-06    
+         6              0                0             0                   0    
+         7              0                0             0                   0    
+         8              0                0             0                   0    
+
+Creating problem... Done!
+
+
+Size of the time matrices: 64 x 64
+Size of the space matrices: 4096 x 4096
+Starting CG lyaponov
+pcg (lyap)
+
+Dim space: 4096 time: 64 .  CG its 12  backward error 1.670103e-11
+Refinement: 6, Time to solve: 39.719159
+Testing the cg_lyap solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterCGlyap    timeCGlyap    errorCGlyap    solvingErrorCGlyap
+    ___________    __________    __________    ___________    __________________
+
+         1              2          0.21499       0.20195          2.7038e-16    
+         2              4         0.010632       0.15232          2.1489e-14    
+         3              8         0.016392      0.099275          2.5009e-11    
+         4             13         0.084434      0.059238          2.1973e-07    
+         5             13           1.1962      0.031902          5.9349e-06    
+         6             12           39.719      0.016484           0.0010001    
+         7              0                0             0                   0    
+         8              0                0             0                   0    
+
+Creating problem... Done!
+
+
+Size of the time matrices: 128 x 128
+Size of the space matrices: 16384 x 16384
+Starting CG lyaponov
+pcg (lyap)
+
+Dim space: 16384 time: 128 .  CG its 12  backward error 1.158661e-12
+Refinement: 7, Time to solve: 1698.708182
+Testing the cg_lyap solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterCGlyap    timeCGlyap    errorCGlyap    solvingErrorCGlyap
+    ___________    __________    __________    ___________    __________________
+
+         1              2          0.21499        0.20195         2.7038e-16    
+         2              4         0.010632        0.15232         2.1489e-14    
+         3              8         0.016392       0.099275         2.5009e-11    
+         4             13         0.084434       0.059238         2.1973e-07    
+         5             13           1.1962       0.031902         5.9349e-06    
+         6             12           39.719       0.016484          0.0010001    
+         7             12           1698.7      0.0086685          0.0030859    
+         8              0                0              0                  0    
+
+Creating problem... Done!
+
+
+Size of the time matrices: 256 x 256
+Size of the space matrices: 65536 x 65536
+Starting CG lyaponov

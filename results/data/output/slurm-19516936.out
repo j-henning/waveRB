@@ -1,0 +1,23 @@
+Submit Directory:                     
+Working Directory:                    /home/ul/ul_student/ul_ovt77/masterarbeit/benchmarks/source
+Running on host                       uc2n461
+Job id:                               
+Job name:                             
+Number of nodes allocated to job:     
+Number of cores allocated to job:     
+slurmstepd: error: *** JOB 19516936 ON uc2n461 CANCELLED AT 2021-05-05T02:56:21 DUE TO TIME LIMIT ***
+
+============================= JOB FEEDBACK =============================
+
+NodeName=uc2n461
+Job ID: 19516936
+Cluster: uc2
+User/Group: ul_ovt77/ul_student
+State: TIMEOUT (exit code 0)
+Nodes: 1
+Cores per node: 2
+CPU Utilized: 13:27:58
+CPU Efficiency: 67.32% of 20:00:16 core-walltime
+Job Wall-clock time: 10:00:08
+Memory Utilized: 7.64 GB
+Memory Efficiency: 12.23% of 62.50 GB

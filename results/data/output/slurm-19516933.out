@@ -1,0 +1,24 @@
+Submit Directory:                     
+Working Directory:                    /home/ul/ul_student/ul_ovt77/masterarbeit/benchmarks/source
+Running on host                       uc2n464
+Job id:                               
+Job name:                             
+Number of nodes allocated to job:     
+Number of cores allocated to job:     
+/var/spool/slurmd/job19516933/slurm_script: line 36: 3546420 Killed                  matlab -nodisplay -r "test3D(2,2,6,1e-10,1e-2,1000,1)" > 3D-Lyap-exact-example2.out 2>&1
+slurmstepd: error: Detected 1 oom-kill event(s) in step 19516933.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.
+
+============================= JOB FEEDBACK =============================
+
+NodeName=uc2n464
+Job ID: 19516933
+Cluster: uc2
+User/Group: ul_ovt77/ul_student
+State: OUT_OF_MEMORY (exit code 0)
+Nodes: 1
+Cores per node: 2
+CPU Utilized: 05:22:01
+CPU Efficiency: 67.44% of 07:57:28 core-walltime
+Job Wall-clock time: 03:58:44
+Memory Utilized: 62.18 GB
+Memory Efficiency: 99.49% of 62.50 GB

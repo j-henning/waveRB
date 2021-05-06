@@ -1,0 +1,24 @@
+Submit Directory:                     
+Working Directory:                    /home/ul/ul_student/ul_ovt77/masterarbeit/benchmarks/source
+Running on host                       uc2n545
+Job id:                               
+Job name:                             
+Number of nodes allocated to job:     
+Number of cores allocated to job:     
+/var/spool/slurmd/job19516921/slurm_script: line 36: 1534174 Killed                  matlab -nodisplay -r "test2D(2,1,8,1e-10,1e-2,1000,1)" > 2D-Opt-exact-example2.out 2>&1
+slurmstepd: error: Detected 1 oom-kill event(s) in step 19516921.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.
+
+============================= JOB FEEDBACK =============================
+
+NodeName=uc2n545
+Job ID: 19516921
+Cluster: uc2
+User/Group: ul_ovt77/ul_student
+State: OUT_OF_MEMORY (exit code 0)
+Nodes: 1
+Cores per node: 2
+CPU Utilized: 05:33:22
+CPU Efficiency: 92.70% of 05:59:38 core-walltime
+Job Wall-clock time: 02:59:49
+Memory Utilized: 62.30 GB
+Memory Efficiency: 99.68% of 62.50 GB
