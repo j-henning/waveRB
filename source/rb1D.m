@@ -39,6 +39,7 @@ problemConfiguration.has_analytical_solution = false;
 
 
 % Example 3
+% problemConfiguration.d = 1; % Dimension
 % problemConfiguration.f_time = {@(t) 0*t};
 % problemConfiguration.f_space = {@(x) 0*x};
 % problemConfiguration.u_0_x = @(x) (x > 0.25 &&  x < 0.75);
@@ -72,17 +73,17 @@ problemConfiguration.has_analytical_solution = false;
 
 
 
-problemConfiguration.refinementLevel_time = 4;
-problemConfiguration.refinementLevel_space = 4;
+problemConfiguration.refinementLevel_time = 5;
+problemConfiguration.refinementLevel_space = 5;
 
-resolution.x = 5;
-resolution.y = 5;
-resolution.t = 5;
+resolution.x = 7;
+resolution.y = 7;
+resolution.t = 7;
 
 
 problemConfiguration.mu = 1;
 
-N_max = 15;
+N_max = 10;
 tolerance = 1e-3;
 Xi = linspace(.5,3,50);
 
@@ -147,7 +148,7 @@ fprintf("Choosing %f as inital mu\n", S(1))
 
 
 
-
+%% Greedy algorithm
 for i=1:N_max-1
     fprintf("N = %d (%d)\n", i+1, N_max)
     % TODO: break if a tolerance is reached
@@ -159,6 +160,7 @@ for i=1:N_max-1
         mu = Xi(j);
         if ismember(mu, S)
             error(j) = 0;
+            res(j) = 0;
             continue;
         end
         
@@ -206,20 +208,41 @@ for i=1:N_max-1
         error(j) = sqrt(mean( (sol{j}-sol_N).^2, 'all'));
         
         
-        res(j) = residuum(problem, mu, u_N_rec);
+        res(j) = residuum(p, mu, u_N_rec);
         
     end
     [maxError(i), index] = max(error);
-    maxRes(i) = max(res);
-    if maxError(i) < tolerance
+    [maxRes(i), indexRes] = max(res);
+    
+    if maxRes(i) < tolerance
         fprintf('Reached desired tolerance!\n')
         break;
     end
     
-    fprintf("Choosing %f as next mu for the basis (Error: %f)\n", ...
-        Xi(index), maxError(i));
-    S = [S, Xi(index)];
-    Y = [Y, U(:,index)];
+    fprintf("Choosing mu = %f as next mu for the basis (Error: %f, beta = %f)\n", ...
+        Xi(indexRes), maxRes(i), maxRes(i) / maxError(i));
+    
+    subplot(1,2,1), hold off
+    semilogy(maxError, '*-'), hold on, grid on
+    semilogy(maxRes, 'o--')
+    semilogy([1 length(maxError)], [tolerance tolerance], 'k')
+    xlabel('N')
+    ylabel('Error')
+    legend('Error', 'Error estimatior')
+%     drawnow
+
+    subplot(1,2,2), hold off
+        semilogy(Xi, error, 'o-'), grid on
+        hold on
+        semilogy(Xi, res, '*--')
+        drawnow
+    
+    if indexRes ~= index
+        fprintf("Better  would be mu = %f with an error of %f!!!\n", Xi(index), maxError(i));
+        
+    end
+    S = [S, Xi(indexRes)];
+    Y = [Y, U(:,indexRes)];
     
     
 end
@@ -237,6 +260,7 @@ for j=1:length(Xi)
     p = pOne;
     p.A_space = mu * p.A_space;
     p.Q_space = mu^2 * p.Q_space;
+    p.mu = mu;
     
     % Compute X
     
@@ -252,7 +276,7 @@ for j=1:length(Xi)
     
     u_N_rec = Y * u_N;
     
-    p.mu = mu;
+    
     
     switch problemConfiguration.d
         case 1
@@ -265,18 +289,12 @@ for j=1:length(Xi)
     
 end
 
-subplot(1,2,1)
+figure
 semilogy(Xi, errorTest, '*--'), hold on, grid on
 semilogy(S, 0.5*min(errorTest)*ones(size(S)), '*')
 xlabel('\mu')
 ylabel('Error')
 
-subplot(1,2,2)
-semilogy(maxError, '*--'), hold on, grid on
-semilogy(maxRes, 'o:')
-semilogy([1 length(maxError)], [tolerance tolerance], 'k')
-xlabel('N')
-ylabel('Error')
 
 
 
@@ -300,11 +318,21 @@ B = kron(p.Q_time, p.M_space) ...
         + kron(p.D_time', p.A_space) ...
         + kron(p.M_time, p.Q_space);
     
+M_ = kron(p.M_time, p.M_space);    
+    
     
 rhs = rhs(:);
 
-for i =1:size(B,1)
-    r = B(i,:) * u_N_rec - rhs(i);
+
+% res = norm(B * u_N_rec - rhs(:));
+
+for j = 1:size(B,2) %test every function of the test space
+%     r = 0;
+%     for i =1:size(B,1) % mu
+%         r = r + B(i,j) * u_N_rec(i) ;
+%     end
+    r = u_N_rec'*B(:,j);
+    r = abs(r - rhs(j)) / sqrt(M_(j,j)); % todo: check this
     res = max(r,res);
 end
 
