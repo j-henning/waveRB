@@ -34,14 +34,16 @@ problemConfiguration.has_analytical_solution = true;
 
 
 % Example 2
-% f_time = {@(t) 0*t};
-% f_space_x = {@(x) 0*x};
-% f_space_y = {@(y) 0*y};
-% u_0_x = @(x) x* (x < 0.5) + (1-x).*(x > 0.5); u_0_y = @(y)  y* (y < 0.5) + (1-y).*(y > 0.5);
-% u_1_x = @(x) 0*x; u_1_y = @(y) 0 *y;
-% inital_conditions = true;
-% has_analytical_solution = false;
-% load('2D-example2') % Reference solution
+% problemConfiguration.f_time = {@(t) 0*t};
+% problemConfiguration.f_space_x = {@(x) 0*x};
+% problemConfiguration.f_space_y = {@(y) 0*y};
+% problemConfiguration.u_0_x = @(x) x* (x < 0.5) + (1-x).*(x > 0.5);
+% problemConfiguration.u_0_y = @(y)  y* (y < 0.5) + (1-y).*(y > 0.5);
+% problemConfiguration.u_1_x = @(x) 0*x; 
+% problemConfiguration.u_1_y = @(y) 0 *y;
+% problemConfiguration.inital_conditions = true;
+% problemConfiguration.has_analytical_solution = false;
+% problemConfiguration.referenceSolutionPath = '2D-example2'; % Reference solution
 
 
 
@@ -49,9 +51,9 @@ plotting = false;
 
 % Specify the solution for plotting and the error calculation
 
-resolution.x = 8;
-resolution.y = 8;
-resolution.t = 8;
+resolution.x = 7;
+resolution.y = 7;
+resolution.t = 7;
 
 
 
@@ -61,7 +63,7 @@ tolerance = 1e-8;
 maxIt = 40;
 exactFlag = true;
 
-space_refinement = 3:6;
+space_refinement = 2:5;
 for refinementLevel_space = space_refinement
     for refinementLevel_time = refinementLevel_space
         
@@ -76,14 +78,14 @@ for refinementLevel_space = space_refinement
         funA=@(X)( problem.M_space * X * problem.Q_time' ...
             + problem.A_space' * X * problem.D_time' ...
             + problem.A_space * X * problem.D_time ...
-             + problem.Q_space * X * problem.M_time');
-%         
-%         condest(problem.Q_time)
-%         condest(problem.D_time)
-%         condest(problem.M_time)
-%         return
+            + problem.Q_space * X * problem.M_time');
+        %
+        %         condest(problem.Q_time)
+        %         condest(problem.D_time)
+        %         condest(problem.M_time)
+        %         return
         
-        for ii=3 % Test all three solutions
+        for ii=4 % Test all three solutions
             
             %% Sove the linear equation system
             
@@ -102,8 +104,8 @@ for refinementLevel_space = space_refinement
                     U_cg_optimal=U(:)*norm(problem.rhs(:));
                     timeCGopt(refinementLevel_space, refinementLevel_time) = toc(tt);
                     
-             %       [~, solvingErrorCGopt(refinementLevel_space, refinementLevel_time)] = ...
-               %         calculate2DSolvingError(problem, U_cg_optimal);
+                    %       [~, solvingErrorCGopt(refinementLevel_space, refinementLevel_time)] = ...
+                    %         calculate2DSolvingError(problem, U_cg_optimal);
                     
                     fprintf('Time refinement: %d, Space refinement: %d, Time to solve: %f\n', ...
                         refinementLevel_time, refinementLevel_space,  timeCGopt(refinementLevel_space, refinementLevel_time))
@@ -117,8 +119,8 @@ for refinementLevel_space = space_refinement
                     timeCGlyap(refinementLevel_space, refinementLevel_time) = toc(tt);
                     U_cg_lyap=U(:)*norm(problem.rhs(:));
                     
-                %    [~, solvingErrorCGlyap(refinementLevel_space, refinementLevel_time)] = ...
-                %        calculate2DSolvingError(problem, U_cg_lyap);
+                    %    [~, solvingErrorCGlyap(refinementLevel_space, refinementLevel_time)] = ...
+                    %        calculate2DSolvingError(problem, U_cg_lyap);
                     
                     fprintf('Time refinement: %d, Space refinement: %d, Time to solve: %f\n', ...
                         refinementLevel_time, refinementLevel_space,  timeCGlyap(refinementLevel_space, refinementLevel_time))
@@ -142,11 +144,22 @@ for refinementLevel_space = space_refinement
                     timeGalerkin(refinementLevel_space, refinementLevel_time) = toc(tt);
                     U=X1*X2';
                     U_galerkin = U(:);
-               %     [~, solvingErrorGalerkin(refinementLevel_space, refinementLevel_time)] = ...
-                  %      calculate2DSolvingError(problem, U_galerkin);
+                    %     [~, solvingErrorGalerkin(refinementLevel_space, refinementLevel_time)] = ...
+                    %      calculate2DSolvingError(problem, U_galerkin);
                     
                     fprintf('Galerkin: Time refinement: %d, Space refinement: %d, Time to solve: %f\n', ...
                         refinementLevel_time, refinementLevel_space,  timeGalerkin(refinementLevel_space, refinementLevel_time))
+                case 4
+                    p = problem;
+                    cond(full(p.Q_time))
+                    
+                    B =  kron(p.Q_time, p.M_space) ...
+                        + kron(p.D_time, p.A_space') ...
+                        + kron(p.D_time', p.A_space) ...
+                        + kron(p.M_time, p.Q_space);
+                    condest(B)
+                    U_backslash = B \ p.rhs(:);
+                    
             end
             
             
@@ -160,6 +173,9 @@ for refinementLevel_space = space_refinement
                 case 3
                     U = U_galerkin;
                     fprintf('Testing the galerkin solution\n');
+                case 4
+                    U = U_backslash;
+                    fprintf('Testing the backslash solution\n');
             end
             
             %% Plot the solution
@@ -221,6 +237,8 @@ for refinementLevel_space = space_refinement
                         errorCGlyap(refinementLevel_space, refinementLevel_time) = calculate2DL2Error(problem, sol);
                     case 3
                         errorGalerkin(refinementLevel_space, refinementLevel_time) = calculate2DL2Error(problem, sol);
+                    case 4
+                        errorBackslash(refinementLevel_space, refinementLevel_time) = calculate2DL2Error(problem, sol)
                 end
             end
             

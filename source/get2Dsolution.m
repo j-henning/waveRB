@@ -5,9 +5,9 @@ if resolution.x ~= resolution.y
     error('x and y resolution should be the same for performance reasons!')
 end
 
-mu = 1;
-if isfield(p, 'mu')
-    mu = p.mu;
+c = 1;
+if isfield(p, 'c')
+    c = p.c;
 end
 
 x = linspace(0, 1, 2^resolution.x + 1);
@@ -65,7 +65,7 @@ for i=1:size(splines_space,1)
     end
 end
 
-if (p.T_space == p.T_time)
+if size(p.T_space,1) == size(p.T_time,1) && min(p.T_space == p.T_time)
     splines_time = splines_space;
     splines_2_time = splines_2_space;
 else
@@ -142,9 +142,9 @@ for i=1:size(u_full,1) % every space node in x
             
             % Build the whole spline
             
-            if  k < 5 || k > size(u_full,3) - 5
+            if  k < 7 || k > size(u_full,3) - 7
                 spline = kron(spline_t_2, temp1) ...
-                    - mu * kron(spline_t, temp2);
+                    - c^2 * kron(spline_t, temp2);
                 
                 
                 spline = reshape(spline, ...

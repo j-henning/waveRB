@@ -1,4 +1,4 @@
-function [X, iter]=pcg_fun4(funA,b,x,params,maxit,tol,n1,n2,flagexact)
+function [X, iter]=pcg_fun4(funA,b,x,params,maxit,tol,tol_res,n1,n2,flagexact)
 %function X=pcg_fun1(funA,b,x,params,maxit,tol)
 % 
 %  PCG with functional preconditioning. 
@@ -28,23 +28,29 @@ gamma=sum(sum(R.*R));
 res0=sqrt(gamma);
 res=full(res0);
 k=0;
-normterm=norm(params.M_time,1)*norm(params.Q_space,1)+norm(params.M_space,1)*norm(params.Q_time,1);
+%normterm=norm(params.M_time,1)*norm(params.Q_space,1)+norm(params.M_space,1)*norm(params.Q_time,1);
+normterm=norm(params.M_time,'fro')*norm(params.Q_space,'fro')+norm(params.M_space,'fro')*norm(params.Q_time,'fro')+...
+    2*norm(params.A_space,'fro')*norm(params.D_time,'fro');
+% ccc=(condest(params.M_time)^2+condest(params.Q_space)^2)/norm(inv(params.M_time),'fro')^2*norm(inv(params.Q_space),'fro')^2 ...
+%     +(condest(params.M_space)^2*condest(params.Q_time)^2)/norm(inv(params.M_space),'fro')^2*norm(inv(params.Q_time),'fro')^2+...
+%     (2*condest(params.A_space)^2+condest(params.D_time)^2)/norm(inv(params.A_space),'fro')^2*norm(inv(params.D_time),'fro')^2;
+
 backward_error=1;
 
 if strcmp(params.precond,'lyap')
     Ls=chol(params.M_space,'lower');
     Lt=chol(params.M_time,'lower');
-    G=Ls\params.Q_space/Ls'; AA=(G+G')/2;
     G=Lt\params.Q_time/Lt'; BB=(G+G')/2;
     if (flagexact)
+        G=Ls\params.Q_space/Ls'; AA=(G+G')/2;
         [X1,E1]=eig(full(AA));
         [X2,E2]=eig(full(BB));
         LL=1./(diag(E1)+diag(E2)');
         V1=X1'/Ls;  V2=Lt'\X2;
         U1=Ls'\ X1; U2=X2'/Lt;
     else
-        eAmin=eigs(AA,1,'sm','Tolerance',1e-2); eAmax=eigs(AA,1,'lm','Tolerance',1e-2);
-        eBmin=eigs(BB,1,'sm','Tolerance',1e-2); eBmax=eigs(BB,1,'lm','Tolerance',1e-2);
+        eAmin=eigs(params.Q_space,params.M_space,1,'sm','Tolerance',1e-2); eAmax=eigs(params.Q_space,params.M_space,1,'lm','Tolerance',1e-2);
+       % eBmin=eigs(BB,1,'sm','Tolerance',1e-2); eBmax=eigs(BB,1,'lm','Tolerance',1e-2);
     end
     
 elseif strcmp(params.precond,'optimal')
@@ -81,7 +87,7 @@ elseif strcmp(params.precond,'optimal')
 end
    
 % start the actual loop
-while (backward_error > tol && k<maxit)
+while ((backward_error > tol || res(k)/res0 > tol_res) && k<maxit)
     
     % preconditioning step
     if strcmp(params.precond,'lyap')
@@ -92,9 +98,11 @@ while (backward_error > tol && k<maxit)
             nr=4; droptol=1e-5; tol_inner=1e-10;
             [uu,ss,vv]=svds(R,min([nr,n1])); is = sum(diag(ss)/ss(1,1)>droptol);
             R1=uu(:,1:is)*sqrt(ss(1:is,1:is)); R2=vv(:,1:is)*sqrt(ss(1:is,1:is)); 
-            [Z1,Z2,~,~]=arn_adapt_SylvMRHS_oneside(-AA,speye(n1),speye(n1),-BB,R1,R2,n1,tol_inner,eAmin,eAmax,0,1);
-            
-            Z=(Ls'\Z1)*(Z2'/Lt);
+            %[Z1,Z2,~,~]=arn_adapt_SylvMRHS_oneside(-AA,speye(n1),speye(n1),-BB,Ls\R1,Lt\R2,10,tol_inner,eAmin,eAmax,0,1);
+            %[Z1,Z2,~,~]=arn_adapt_SylvMRHS_oneside(-params.Q_space,params.M_space,Ls,-BB,Ls\R1,Lt\R2,20,tol_inner,eAmin,eAmax,0,1);
+            %Z=(Ls'\Z1)*(Z2'/Lt);
+            [Z]=rksm_onesided_lyapprec(-params.Q_space,params.M_space,Ls,-BB,R1,Lt\R2,10,eAmin,eAmax,0);
+            Z=Z/Lt;
         end
     
     elseif strcmp(params.precond,'optimal')
@@ -112,13 +120,13 @@ while (backward_error > tol && k<maxit)
             [uu,ss,vv]=svds(R,min([nr,n1])); is = sum(diag(ss)/ss(1,1)>droptol);
             R1=uu(:,1:is)*sqrt(ss(1:is,1:is)); R2=vv(:,1:is)*sqrt(ss(1:is,1:is));
             % solve the first equation
-            [Z1,Z2,~,~]=arn_adapt_SylvMRHS_oneside(-hatA,params.M_space,LM,-BB1,R1,R2,2*n1,tol_inner,eAmin,eAmax,0,1);
+            [Z1,Z2,~,~]=arn_adapt_SylvMRHS_oneside(-hatA,params.M_space,LM,-BB1,R1,R2,10,tol_inner,eAmin,eAmax,0,1);
             % Further reduce the rank of Z1*Z2' to make the solution of the
             % second equation cheaper
             [uu,ss,vv]=svds(Z1*Z2',min([nr,size(Z1,2)])); is=sum(diag(ss)/ss(1,1)>droptol); 
             Z1=uu(:,1:is)*sqrt(ss(1:is,1:is)); Z2=vv(:,1:is)*sqrt(ss(1:is,1:is));
             % solve the second equation
-            [Z1,Z2,~,~]=arn_adapt_SylvMRHS_oneside(-hatA,params.M_space,LM,-BB2,Z1,Z2,2*n1,tol_inner,eAmin,eAmax,0,1);
+            [Z1,Z2,~,~]=arn_adapt_SylvMRHS_oneside(-hatA,params.M_space,LM,-BB2,Z1,Z2,10,tol_inner,eAmin,eAmax,0,1);
             Z=(LM'\(LM\Z1))*(Z2'/params.M_time);
         end
     end
@@ -138,7 +146,9 @@ while (backward_error > tol && k<maxit)
   R = b-funA(X);  %R=R - alfa*AP;
   gamma0=gamma;
   res(k)=full(sqrt(sum(sum(R.*R))));
-  backward_error=res(k)/(res0+norm(X,1)*normterm); 
+  backward_error=res(k)/(res0+2*norm(X,'fro')*normterm); 
+  %backward_error=res(k)/(sqrt(res0^2+min(svd(full(X)))^2*ccc)); 
+  
   if params.info
       disp([k,res(k),backward_error]) %JH
   end

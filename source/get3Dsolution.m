@@ -5,6 +5,11 @@ if resolution.x ~= resolution.y || resolution.x ~= resolution.z
     error('x, y and z resolution should be the same for performance reasons!')
 end
 
+c = 1;
+if isfield(p, 'c')
+    c = p.c;
+end
+
 x = linspace(0, 1, 2^resolution.x + 1);
 y = linspace(0, 1, 2^resolution.y + 1);
 z = linspace(0, 1, 2^resolution.z + 1);
@@ -36,18 +41,18 @@ splines_space = zeros(size(u_full,1), length(x));
 splines_2_space = zeros(size(u_full,1), length(x));
 
 for i=1:size(splines_space,1)
-    if i < 5 || i > size(splines_space,1) - 5
+     if i < 5 || i > size(splines_space,1) - 5
         for j=1:size(splines_space,2)
             
-            if j > 3 && splines_space(i,j-1) == 0 ...
-                    && splines_space(i,j-2) == 0 ...
-                    && splines_space(i,j-3) ~= 0 ...
-                    && splines_2_space(i,j-1) == 0 ...
-                    && splines_2_space(i,j-2) == 0 ...
-                    && splines_2_space(i,j-3) ~= 0
-                % Don't calculate all the zeros values of spline
-                break;
-            end
+%             if j > 3 && splines_space(i,j-1) == 0 ...
+%                     && splines_space(i,j-2) == 0 ...
+%                     && splines_space(i,j-3) ~= 0 ...
+%                     && splines_2_space(i,j-1) == 0 ...
+%                     && splines_2_space(i,j-2) == 0 ...
+%                     && splines_2_space(i,j-3) ~= 0
+%                 % Don't calculate all the zeros values of spline
+%                 break;
+%             end
             
             g = @(s) Ndiff(p.T_space, p.bSplineOrder_space,0,i,(s==0)*(s+eps) + (s==1)*(s-eps) + (s > 0 && s < 1)*s);
             h = @(s) Ndiff(p.T_space, p.bSplineOrder_space,2,i,(s==0)*(s+eps) + (s==1)*(s-eps) + (s > 0 && s < 1)*s);
@@ -56,7 +61,7 @@ for i=1:size(splines_space,1)
             
             splines_2_space(i,j) = h(x(j));
             
-        end
+         end
     else
         offset = 2^(resolution.x - p.refinementLevel_space);
         splines_space(i, offset+1:end) = splines_space(i-1, 1:end-offset);
@@ -64,32 +69,32 @@ for i=1:size(splines_space,1)
     end
 end
 
-if (p.T_space == p.T_time)
+if false % (p.T_space == p.T_time)
     splines_time = splines_space;
     splines_2_time = splines_2_space;
 else
     
-    splines_time = zeros(size(u_full,2), length(t));
-    splines_2_time = zeros(size(u_full,2), length(t));
+    splines_time = zeros(size(u_full,4), length(t));
+    splines_2_time = zeros(size(u_full,4), length(t));
     
     for i=1:size(splines_time,1)
         if i < 5 || i > size(splines_time,1) - 5
             for j=1:size(splines_time,2)
-                if j > 3 && splines_time(i,j-1) == 0 ...
-                        && splines_time(i,j-2) == 0 ...
-                        && splines_time(i,j-3) ~= 0 ...
-                        && splines_2_time(i,j-1) == 0 ...
-                        && splines_2_time(i,j-2) == 0 ...
-                        && splines_2_time(i,j-3) ~= 0
-                    % Don't calculate all the zeros values of spline
-                    break;
-                end
+%                 if j > 3 && splines_time(i,j-1) == 0 ...
+%                         && splines_time(i,j-2) == 0 ...
+%                         && splines_time(i,j-3) ~= 0 ...
+%                         && splines_2_time(i,j-1) == 0 ...
+%                         && splines_2_time(i,j-2) == 0 ...
+%                         && splines_2_time(i,j-3) ~= 0
+%                     % Don't calculate all the zeros values of spline
+%                     break;
+%                 end
                 
                 g = @(s) Ndiff(p.T_time, p.bSplineOrder_time,0,i,(s==0)*(s+eps) + (s==1)*(s-eps) + (s > 0 && s < 1)*s);
                 h = @(s) Ndiff(p.T_time, p.bSplineOrder_time,2,i,(s==0)*(s+eps) + (s==1)*(s-eps) + (s > 0 && s < 1)*s);
                 
-                splines_time(i,j) = g(x(j));
-                splines_2_time(i,j) = h(x(j));
+                splines_time(i,j) = g(t(j));
+                splines_2_time(i,j) = h(t(j));
                 
             end
         else
@@ -153,7 +158,7 @@ for i=1:size(u_full,1) % every space node in x
                 %                         - kron(spline_t, kron(spline_z, kron(spline_y, spline_x_2))) ...
                 %                         - kron(spline_t, kron(spline_z, kron(spline_y_2, spline_x))) ...
                 %                         - kron(spline_t, kron(spline_z_2, kron(spline_y, spline_x)));
-                spline = kron(spline_t_2, spl_space) - kron(spline_t, spl_space_mixed);
+                spline = kron(spline_t_2, spl_space) - c^2 * kron(spline_t, spl_space_mixed);
                 
                 spline = reshape(spline, ...
                     [length(space_x_indices), length(space_y_indices), ...

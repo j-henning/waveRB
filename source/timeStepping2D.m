@@ -21,13 +21,13 @@ addpath('../Solvers');
 % inital_conditions = false;
 
 % Example 2
-f_time = {@(t) 0*t};
-f_space_x = {@(x) 0*x};
-f_space_y = {@(y) 0*y};
-u0_x = @(x) x* (x < 0.5) + (1-x).*(x > 0.5); u0_y = @(y)  y* (y < 0.5) + (1-y).*(y > 0.5);
-u1_x = @(x) 0*x; u1_y = @(y) 0 *y;
-u_analytical = @(x,y,t) 0.*t.*x.*y; % Not known
-inital_conditions = true;
+% f_time = {@(t) 0*t};
+% f_space_x = {@(x) 0*x};
+% f_space_y = {@(y) 0*y};
+% u0_x = @(x) x* (x < 0.5) + (1-x).*(x > 0.5); u0_y = @(y)  y* (y < 0.5) + (1-y).*(y > 0.5);
+% u1_x = @(x) 0*x; u1_y = @(y) 0 *y;
+% u_analytical = @(x,y,t) 0.*t.*x.*y; % Not known
+% inital_conditions = true;
 
 % Example 3
 % f_time = {@(t) t; @(t) t.^2.*cos(2*pi*t);};
@@ -62,6 +62,19 @@ inital_conditions = true;
 
 
 
+% Example 5 (radial)
+u0r = @(r) 1.* (r < 0.2);
+f_time = {@(t) 0*t};
+f_space_x = {@(x) 0*x};
+f_space_y = {@(y) 0*y};
+u0_x = @(x) (x < 0.75) .* (x > 0.25);
+u0_y = @(y) (y < 0.75) .* (y > 0.25);
+u1_x = @(x) 0*x; u1_y = @(y) 0 *y;
+u_analytical = @(x,y,t) 0.*t.*x.*y; % Not known
+inital_conditions = true;
+
+
+
 % f_time = {@(t) sin(4*pi*t)};
 % f_space_x = {@(x) (x < 0.75).*(x > 0.25)};
 % f_space_y = {@(y) (y < 0.75).*(y > 0.25)};
@@ -88,8 +101,8 @@ Kref = 2^8+1;
 %sol_ref = u_analytical(X, Y, T);
 % sol_ref = solRef;
 
-for refinement_space = 8%space_refinements
-    for refinement_time = 8%time_refinements
+for refinement_space = 4%space_refinements
+    for refinement_time = 4%time_refinements
         fprintf('Space refinement: %d, Time refinement: %d\n', ...
             refinement_space, refinement_time);
         
@@ -398,8 +411,14 @@ for refinement_space = 8%space_refinements
         [Xq, Yq, Tq] = ndgrid(x, y, linspace(0,1, Kref));
         solInt = interpn(X,Y,T,sol,Xq,Yq,Tq);
         
-        l2error(refinement_space, refinement_time) = sqrt(mean((solInt-sol_ref).^2, 'all'));
+%         l2error(refinement_space, refinement_time) = sqrt(mean((solInt-sol_ref).^2, 'all'));
     end
+end
+
+
+for i=1:size(solInt,3)
+   surf(solInt(:,:,i)), drawnow
+   pause(0.5)
 end
 
 % semilogy(space_refinements, l2error(space_refinements,:), 'o--', 'LineWidth', 2)

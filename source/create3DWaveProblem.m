@@ -5,7 +5,6 @@ function [p] = create3DWaveProblem(pC)
 p = pC; % Copy all values from the problem configuration into the problem
 p.T_time = InitUniNodes(p.refinementLevel_time, p.bSplineOrder_time);
 
-p.T_time = InitUniNodes(p.refinementLevel_time, p.bSplineOrder_time);
 
 p.Q_time = StiffMat(p.T_time, ... % Tsol
     p.T_time, ... % Ttest

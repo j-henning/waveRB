@@ -23,7 +23,7 @@ problemConfiguration.offset_space_test = [1, 1];
 % problemConfiguration.f_space = {@(x) sin(2*pi*x), @(x) 4*pi^2*sin(2*pi*x)};
 % problemConfiguration.u_0_x = @(x) 0.*x;
 % problemConfiguration.u_1_x = @(x) 0.*x;
-% 
+%
 % problemConfiguration.u_analytical = @(x,t) t.^2 .* sin(2*pi*x);
 % problemConfiguration.dAlemebert = false;
 % problemConfiguration.has_analytical_solution = true;
@@ -49,7 +49,7 @@ problemConfiguration.has_analytical_solution = false;
 
 %% 2D examples
 % problemConfiguration.d = 2;
-% 
+%
 % problemConfiguration.f_time = {@(t) 0*t};
 % problemConfiguration.f_space_x = {@(x) 0*x};
 % problemConfiguration.f_space_y = {@(y) 0*y};
@@ -76,16 +76,19 @@ problemConfiguration.has_analytical_solution = false;
 problemConfiguration.refinementLevel_time = 5;
 problemConfiguration.refinementLevel_space = 5;
 
-resolution.x = 7;
-resolution.y = 7;
-resolution.t = 7;
+resolution.x = 8;
+resolution.y = 8;
+resolution.t = 8;
 
 
 problemConfiguration.mu = 1;
 
-N_max = 10;
-tolerance = 1e-3;
-Xi = linspace(.5,3,50);
+N_max = 20;
+tolerance_N = 1e-2;
+tolerance_M = 1e-4;
+
+Xi = linspace(.1,5,100);
+
 
 
 
@@ -138,18 +141,34 @@ end
 
 
 % pick the first mu before you enter the loop (how?)
+
+% indices = randperm(length(Xi));
+% offset = 2;
+% 
+% S = Xi(indices(1:offset+1));
+% Y = U(:,indices(1:offset+1) 
+
 S = Xi(ceil(length(Xi)/2));
 Y = U(:,ceil(length(Xi)/2));
-
 fprintf("N = %d (%d)\n", 1, N_max)
 fprintf("Choosing %f as inital mu\n", S(1))
+% 
+% S = [S, Xi(1)];
+% Y = [Y, U(:,1)];
+% fprintf("N = %d (%d)\n", 2, N_max)
+% fprintf("Choosing %f as second mu\n", S(2))
+% 
+% S = [S, Xi(end)];
+% Y = [Y, U(:,end)];
+% fprintf("N = %d (%d)\n", 3, N_max)
+% fprintf("Choosing %f as second mu\n", S(end))
 
 % X = sol(:,1);
 
 
 
 %% Greedy algorithm
-for i=1:N_max-1
+for i=1:N_max-2
     fprintf("N = %d (%d)\n", i+1, N_max)
     % TODO: break if a tolerance is reached
     
@@ -158,7 +177,7 @@ for i=1:N_max-1
     for j=1:length(Xi)
         
         mu = Xi(j);
-        if ismember(mu, S)
+        if ismember(mu, S) 
             error(j) = 0;
             res(j) = 0;
             continue;
@@ -186,6 +205,18 @@ for i=1:N_max-1
         %          B_N = X' * (B) * Y
         
         
+%         B_M = Y' * (kron(p.Q_time, p.M_space) ...
+%             + kron(p.D_time, p.A_space') ...
+%             + kron(p.D_time', p.A_space) ...
+%             + kron(p.M_time, p.Q_space)) * Y;
+%         f_M = Y' * p.rhs(:); % X or Y?
+%         
+%         u_M = B_M \ f_M;
+%         
+%         u_M_rec = Y * u_M;
+        
+        % N = M-1
+        
         B_N = Y' * (kron(p.Q_time, p.M_space) ...
             + kron(p.D_time, p.A_space') ...
             + kron(p.D_time', p.A_space) ...
@@ -196,62 +227,72 @@ for i=1:N_max-1
         
         u_N_rec = Y * u_N;
         
-        p.mu = Xi(j);
+        
         
         switch problemConfiguration.d
             case 1
                 sol_N = get1Dsolution(p, u_N_rec,  resolution);
+%                 sol_M = get1Dsolution(p, u_M_rec,  resolution);
             case 2
                 sol_N = get2Dsolution(p, u_N_rec,  resolution);
+%                 sol_M = get2Dsolution(p, u_M_rec,  resolution);
         end
         
         error(j) = sqrt(mean( (sol{j}-sol_N).^2, 'all'));
         
-        
-        res(j) = residuum(p, mu, u_N_rec);
+%         res(j) = sqrt(mean( (sol_M-sol_N).^2, 'all'));
+   
+%         res(j) = residuum(p, u_N_rec);
         
     end
     [maxError(i), index] = max(error);
-    [maxRes(i), indexRes] = max(res);
-    
-    if maxRes(i) < tolerance
+%     [maxRes(i), indexRes] = max(res);
+%     
+    if maxError(i) < tolerance_M
         fprintf('Reached desired tolerance!\n')
         break;
     end
     
-    fprintf("Choosing mu = %f as next mu for the basis (Error: %f, beta = %f)\n", ...
-        Xi(indexRes), maxRes(i), maxRes(i) / maxError(i));
+    %     fprintf("Choosing mu = %f as next mu for the basis (Error: %f, beta = %f)\n", ...
+    %         Xi(indexRes), maxRes(i), maxRes(i) / maxError(i));
+    
+    fprintf("Choosing mu = %f as next mu for the basis (Error: %e)\n", ...
+        Xi(index), maxError(i));
     
     subplot(1,2,1), hold off
     semilogy(maxError, '*-'), hold on, grid on
-    semilogy(maxRes, 'o--')
-    semilogy([1 length(maxError)], [tolerance tolerance], 'k')
     xlabel('N')
     ylabel('Error')
-    legend('Error', 'Error estimatior')
-%     drawnow
-
-    subplot(1,2,2), hold off
-        semilogy(Xi, error, 'o-'), grid on
-        hold on
-        semilogy(Xi, res, '*--')
-        drawnow
+    legend('Max Error')
+    %     drawnow
     
-    if indexRes ~= index
-        fprintf("Better  would be mu = %f with an error of %f!!!\n", Xi(index), maxError(i));
-        
-    end
-    S = [S, Xi(indexRes)];
-    Y = [Y, U(:,indexRes)];
+    subplot(1,2,2), hold off
+    semilogy(Xi, error, 'o-'), grid on
+    xlabel('mu')
+    ylabel('Error')
+    legend('Error')
+%     hold on
+%     semilogy(Xi, res, '*--')
+    drawnow
+
+    
+    S = [S, Xi(index)];
+    Y = [Y, U(:,index)];
     
     
 end
 toc
 
-%% Online phase
+index_N = find(maxError > tolerance_N, 1, 'last') + 1;
+S_N = S(1:index_N);
+Y_N = Y(:,1:index_N);
+
+S_M = S;
+Y_M = Y;
 
 
-%% Check error for all parameters
+
+%% Online phase: Check error and hierarchical error estimator for all parameters
 
 for j=1:length(Xi)
     
@@ -266,34 +307,53 @@ for j=1:length(Xi)
     
     % X = Y
     %          B_N = X' * (B) * Y
-    B_N = Y' * (kron(p.Q_time, p.M_space) ...
+    B_N = Y_N' * (kron(p.Q_time, p.M_space) ...
         + kron(p.D_time, p.A_space') ...
         + kron(p.D_time', p.A_space) ...
-        + kron(p.M_time, p.Q_space)) * Y;
-    f_N = Y' * p.rhs(:); % or Y?
+        + kron(p.M_time, p.Q_space)) * Y_N;
+    f_N = Y_N' * p.rhs(:); % or Y?
     
     u_N = B_N \ f_N;
     
-    u_N_rec = Y * u_N;
+    u_N_rec = Y_N * u_N;
+    
+    
+    B_M = Y_M' * (kron(p.Q_time, p.M_space) ...
+        + kron(p.D_time, p.A_space') ...
+        + kron(p.D_time', p.A_space) ...
+        + kron(p.M_time, p.Q_space)) * Y_M;
+    f_M = Y_M' * p.rhs(:); % or Y?
+    
+    u_M = B_M \ f_M;
+    
+    u_M_rec = Y_M * u_M;
+    
     
     
     
     switch problemConfiguration.d
         case 1
             sol_N = get1Dsolution(p, u_N_rec,  resolution);
+            sol_M = get1Dsolution(p, u_M_rec,  resolution);
         case 2
             sol_N = get2Dsolution(p, u_N_rec,  resolution);
+            sol_M = get2Dsolution(p, u_M_rec,  resolution);
     end
     
     errorTest(j) = sqrt(mean( (sol{j}-sol_N).^2, 'all'));
+    residualTest(j) = sqrt(mean( (sol_M-sol_N).^2, 'all'));
     
 end
 
+
+
 figure
-semilogy(Xi, errorTest, '*--'), hold on, grid on
-semilogy(S, 0.5*min(errorTest)*ones(size(S)), '*')
+semilogy(Xi, errorTest, '*-'), hold on, grid on
+semilogy(Xi, residualTest, 'o:')
+semilogy(S, 0.5*min(errorTest)*ones(size(S)), 'k*')
 xlabel('\mu')
 ylabel('Error')
+legend('Error', 'Error estimator', 'Snapshot parameters')
 
 
 
@@ -303,7 +363,7 @@ ylabel('Error')
 %   - problem
 %   - parameter mu
 %   - RB solution u_N_rec(mu) = Y * u_N(mu)
-function res = residuum(p, mu, u_N_rec)
+function res = residuum(p, u_N_rec)
 res = 0;
 
 if p.d ~= 1
@@ -314,43 +374,25 @@ rhs = p.rhs; % No dependency in mu
 
 
 B = kron(p.Q_time, p.M_space) ...
-        + kron(p.D_time, p.A_space') ...
-        + kron(p.D_time', p.A_space) ...
-        + kron(p.M_time, p.Q_space);
-    
-M_ = kron(p.M_time, p.M_space);    
-    
-    
+    + kron(p.D_time, p.A_space') ...
+    + kron(p.D_time', p.A_space) ...
+    + kron(p.M_time, p.Q_space);
+
+M_ = kron(p.M_time, p.M_space);
+
+
 rhs = rhs(:);
 
 
 % res = norm(B * u_N_rec - rhs(:));
 
 for j = 1:size(B,2) %test every function of the test space
-%     r = 0;
-%     for i =1:size(B,1) % mu
-%         r = r + B(i,j) * u_N_rec(i) ;
-%     end
-    r = u_N_rec'*B(:,j);
-    r = abs(r - rhs(j)) / sqrt(M_(j,j)); % todo: check this
-    res = max(r,res);
+    
+    r =  B(j,:) * u_N_rec;
+    %   r = abs(r - rhs(j)) / sqrt(M_(j,j)); % todo: check this
+        r = abs(r - rhs(j)) / sqrt(B(j,j)); % todo: check this
+    res = max(r,  res);
 end
-
-% for i = 1:size(rhs,1)
-%     for j = 1:size(rhs,2)
-%     % Compute f(v_h, mu) = f(v_h)
-%     
-%     f = rhs(i,j);
-%     % Compute a(u_N(mu), v; mu)
-%     a = 0;
-%     % Compute ||v_h||_{V_h}
-%     normV = 0;
-%     
-%     res = max(res, abs(f - a) / normV);
-%     end
-% end
-
-
 end
 
 
@@ -364,12 +406,12 @@ function U = solveProblem(problem)
 [uu,ss,vv]=svds(problem.rhs,1);
 rhs1=uu(:,1)*sqrt(ss(1,1));
 rhs2=vv(:,1)*sqrt(ss(1,1));
-tolG=1e-5;
+tolG=1e-8;
 maxIt = 100;
 info = 0;
 [X1,X2]= ...
     Galerkin3(problem.M_space,2*problem.A_space,problem.Q_space,problem.Q_time,...
-    (problem.D_time+problem.D_time')/2,problem.M_time,rhs1,rhs2,maxIt,tolG,info);
+    (problem.D_time+problem.D_time')/2,problem.M_time,rhs1,rhs2,maxIt,tolG,1e-3,info);
 U=X1*X2';
 U=U(:);
 
