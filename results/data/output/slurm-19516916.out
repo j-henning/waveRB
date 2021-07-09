@@ -1,0 +1,23 @@
+Submit Directory:                     
+Working Directory:                    /home/ul/ul_student/ul_ovt77/masterarbeit/benchmarks/source
+Running on host                       uc2n532
+Job id:                               
+Job name:                             
+Number of nodes allocated to job:     
+Number of cores allocated to job:     
+slurmstepd: error: Detected 1 oom-kill event(s) in step 19516916.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.
+
+============================= JOB FEEDBACK =============================
+
+NodeName=uc2n532
+Job ID: 19516916
+Cluster: uc2
+User/Group: ul_ovt77/ul_student
+State: OUT_OF_MEMORY (exit code 0)
+Nodes: 1
+Cores per node: 2
+CPU Utilized: 02:02:19
+CPU Efficiency: 57.91% of 03:31:14 core-walltime
+Job Wall-clock time: 01:45:37
+Memory Utilized: 60.74 GB
+Memory Efficiency: 97.18% of 62.50 GB

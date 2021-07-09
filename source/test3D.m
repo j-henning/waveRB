@@ -128,7 +128,7 @@ for refinementLevel_space = 1:6
         %         params.d=3;
         %         exactflag=0;
         
-        for ii=1:3 % Test all three solutions
+        for ii=3 % Test all three solutions
             switch ii
                 case 1
                     % Product operator preconditioner
@@ -182,7 +182,7 @@ for refinementLevel_space = 1:6
                         refinementLevel_time)]=Galerkin3(problem.M_space,...
                         2*problem.A_space,problem.Q_space,problem.Q_time, ...
                         (problem.D_time+problem.D_time')/2,...
-                        problem.M_time,rhs1,rhs2,maxitG,tolG,info);
+                        problem.M_time,rhs1,rhs2,maxitG,tolG,1e-2,info);
                     solvingTimes_Galerkin(refinementLevel_space, refinementLevel_time) = toc(tt);
                     U=X1*X2';
                     U_galerkin=U(:);

@@ -1,0 +1,131 @@
+\begin{tikzpicture}[xscale=.8,yscale=.8]
+	\begin{semilogyaxis}[title={2D Example 1: $L_2$ convergence},
+			xlabel={Number of refinements},
+			ylabel={$L_2$ error},
+			grid=major,
+			ymax=1e2,
+			legend style={at={(1,1)},xshift=2cm,yshift=-0.2cm,anchor=north east,nodes=right}
+			]	
+	% CG Optimal
+	\addplot+ [blue,very thick,mark=x] table [x=refinements, y=errorCGopt] {data/2Dexample1-CG-opt-exact-1-maxIt-1000-tolerance-1e-10-toleranceRes-0.01.txt};
+	\addlegendentry{CG Optimal}
+	\addplot+ [blue,dotted,very thick,mark=x] table [x=refinements, y=errorCGopt] {data/2Dexample1-CG-opt-exact-0-maxIt-1000-tolerance-1e-10-toleranceRes-0.01.txt};
+	\addlegendentry{CG Optimal (inexact)}
+	
+	% CG Lyapunov
+	\addplot+ [Green,very thick,mark=o] table [x=refinements, y=errorCGlyap] {data/2Dexample1-CG-lyap-exact-1-maxIt-1000-tolerance-1e-10-toleranceRes-0.01.txt};
+	\addlegendentry{CG Lyapunov}
+	\addplot+ [Green,dotted,very thick,mark=o] table [x=refinements, y=errorCGlyap] {data/2Dexample1-CG-lyap-exact-0-maxIt-1000-tolerance-1e-10-toleranceRes-0.01.txt};
+	\addlegendentry{CG Lyapunov (inexact)}
+	
+	% Galerkin
+	\addplot+ [red,very thick,mark=*] table [x=refinements, y=errorGalerkin] {data/2Dexample1-Galerkin-1-maxIt-1000-tolerance-1e-10-toleranceRes-0.01.txt};
+	\addlegendentry{Galerkin}
+
+	% Timestepping
+	\addplot+ [black,very thick,mark=diamond] table [x=refinements, y=l2error] {data/2Dexample1-timestepping.txt};
+	\addlegendentry{Timestepping}
+	
+	\end{semilogyaxis}
+\end{tikzpicture}
+\begin{tikzpicture}[xscale=.8,yscale=.8]
+	\begin{semilogyaxis}[title={2D Example 1: Walltimes},
+			xlabel={Number of refinements},
+			ylabel={Wall time $[s]$},
+			grid=major,
+%			legend style={at={(0,1)},xshift=0.2cm,yshift=-0.2cm,anchor=north west,nodes=right			}
+			]	
+	% CG Optimal
+	\addplot+ [blue,very thick,mark=x] table [x=refinements, y=timeCGopt] {data/2Dexample1-CG-opt-exact-1-maxIt-1000-tolerance-1e-10-toleranceRes-0.01.txt};
+%	\addlegendentry{CG Optimal}
+	\addplot+ [blue,dotted,very thick,mark=x] table [x=refinements, y=timeCGopt] {data/2Dexample1-CG-opt-exact-0-maxIt-1000-tolerance-1e-10-toleranceRes-0.01.txt};
+%	\addlegendentry{CG Optimal (inexact)}
+
+	% CG Lyapunov
+	\addplot+ [Green,very thick,mark=o] table [x=refinements, y=timeCGlyap] {data/2Dexample1-CG-lyap-exact-1-maxIt-1000-tolerance-1e-10-toleranceRes-0.01.txt};
+%	\addlegendentry{CG Lyapunov}
+	\addplot+ [Green,dotted,very thick,mark=o] table [x=refinements, y=timeCGlyap] {data/2Dexample1-CG-lyap-exact-0-maxIt-1000-tolerance-1e-10-toleranceRes-0.01.txt};
+%	\addlegendentry{CG Lyapunov (inexact)}
+
+	% Galerkin
+	\addplot+ [red,very thick,mark=*] table [x=refinements, y=timeGalerkin] {data/2Dexample1-Galerkin-1-maxIt-1000-tolerance-1e-10-toleranceRes-0.01.txt};
+%	\addlegendentry{Galerkin}
+
+	% Timestepping
+	\addplot+ [black,very thick,mark=diamond] table [x=refinements, y=times] {data/2Dexample1-Timestepping.txt};
+%	\addlegendentry{Timestepping}
+	\end{semilogyaxis}
+\end{tikzpicture}
+
+
+% Load the data
+\pgfplotstableread{data/2Dexample1-CG-opt-exact-0-maxIt-1000-tolerance-1e-10-toleranceRes-0.01.txt}\TwoDOneCGOptFalse
+\pgfplotstableread{data/2Dexample1-CG-opt-exact-1-maxIt-1000-tolerance-1e-10-toleranceRes-0.01.txt}\TwoDOneCGOptTrue
+
+\pgfplotstableread{data/2Dexample1-CG-lyap-exact-0-maxIt-1000-tolerance-1e-10-toleranceRes-0.01.txt}\TwoDOneCGLyapFalse
+\pgfplotstableread{data/2Dexample1-CG-lyap-exact-1-maxIt-1000-tolerance-1e-10-toleranceRes-0.01.txt}\TwoDOneCGLyapTrue
+
+
+\pgfplotstableread{data/2Dexample1-Galerkin-1-maxIt-1000-tolerance-1e-10-toleranceRes-0.01.txt}\TwoDOneGalerkin
+
+
+\pgfplotstableread{data/2Dexample1-Timestepping.txt}\TwoDOneTimestepping
+
+
+
+\pgfplotstableread{data/2Drefinements.txt}\TwoDOne
+
+
+\pgfplotstablecreatecol[copy column from table={\TwoDOneCGOptTrue}{[index] 3}] {errorCGOPTexact} {\TwoDOne}
+\pgfplotstablecreatecol[copy column from table={\TwoDOneCGOptTrue}{[index] 2}] {timeCGOPTexact} {\TwoDOne}
+
+\pgfplotstablecreatecol[copy column from table={\TwoDOneCGOptFalse}{[index] 3}] {errorCGOPTinexact} {\TwoDOne}
+\pgfplotstablecreatecol[copy column from table={\TwoDOneCGOptFalse}{[index] 2}] {timeCGOPTinexact} {\TwoDOne}
+
+\pgfplotstablecreatecol[copy column from table={\TwoDOneCGLyapTrue}{[index] 3}] {errorCGLYAPexact} {\TwoDOne}
+\pgfplotstablecreatecol[copy column from table={\TwoDOneCGLyapTrue}{[index] 2}] {timeCGLYAPexact} {\TwoDOne}
+
+
+\pgfplotstablecreatecol[copy column from table={\TwoDOneCGLyapFalse}{[index] 3}] {errorCGLYAPinexact} {\TwoDOne}
+\pgfplotstablecreatecol[copy column from table={\TwoDOneCGLyapFalse}{[index] 2}] {timeCGLYAPinexact} {\TwoDOne}
+
+
+\pgfplotstablecreatecol[copy column from table={\TwoDOneGalerkin}{[index] 3}] {errorGalerkin} {\TwoDOne}
+\pgfplotstablecreatecol[copy column from table={\TwoDOneGalerkin}{[index] 2}] {timeGalerkin} {\TwoDOne}
+
+\pgfplotstablecreatecol[copy column from table={\TwoDOneTimestepping}{[index] 2}] {errorTimestepping} {\TwoDOne}
+\pgfplotstablecreatecol[copy column from table={\TwoDOneTimestepping}{[index] 1}] {timeTimestepping} {\TwoDOne}
+
+
+
+
+\hspace{-1cm}
+
+\pgfplotstabletypeset[
+%Rename the columns
+columns/Refinements/.style={column name={Ref.}},
+columns/errorCGOPTexact/.style={column name={$L_2$ error}},
+columns/timeCGOPTexact/.style={column name={Time}},
+columns/errorCGOPTinexact/.style={column name={$L_2$ error}},
+columns/timeCGOPTinexact/.style={column name={Time}},
+columns/errorCGLYAPexact/.style={column name={$L_2$ error}},
+columns/timeCGLYAPexact/.style={column name={Time}},
+columns/errorCGLYAPinexact/.style={column name={$L_2$ error}},
+columns/timeCGLYAPinexact/.style={column name={Time}},
+columns/errorGalerkin/.style={column name={$L_2$ error}},
+columns/timeGalerkin/.style={column name={Time}},
+columns/errorTimestepping/.style={column name={$L_2$ error}},
+columns/timeTimestepping/.style={column name={Time},column type/.add={}{|}},
+precision=1,
+% Head row		
+every head row/.style={
+	before row={
+		\hline
+		 & \multicolumn{2}{c|}{Unknowns} & \multicolumn{2}{c|}{CG opt (exact)}
+		  & \multicolumn{2}{c|}{CG opt (inexact)} & \multicolumn{2}{c|}{CG lyap (exact)} & \multicolumn{2}{c|}{CG lyap (inexact)} & \multicolumn{2}{c|}{Galerkin} & \multicolumn{2}{c|}{Timestepping}\\
+	},
+	after row=\hline,		
+},
+column type/.add={|}{},
+every last row/.style={after row=\hline}	
+]{\TwoDOne}

@@ -1,0 +1,228 @@
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2020 The MathWorks, Inc.
+                  R2020a (9.8.0.1323502) 64-bit (glnxa64)
+                             February 25, 2020
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+Creating problem... Done!
+
+
+Size of the time matrices: 2 x 2
+Size of the space matrices: 4 x 4
+Starting Galerkin
+Refinement: 1, Time to solve: 0.155726
+Testing the galerkin solution
+Plotting preparation: 25%
+Plotting preparation: 50%
+Plotting preparation: 75%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterGalerkin    timeGalerkin    errorGalerkin    solvingErrorGalerkin
+    ___________    ____________    ____________    _____________    ____________________
+
+    1.0000e+00      1.0000e+00      1.5573e-01      2.0195e-01           9.7169e-16     
+    2.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    3.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    4.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    5.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    6.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    7.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    8.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+
+Creating problem... Done!
+
+
+Size of the time matrices: 4 x 4
+Size of the space matrices: 16 x 16
+Starting Galerkin
+Refinement: 2, Time to solve: 0.062322
+Testing the galerkin solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterGalerkin    timeGalerkin    errorGalerkin    solvingErrorGalerkin
+    ___________    ____________    ____________    _____________    ____________________
+
+    1.0000e+00      1.0000e+00      1.5573e-01      2.0195e-01           9.7169e-16     
+    2.0000e+00      2.0000e+00      6.2322e-02      1.5232e-01           6.4595e-16     
+    3.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    4.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    5.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    6.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    7.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    8.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+
+Creating problem... Done!
+
+
+Size of the time matrices: 8 x 8
+Size of the space matrices: 64 x 64
+Starting Galerkin
+Refinement: 3, Time to solve: 0.139817
+Testing the galerkin solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterGalerkin    timeGalerkin    errorGalerkin    solvingErrorGalerkin
+    ___________    ____________    ____________    _____________    ____________________
+
+    1.0000e+00      1.0000e+00      1.5573e-01      2.0195e-01           9.7169e-16     
+    2.0000e+00      2.0000e+00      6.2322e-02      1.5232e-01           6.4595e-16     
+    3.0000e+00      4.0000e+00      1.3982e-01      9.9275e-02           3.6380e-15     
+    4.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    5.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    6.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    7.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    8.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+
+Creating problem... Done!
+
+
+Size of the time matrices: 16 x 16
+Size of the space matrices: 256 x 256
+Starting Galerkin
+Refinement: 4, Time to solve: 0.114473
+Testing the galerkin solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterGalerkin    timeGalerkin    errorGalerkin    solvingErrorGalerkin
+    ___________    ____________    ____________    _____________    ____________________
+
+    1.0000e+00      1.0000e+00      1.5573e-01      2.0195e-01           9.7169e-16     
+    2.0000e+00      2.0000e+00      6.2322e-02      1.5232e-01           6.4595e-16     
+    3.0000e+00      4.0000e+00      1.3982e-01      9.9275e-02           3.6380e-15     
+    4.0000e+00      8.0000e+00      1.1447e-01      5.9238e-02           6.0224e-14     
+    5.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    6.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    7.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    8.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+
+Creating problem... Done!
+
+
+Size of the time matrices: 32 x 32
+Size of the space matrices: 1024 x 1024
+Starting Galerkin
+Refinement: 5, Time to solve: 0.217668
+Testing the galerkin solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterGalerkin    timeGalerkin    errorGalerkin    solvingErrorGalerkin
+    ___________    ____________    ____________    _____________    ____________________
+
+    1.0000e+00      1.0000e+00      1.5573e-01      2.0195e-01           9.7169e-16     
+    2.0000e+00      2.0000e+00      6.2322e-02      1.5232e-01           6.4595e-16     
+    3.0000e+00      4.0000e+00      1.3982e-01      9.9275e-02           3.6380e-15     
+    4.0000e+00      8.0000e+00      1.1447e-01      5.9238e-02           6.0224e-14     
+    5.0000e+00      1.1000e+01      2.1767e-01      3.1902e-02           9.0015e-06     
+    6.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    7.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    8.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+
+Creating problem... Done!
+
+
+Size of the time matrices: 64 x 64
+Size of the space matrices: 4096 x 4096
+Starting Galerkin
+Refinement: 6, Time to solve: 0.546515
+Testing the galerkin solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterGalerkin    timeGalerkin    errorGalerkin    solvingErrorGalerkin
+    ___________    ____________    ____________    _____________    ____________________
+
+    1.0000e+00      1.0000e+00      1.5573e-01      2.0195e-01           9.7169e-16     
+    2.0000e+00      2.0000e+00      6.2322e-02      1.5232e-01           6.4595e-16     
+    3.0000e+00      4.0000e+00      1.3982e-01      9.9275e-02           3.6380e-15     
+    4.0000e+00      8.0000e+00      1.1447e-01      5.9238e-02           6.0224e-14     
+    5.0000e+00      1.1000e+01      2.1767e-01      3.1902e-02           9.0015e-06     
+    6.0000e+00      1.0000e+01      5.4651e-01      1.6484e-02           9.5679e-03     
+    7.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    8.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+
+Creating problem... Done!
+
+
+Size of the time matrices: 128 x 128
+Size of the space matrices: 16384 x 16384
+Starting Galerkin
+Refinement: 7, Time to solve: 8.991489
+Testing the galerkin solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterGalerkin    timeGalerkin    errorGalerkin    solvingErrorGalerkin
+    ___________    ____________    ____________    _____________    ____________________
+
+    1.0000e+00      1.0000e+00      1.5573e-01      2.0195e-01           9.7169e-16     
+    2.0000e+00      2.0000e+00      6.2322e-02      1.5232e-01           6.4595e-16     
+    3.0000e+00      4.0000e+00      1.3982e-01      9.9275e-02           3.6380e-15     
+    4.0000e+00      8.0000e+00      1.1447e-01      5.9238e-02           6.0224e-14     
+    5.0000e+00      1.1000e+01      2.1767e-01      3.1902e-02           9.0015e-06     
+    6.0000e+00      1.0000e+01      5.4651e-01      1.6484e-02           9.5679e-03     
+    7.0000e+00      1.4000e+01      8.9915e+00      8.6685e-03           9.5790e-04     
+    8.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+
+Creating problem... Done!
+
+
+Size of the time matrices: 256 x 256
+Size of the space matrices: 65536 x 65536
+Starting Galerkin
+Refinement: 8, Time to solve: 42.614798
+Testing the galerkin solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterGalerkin    timeGalerkin    errorGalerkin    solvingErrorGalerkin
+    ___________    ____________    ____________    _____________    ____________________
+
+    1.0000e+00      1.0000e+00      1.5573e-01      2.0195e-01           9.7169e-16     
+    2.0000e+00      2.0000e+00      6.2322e-02      1.5232e-01           6.4595e-16     
+    3.0000e+00      4.0000e+00      1.3982e-01      9.9275e-02           3.6380e-15     
+    4.0000e+00      8.0000e+00      1.1447e-01      5.9238e-02           6.0224e-14     
+    5.0000e+00      1.1000e+01      2.1767e-01      3.1902e-02           9.0015e-06     
+    6.0000e+00      1.0000e+01      5.4651e-01      1.6484e-02           9.5679e-03     
+    7.0000e+00      1.4000e+01      8.9915e+00      8.6685e-03           9.5790e-04     
+    8.0000e+00      1.2000e+01      4.2615e+01      5.0317e-03           2.3131e-03     
+

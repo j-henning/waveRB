@@ -1,0 +1,1166 @@
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2020 The MathWorks, Inc.
+                  R2020a (9.8.0.1323502) 64-bit (glnxa64)
+                             February 25, 2020
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+Refinement: 1
+Time stepping...pcg converged at iteration 1 to a solution with relative residual 1.4e-16.
+ Done.
+Elapsed time is 0.168452 seconds.
+
+t =
+
+  8x3 table
+
+    refinements    times     l2error
+    ___________    ______    _______
+
+         1         2.4679    0.36055
+         2              0          0
+         3              0          0
+         4              0          0
+         5              0          0
+         6              0          0
+         7              0          0
+         8              0          0
+
+Refinement: 2
+Time stepping...pcg converged at iteration 3 to a solution with relative residual 5.3e-16.
+3
+Time stepping progress: 75.00%
+4
+Time stepping progress: 100.00%
+ Done.
+Elapsed time is 0.230887 seconds.
+
+t =
+
+  8x3 table
+
+    refinements     times      l2error 
+    ___________    ________    ________
+
+         1           2.4679     0.36055
+         2         0.048587    0.030093
+         3                0           0
+         4                0           0
+         5                0           0
+         6                0           0
+         7                0           0
+         8                0           0
+
+Refinement: 3
+Time stepping...pcg converged at iteration 10 to a solution with relative residual 3.4e-12.
+3
+Time stepping progress: 37.50%
+4
+Time stepping progress: 50.00%
+5
+Time stepping progress: 62.50%
+6
+Time stepping progress: 75.00%
+7
+Time stepping progress: 87.50%
+8
+Time stepping progress: 100.00%
+ Done.
+Elapsed time is 0.249309 seconds.
+
+t =
+
+  8x3 table
+
+    refinements     times       l2error 
+    ___________    ________    _________
+
+         1           2.4679      0.36055
+         2         0.048587     0.030093
+         3         0.016609    0.0086284
+         4                0            0
+         5                0            0
+         6                0            0
+         7                0            0
+         8                0            0
+
+Refinement: 4
+Time stepping...pcg converged at iteration 20 to a solution with relative residual 7.6e-08.
+3
+Time stepping progress: 18.75%
+4
+Time stepping progress: 25.00%
+5
+Time stepping progress: 31.25%
+6
+Time stepping progress: 37.50%
+7
+Time stepping progress: 43.75%
+8
+Time stepping progress: 50.00%
+9
+Time stepping progress: 56.25%
+10
+Time stepping progress: 62.50%
+11
+Time stepping progress: 68.75%
+12
+Time stepping progress: 75.00%
+13
+Time stepping progress: 81.25%
+14
+Time stepping progress: 87.50%
+15
+Time stepping progress: 93.75%
+16
+Time stepping progress: 100.00%
+ Done.
+Elapsed time is 0.733778 seconds.
+
+t =
+
+  8x3 table
+
+    refinements     times       l2error 
+    ___________    ________    _________
+
+         1           2.4679      0.36055
+         2         0.048587     0.030093
+         3         0.016609    0.0086284
+         4         0.021115    0.0040405
+         5                0            0
+         6                0            0
+         7                0            0
+         8                0            0
+
+Refinement: 5
+Time stepping...pcg converged at iteration 17 to a solution with relative residual 9.8e-08.
+3
+Time stepping progress: 9.38%
+4
+Time stepping progress: 12.50%
+5
+Time stepping progress: 15.62%
+6
+Time stepping progress: 18.75%
+7
+Time stepping progress: 21.88%
+8
+Time stepping progress: 25.00%
+9
+Time stepping progress: 28.12%
+10
+Time stepping progress: 31.25%
+11
+Time stepping progress: 34.38%
+12
+Time stepping progress: 37.50%
+13
+Time stepping progress: 40.62%
+14
+Time stepping progress: 43.75%
+15
+Time stepping progress: 46.88%
+16
+Time stepping progress: 50.00%
+17
+Time stepping progress: 53.12%
+18
+Time stepping progress: 56.25%
+19
+Time stepping progress: 59.38%
+20
+Time stepping progress: 62.50%
+21
+Time stepping progress: 65.62%
+22
+Time stepping progress: 68.75%
+23
+Time stepping progress: 71.88%
+24
+Time stepping progress: 75.00%
+25
+Time stepping progress: 78.12%
+26
+Time stepping progress: 81.25%
+27
+Time stepping progress: 84.38%
+28
+Time stepping progress: 87.50%
+29
+Time stepping progress: 90.62%
+30
+Time stepping progress: 93.75%
+31
+Time stepping progress: 96.88%
+32
+Time stepping progress: 100.00%
+ Done.
+Elapsed time is 1.103120 seconds.
+
+t =
+
+  8x3 table
+
+    refinements     times       l2error 
+    ___________    ________    _________
+
+         1           2.4679      0.36055
+         2         0.048587     0.030093
+         3         0.016609    0.0086284
+         4         0.021115    0.0040405
+         5         0.066225    0.0020144
+         6                0            0
+         7                0            0
+         8                0            0
+
+Refinement: 6
+Time stepping...pcg converged at iteration 14 to a solution with relative residual 7.7e-08.
+3
+Time stepping progress: 4.69%
+4
+Time stepping progress: 6.25%
+5
+Time stepping progress: 7.81%
+6
+Time stepping progress: 9.38%
+7
+Time stepping progress: 10.94%
+8
+Time stepping progress: 12.50%
+9
+Time stepping progress: 14.06%
+10
+Time stepping progress: 15.62%
+11
+Time stepping progress: 17.19%
+12
+Time stepping progress: 18.75%
+13
+Time stepping progress: 20.31%
+14
+Time stepping progress: 21.88%
+15
+Time stepping progress: 23.44%
+16
+Time stepping progress: 25.00%
+17
+Time stepping progress: 26.56%
+18
+Time stepping progress: 28.12%
+19
+Time stepping progress: 29.69%
+20
+Time stepping progress: 31.25%
+21
+Time stepping progress: 32.81%
+22
+Time stepping progress: 34.38%
+23
+Time stepping progress: 35.94%
+24
+Time stepping progress: 37.50%
+25
+Time stepping progress: 39.06%
+26
+Time stepping progress: 40.62%
+27
+Time stepping progress: 42.19%
+28
+Time stepping progress: 43.75%
+29
+Time stepping progress: 45.31%
+30
+Time stepping progress: 46.88%
+31
+Time stepping progress: 48.44%
+32
+Time stepping progress: 50.00%
+33
+Time stepping progress: 51.56%
+34
+Time stepping progress: 53.12%
+35
+Time stepping progress: 54.69%
+36
+Time stepping progress: 56.25%
+37
+Time stepping progress: 57.81%
+38
+Time stepping progress: 59.38%
+39
+Time stepping progress: 60.94%
+40
+Time stepping progress: 62.50%
+41
+Time stepping progress: 64.06%
+42
+Time stepping progress: 65.62%
+43
+Time stepping progress: 67.19%
+44
+Time stepping progress: 68.75%
+45
+Time stepping progress: 70.31%
+46
+Time stepping progress: 71.88%
+47
+Time stepping progress: 73.44%
+48
+Time stepping progress: 75.00%
+49
+Time stepping progress: 76.56%
+50
+Time stepping progress: 78.12%
+51
+Time stepping progress: 79.69%
+52
+Time stepping progress: 81.25%
+53
+Time stepping progress: 82.81%
+54
+Time stepping progress: 84.38%
+55
+Time stepping progress: 85.94%
+56
+Time stepping progress: 87.50%
+57
+Time stepping progress: 89.06%
+58
+Time stepping progress: 90.62%
+59
+Time stepping progress: 92.19%
+60
+Time stepping progress: 93.75%
+61
+Time stepping progress: 95.31%
+62
+Time stepping progress: 96.88%
+63
+Time stepping progress: 98.44%
+64
+Time stepping progress: 100.00%
+ Done.
+Elapsed time is 4.059528 seconds.
+
+t =
+
+  8x3 table
+
+    refinements     times       l2error 
+    ___________    ________    _________
+
+         1           2.4679      0.36055
+         2         0.048587     0.030093
+         3         0.016609    0.0086284
+         4         0.021115    0.0040405
+         5         0.066225    0.0020144
+         6           0.8963    0.0010104
+         7                0            0
+         8                0            0
+
+Refinement: 7
+Time stepping...pcg converged at iteration 13 to a solution with relative residual 4.8e-08.
+3
+Time stepping progress: 2.34%
+4
+Time stepping progress: 3.12%
+5
+Time stepping progress: 3.91%
+6
+Time stepping progress: 4.69%
+7
+Time stepping progress: 5.47%
+8
+Time stepping progress: 6.25%
+9
+Time stepping progress: 7.03%
+10
+Time stepping progress: 7.81%
+11
+Time stepping progress: 8.59%
+12
+Time stepping progress: 9.38%
+13
+Time stepping progress: 10.16%
+14
+Time stepping progress: 10.94%
+15
+Time stepping progress: 11.72%
+16
+Time stepping progress: 12.50%
+17
+Time stepping progress: 13.28%
+18
+Time stepping progress: 14.06%
+19
+Time stepping progress: 14.84%
+20
+Time stepping progress: 15.62%
+21
+Time stepping progress: 16.41%
+22
+Time stepping progress: 17.19%
+23
+Time stepping progress: 17.97%
+24
+Time stepping progress: 18.75%
+25
+Time stepping progress: 19.53%
+26
+Time stepping progress: 20.31%
+27
+Time stepping progress: 21.09%
+28
+Time stepping progress: 21.88%
+29
+Time stepping progress: 22.66%
+30
+Time stepping progress: 23.44%
+31
+Time stepping progress: 24.22%
+32
+Time stepping progress: 25.00%
+33
+Time stepping progress: 25.78%
+34
+Time stepping progress: 26.56%
+35
+Time stepping progress: 27.34%
+36
+Time stepping progress: 28.12%
+37
+Time stepping progress: 28.91%
+38
+Time stepping progress: 29.69%
+39
+Time stepping progress: 30.47%
+40
+Time stepping progress: 31.25%
+41
+Time stepping progress: 32.03%
+42
+Time stepping progress: 32.81%
+43
+Time stepping progress: 33.59%
+44
+Time stepping progress: 34.38%
+45
+Time stepping progress: 35.16%
+46
+Time stepping progress: 35.94%
+47
+Time stepping progress: 36.72%
+48
+Time stepping progress: 37.50%
+49
+Time stepping progress: 38.28%
+50
+Time stepping progress: 39.06%
+51
+Time stepping progress: 39.84%
+52
+Time stepping progress: 40.62%
+53
+Time stepping progress: 41.41%
+54
+Time stepping progress: 42.19%
+55
+Time stepping progress: 42.97%
+56
+Time stepping progress: 43.75%
+57
+Time stepping progress: 44.53%
+58
+Time stepping progress: 45.31%
+59
+Time stepping progress: 46.09%
+60
+Time stepping progress: 46.88%
+61
+Time stepping progress: 47.66%
+62
+Time stepping progress: 48.44%
+63
+Time stepping progress: 49.22%
+64
+Time stepping progress: 50.00%
+65
+Time stepping progress: 50.78%
+66
+Time stepping progress: 51.56%
+67
+Time stepping progress: 52.34%
+68
+Time stepping progress: 53.12%
+69
+Time stepping progress: 53.91%
+70
+Time stepping progress: 54.69%
+71
+Time stepping progress: 55.47%
+72
+Time stepping progress: 56.25%
+73
+Time stepping progress: 57.03%
+74
+Time stepping progress: 57.81%
+75
+Time stepping progress: 58.59%
+76
+Time stepping progress: 59.38%
+77
+Time stepping progress: 60.16%
+78
+Time stepping progress: 60.94%
+79
+Time stepping progress: 61.72%
+80
+Time stepping progress: 62.50%
+81
+Time stepping progress: 63.28%
+82
+Time stepping progress: 64.06%
+83
+Time stepping progress: 64.84%
+84
+Time stepping progress: 65.62%
+85
+Time stepping progress: 66.41%
+86
+Time stepping progress: 67.19%
+87
+Time stepping progress: 67.97%
+88
+Time stepping progress: 68.75%
+89
+Time stepping progress: 69.53%
+90
+Time stepping progress: 70.31%
+91
+Time stepping progress: 71.09%
+92
+Time stepping progress: 71.88%
+93
+Time stepping progress: 72.66%
+94
+Time stepping progress: 73.44%
+95
+Time stepping progress: 74.22%
+96
+Time stepping progress: 75.00%
+97
+Time stepping progress: 75.78%
+98
+Time stepping progress: 76.56%
+99
+Time stepping progress: 77.34%
+100
+Time stepping progress: 78.12%
+101
+Time stepping progress: 78.91%
+102
+Time stepping progress: 79.69%
+103
+Time stepping progress: 80.47%
+104
+Time stepping progress: 81.25%
+105
+Time stepping progress: 82.03%
+106
+Time stepping progress: 82.81%
+107
+Time stepping progress: 83.59%
+108
+Time stepping progress: 84.38%
+109
+Time stepping progress: 85.16%
+110
+Time stepping progress: 85.94%
+111
+Time stepping progress: 86.72%
+112
+Time stepping progress: 87.50%
+113
+Time stepping progress: 88.28%
+114
+Time stepping progress: 89.06%
+115
+Time stepping progress: 89.84%
+116
+Time stepping progress: 90.62%
+117
+Time stepping progress: 91.41%
+118
+Time stepping progress: 92.19%
+119
+Time stepping progress: 92.97%
+120
+Time stepping progress: 93.75%
+121
+Time stepping progress: 94.53%
+122
+Time stepping progress: 95.31%
+123
+Time stepping progress: 96.09%
+124
+Time stepping progress: 96.88%
+125
+Time stepping progress: 97.66%
+126
+Time stepping progress: 98.44%
+127
+Time stepping progress: 99.22%
+128
+Time stepping progress: 100.00%
+ Done.
+Elapsed time is 22.271979 seconds.
+
+t =
+
+  8x3 table
+
+    refinements     times       l2error  
+    ___________    ________    __________
+
+         1           2.4679       0.36055
+         2         0.048587      0.030093
+         3         0.016609     0.0086284
+         4         0.021115     0.0040405
+         5         0.066225     0.0020144
+         6           0.8963     0.0010104
+         7           3.3079    0.00049741
+         8                0             0
+
+Refinement: 8
+Time stepping...pcg converged at iteration 11 to a solution with relative residual 7.8e-08.
+3
+Time stepping progress: 1.17%
+4
+Time stepping progress: 1.56%
+5
+Time stepping progress: 1.95%
+6
+Time stepping progress: 2.34%
+7
+Time stepping progress: 2.73%
+8
+Time stepping progress: 3.12%
+9
+Time stepping progress: 3.52%
+10
+Time stepping progress: 3.91%
+11
+Time stepping progress: 4.30%
+12
+Time stepping progress: 4.69%
+13
+Time stepping progress: 5.08%
+14
+Time stepping progress: 5.47%
+15
+Time stepping progress: 5.86%
+16
+Time stepping progress: 6.25%
+17
+Time stepping progress: 6.64%
+18
+Time stepping progress: 7.03%
+19
+Time stepping progress: 7.42%
+20
+Time stepping progress: 7.81%
+21
+Time stepping progress: 8.20%
+22
+Time stepping progress: 8.59%
+23
+Time stepping progress: 8.98%
+24
+Time stepping progress: 9.38%
+25
+Time stepping progress: 9.77%
+26
+Time stepping progress: 10.16%
+27
+Time stepping progress: 10.55%
+28
+Time stepping progress: 10.94%
+29
+Time stepping progress: 11.33%
+30
+Time stepping progress: 11.72%
+31
+Time stepping progress: 12.11%
+32
+Time stepping progress: 12.50%
+33
+Time stepping progress: 12.89%
+34
+Time stepping progress: 13.28%
+35
+Time stepping progress: 13.67%
+36
+Time stepping progress: 14.06%
+37
+Time stepping progress: 14.45%
+38
+Time stepping progress: 14.84%
+39
+Time stepping progress: 15.23%
+40
+Time stepping progress: 15.62%
+41
+Time stepping progress: 16.02%
+42
+Time stepping progress: 16.41%
+43
+Time stepping progress: 16.80%
+44
+Time stepping progress: 17.19%
+45
+Time stepping progress: 17.58%
+46
+Time stepping progress: 17.97%
+47
+Time stepping progress: 18.36%
+48
+Time stepping progress: 18.75%
+49
+Time stepping progress: 19.14%
+50
+Time stepping progress: 19.53%
+51
+Time stepping progress: 19.92%
+52
+Time stepping progress: 20.31%
+53
+Time stepping progress: 20.70%
+54
+Time stepping progress: 21.09%
+55
+Time stepping progress: 21.48%
+56
+Time stepping progress: 21.88%
+57
+Time stepping progress: 22.27%
+58
+Time stepping progress: 22.66%
+59
+Time stepping progress: 23.05%
+60
+Time stepping progress: 23.44%
+61
+Time stepping progress: 23.83%
+62
+Time stepping progress: 24.22%
+63
+Time stepping progress: 24.61%
+64
+Time stepping progress: 25.00%
+65
+Time stepping progress: 25.39%
+66
+Time stepping progress: 25.78%
+67
+Time stepping progress: 26.17%
+68
+Time stepping progress: 26.56%
+69
+Time stepping progress: 26.95%
+70
+Time stepping progress: 27.34%
+71
+Time stepping progress: 27.73%
+72
+Time stepping progress: 28.12%
+73
+Time stepping progress: 28.52%
+74
+Time stepping progress: 28.91%
+75
+Time stepping progress: 29.30%
+76
+Time stepping progress: 29.69%
+77
+Time stepping progress: 30.08%
+78
+Time stepping progress: 30.47%
+79
+Time stepping progress: 30.86%
+80
+Time stepping progress: 31.25%
+81
+Time stepping progress: 31.64%
+82
+Time stepping progress: 32.03%
+83
+Time stepping progress: 32.42%
+84
+Time stepping progress: 32.81%
+85
+Time stepping progress: 33.20%
+86
+Time stepping progress: 33.59%
+87
+Time stepping progress: 33.98%
+88
+Time stepping progress: 34.38%
+89
+Time stepping progress: 34.77%
+90
+Time stepping progress: 35.16%
+91
+Time stepping progress: 35.55%
+92
+Time stepping progress: 35.94%
+93
+Time stepping progress: 36.33%
+94
+Time stepping progress: 36.72%
+95
+Time stepping progress: 37.11%
+96
+Time stepping progress: 37.50%
+97
+Time stepping progress: 37.89%
+98
+Time stepping progress: 38.28%
+99
+Time stepping progress: 38.67%
+100
+Time stepping progress: 39.06%
+101
+Time stepping progress: 39.45%
+102
+Time stepping progress: 39.84%
+103
+Time stepping progress: 40.23%
+104
+Time stepping progress: 40.62%
+105
+Time stepping progress: 41.02%
+106
+Time stepping progress: 41.41%
+107
+Time stepping progress: 41.80%
+108
+Time stepping progress: 42.19%
+109
+Time stepping progress: 42.58%
+110
+Time stepping progress: 42.97%
+111
+Time stepping progress: 43.36%
+112
+Time stepping progress: 43.75%
+113
+Time stepping progress: 44.14%
+114
+Time stepping progress: 44.53%
+115
+Time stepping progress: 44.92%
+116
+Time stepping progress: 45.31%
+117
+Time stepping progress: 45.70%
+118
+Time stepping progress: 46.09%
+119
+Time stepping progress: 46.48%
+120
+Time stepping progress: 46.88%
+121
+Time stepping progress: 47.27%
+122
+Time stepping progress: 47.66%
+123
+Time stepping progress: 48.05%
+124
+Time stepping progress: 48.44%
+125
+Time stepping progress: 48.83%
+126
+Time stepping progress: 49.22%
+127
+Time stepping progress: 49.61%
+128
+Time stepping progress: 50.00%
+129
+Time stepping progress: 50.39%
+130
+Time stepping progress: 50.78%
+131
+Time stepping progress: 51.17%
+132
+Time stepping progress: 51.56%
+133
+Time stepping progress: 51.95%
+134
+Time stepping progress: 52.34%
+135
+Time stepping progress: 52.73%
+136
+Time stepping progress: 53.12%
+137
+Time stepping progress: 53.52%
+138
+Time stepping progress: 53.91%
+139
+Time stepping progress: 54.30%
+140
+Time stepping progress: 54.69%
+141
+Time stepping progress: 55.08%
+142
+Time stepping progress: 55.47%
+143
+Time stepping progress: 55.86%
+144
+Time stepping progress: 56.25%
+145
+Time stepping progress: 56.64%
+146
+Time stepping progress: 57.03%
+147
+Time stepping progress: 57.42%
+148
+Time stepping progress: 57.81%
+149
+Time stepping progress: 58.20%
+150
+Time stepping progress: 58.59%
+151
+Time stepping progress: 58.98%
+152
+Time stepping progress: 59.38%
+153
+Time stepping progress: 59.77%
+154
+Time stepping progress: 60.16%
+155
+Time stepping progress: 60.55%
+156
+Time stepping progress: 60.94%
+157
+Time stepping progress: 61.33%
+158
+Time stepping progress: 61.72%
+159
+Time stepping progress: 62.11%
+160
+Time stepping progress: 62.50%
+161
+Time stepping progress: 62.89%
+162
+Time stepping progress: 63.28%
+163
+Time stepping progress: 63.67%
+164
+Time stepping progress: 64.06%
+165
+Time stepping progress: 64.45%
+166
+Time stepping progress: 64.84%
+167
+Time stepping progress: 65.23%
+168
+Time stepping progress: 65.62%
+169
+Time stepping progress: 66.02%
+170
+Time stepping progress: 66.41%
+171
+Time stepping progress: 66.80%
+172
+Time stepping progress: 67.19%
+173
+Time stepping progress: 67.58%
+174
+Time stepping progress: 67.97%
+175
+Time stepping progress: 68.36%
+176
+Time stepping progress: 68.75%
+177
+Time stepping progress: 69.14%
+178
+Time stepping progress: 69.53%
+179
+Time stepping progress: 69.92%
+180
+Time stepping progress: 70.31%
+181
+Time stepping progress: 70.70%
+182
+Time stepping progress: 71.09%
+183
+Time stepping progress: 71.48%
+184
+Time stepping progress: 71.88%
+185
+Time stepping progress: 72.27%
+186
+Time stepping progress: 72.66%
+187
+Time stepping progress: 73.05%
+188
+Time stepping progress: 73.44%
+189
+Time stepping progress: 73.83%
+190
+Time stepping progress: 74.22%
+191
+Time stepping progress: 74.61%
+192
+Time stepping progress: 75.00%
+193
+Time stepping progress: 75.39%
+194
+Time stepping progress: 75.78%
+195
+Time stepping progress: 76.17%
+196
+Time stepping progress: 76.56%
+197
+Time stepping progress: 76.95%
+198
+Time stepping progress: 77.34%
+199
+Time stepping progress: 77.73%
+200
+Time stepping progress: 78.12%
+201
+Time stepping progress: 78.52%
+202
+Time stepping progress: 78.91%
+203
+Time stepping progress: 79.30%
+204
+Time stepping progress: 79.69%
+205
+Time stepping progress: 80.08%
+206
+Time stepping progress: 80.47%
+207
+Time stepping progress: 80.86%
+208
+Time stepping progress: 81.25%
+209
+Time stepping progress: 81.64%
+210
+Time stepping progress: 82.03%
+211
+Time stepping progress: 82.42%
+212
+Time stepping progress: 82.81%
+213
+Time stepping progress: 83.20%
+214
+Time stepping progress: 83.59%
+215
+Time stepping progress: 83.98%
+216
+Time stepping progress: 84.38%
+217
+Time stepping progress: 84.77%
+218
+Time stepping progress: 85.16%
+219
+Time stepping progress: 85.55%
+220
+Time stepping progress: 85.94%
+221
+Time stepping progress: 86.33%
+222
+Time stepping progress: 86.72%
+223
+Time stepping progress: 87.11%
+224
+Time stepping progress: 87.50%
+225
+Time stepping progress: 87.89%
+226
+Time stepping progress: 88.28%
+227
+Time stepping progress: 88.67%
+228
+Time stepping progress: 89.06%
+229
+Time stepping progress: 89.45%
+230
+Time stepping progress: 89.84%
+231
+Time stepping progress: 90.23%
+232
+Time stepping progress: 90.62%
+233
+Time stepping progress: 91.02%
+234
+Time stepping progress: 91.41%
+235
+Time stepping progress: 91.80%
+236
+Time stepping progress: 92.19%
+237
+Time stepping progress: 92.58%
+238
+Time stepping progress: 92.97%
+239
+Time stepping progress: 93.36%
+240
+Time stepping progress: 93.75%
+241
+Time stepping progress: 94.14%
+242
+Time stepping progress: 94.53%
+243
+Time stepping progress: 94.92%
+244
+Time stepping progress: 95.31%
+245
+Time stepping progress: 95.70%
+246
+Time stepping progress: 96.09%
+247
+Time stepping progress: 96.48%
+248
+Time stepping progress: 96.88%
+249
+Time stepping progress: 97.27%
+250
+Time stepping progress: 97.66%
+251
+Time stepping progress: 98.05%
+252
+Time stepping progress: 98.44%
+253
+Time stepping progress: 98.83%
+254
+Time stepping progress: 99.22%
+255
+Time stepping progress: 99.61%
+256
+Time stepping progress: 100.00%
+ Done.
+Elapsed time is 123.677728 seconds.
+
+t =
+
+  8x3 table
+
+    refinements     times       l2error  
+    ___________    ________    __________
+
+         1           2.4679       0.36055
+         2         0.048587      0.030093
+         3         0.016609     0.0086284
+         4         0.021115     0.0040405
+         5         0.066225     0.0020144
+         6           0.8963     0.0010104
+         7           3.3079    0.00049741
+         8            22.04    0.00022333
+

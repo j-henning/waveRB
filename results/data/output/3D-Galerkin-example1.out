@@ -1,0 +1,448 @@
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2020 The MathWorks, Inc.
+                  R2020a (9.8.0.1323502) 64-bit (glnxa64)
+                             February 25, 2020
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+Creating problem... Done!
+
+
+Size of the time matrices: 2 x 2
+Size of the space matrices: 8 x 8
+Starting Galerkin
+     iter        rel.res.   bckwrd er.res    sigma1      sigma2       dim(V)       dim(W)
+  Columns 1 through 6
+
+   1.0000e+00   4.4670e-16   8.8044e-18   1.0000e+00   1.0000e-02   3.0000e+00
+
+  Column 7
+
+   2.0000e+00
+
+Galerkin: Refinement: 1, Time to solve: 0.187062
+Testing the galerkin solution
+Getting solution: 25%
+Getting solution: 50%
+Getting solution: 75%
+Getting solution: 100%
+
+t =
+
+  6x5 table
+
+    refinements    iterGalerkin    timeGalerkin    errorGalerkin    solvingErrorGalerkin
+    ___________    ____________    ____________    _____________    ____________________
+
+    1.0000e+00      1.0000e+00      1.8706e-01      1.5709e-01           5.9937e-16     
+    2.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    3.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    4.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    5.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    6.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+
+Creating problem... Done!
+
+
+Size of the time matrices: 4 x 4
+Size of the space matrices: 64 x 64
+Starting Galerkin
+     iter        rel.res.   bckwrd er.res    sigma1      sigma2       dim(V)       dim(W)
+  Columns 1 through 6
+
+   1.0000e+00   1.1219e-01   9.4735e-04   1.0000e+00   1.0000e-02   3.0000e+00
+
+  Column 7
+
+   3.0000e+00
+
+  Columns 1 through 6
+
+   2.0000e+00   7.3673e-16   4.8046e-18   3.2452e+01   3.0060e+02   5.0000e+00
+
+  Column 7
+
+   4.0000e+00
+
+Galerkin: Refinement: 2, Time to solve: 0.037139
+Testing the galerkin solution
+Getting solution: 50%
+Getting solution: 100%
+
+t =
+
+  6x5 table
+
+    refinements    iterGalerkin    timeGalerkin    errorGalerkin    solvingErrorGalerkin
+    ___________    ____________    ____________    _____________    ____________________
+
+    1.0000e+00      1.0000e+00      1.8706e-01      1.5709e-01           5.9937e-16     
+    2.0000e+00      2.0000e+00      3.7139e-02      1.2134e-01           6.1708e-16     
+    3.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    4.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    5.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    6.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+
+Creating problem... Done!
+
+
+Size of the time matrices: 8 x 8
+Size of the space matrices: 512 x 512
+Starting Galerkin
+     iter        rel.res.   bckwrd er.res    sigma1      sigma2       dim(V)       dim(W)
+  Columns 1 through 6
+
+   1.0000e+00   3.3561e-01   2.1922e-04   1.0000e+00   1.0000e-02   3.0000e+00
+
+  Column 7
+
+   3.0000e+00
+
+  Columns 1 through 6
+
+   2.0000e+00   1.8271e-01   1.0129e-04   2.5715e+01   4.1631e+02   5.0000e+00
+
+  Column 7
+
+   5.0000e+00
+
+  Columns 1 through 6
+
+   3.0000e+00   3.8274e-02   1.9664e-05   7.0208e+00   6.1196e+03   7.0000e+00
+
+  Column 7
+
+   7.0000e+00
+
+  Columns 1 through 6
+
+   4.0000e+00   2.5771e-15   1.3215e-18   6.8820e+01   5.1374e+01   9.0000e+00
+
+  Column 7
+
+   8.0000e+00
+
+Galerkin: Refinement: 3, Time to solve: 0.205293
+Testing the galerkin solution
+Getting solution: 50%
+Getting solution: 100%
+
+t =
+
+  6x5 table
+
+    refinements    iterGalerkin    timeGalerkin    errorGalerkin    solvingErrorGalerkin
+    ___________    ____________    ____________    _____________    ____________________
+
+    1.0000e+00      1.0000e+00      1.8706e-01      1.5709e-01           5.9937e-16     
+    2.0000e+00      2.0000e+00      3.7139e-02      1.2134e-01           6.1708e-16     
+    3.0000e+00      4.0000e+00      2.0529e-01      7.6241e-02           2.1733e-15     
+    4.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    5.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    6.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+
+Creating problem... Done!
+
+
+Size of the time matrices: 16 x 16
+Size of the space matrices: 4096 x 4096
+Starting Galerkin
+     iter        rel.res.   bckwrd er.res    sigma1      sigma2       dim(V)       dim(W)
+  Columns 1 through 6
+
+   1.0000e+00   1.6845e+00   2.6580e-05   1.0000e+00   1.0000e-02   3.0000e+00
+
+  Column 7
+
+   3.0000e+00
+
+  Columns 1 through 6
+
+   2.0000e+00   5.1760e-01   5.5675e-06   1.6405e+01   7.3091e+02   5.0000e+00
+
+  Column 7
+
+   5.0000e+00
+
+  Columns 1 through 6
+
+   3.0000e+00   2.7086e-01   2.4568e-06   2.6881e-01   1.5259e+04   7.0000e+00
+
+  Column 7
+
+   7.0000e+00
+
+  Columns 1 through 6
+
+   4.0000e+00   8.8047e-02   7.4188e-07   5.7757e+01   4.3730e+01   9.0000e+00
+
+  Column 7
+
+   9.0000e+00
+
+  Columns 1 through 6
+
+   5.0000e+00   2.0924e-02   1.7576e-07   4.5034e+00   1.1760e+05   1.1000e+01
+
+  Column 7
+
+   1.1000e+01
+
+  Columns 1 through 6
+
+   6.0000e+00   4.0639e-03   3.4137e-08   1.3960e+02   3.9779e+03   1.3000e+01
+
+  Column 7
+
+   1.3000e+01
+
+  Columns 1 through 6
+
+   7.0000e+00   2.8847e-03   2.4232e-08   2.1216e+00   5.2008e+05   1.5000e+01
+
+  Column 7
+
+   1.5000e+01
+
+  Columns 1 through 6
+
+   8.0000e+00   2.3316e-14   1.9586e-19   3.0196e+01   3.6463e+04   1.7000e+01
+
+  Column 7
+
+   1.6000e+01
+
+Galerkin: Refinement: 4, Time to solve: 1.121430
+Testing the galerkin solution
+Getting solution: 50%
+Getting solution: 100%
+
+t =
+
+  6x5 table
+
+    refinements    iterGalerkin    timeGalerkin    errorGalerkin    solvingErrorGalerkin
+    ___________    ____________    ____________    _____________    ____________________
+
+    1.0000e+00      1.0000e+00      1.8706e-01      1.5709e-01           5.9937e-16     
+    2.0000e+00      2.0000e+00      3.7139e-02      1.2134e-01           6.1708e-16     
+    3.0000e+00      4.0000e+00      2.0529e-01      7.6241e-02           2.1733e-15     
+    4.0000e+00      8.0000e+00      1.1214e+00      4.7030e-02           2.3506e-14     
+    5.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+    6.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+
+Creating problem... Done!
+
+
+Size of the time matrices: 32 x 32
+Size of the space matrices: 32768 x 32768
+Starting Galerkin
+     iter        rel.res.   bckwrd er.res    sigma1      sigma2       dim(V)       dim(W)
+  Columns 1 through 6
+
+   1.0000e+00   6.5619e+00   1.3455e-06   1.0000e+00   1.0000e-02   3.0000e+00
+
+  Column 7
+
+   3.0000e+00
+
+  Columns 1 through 6
+
+   2.0000e+00   1.7389e+00   2.7110e-07   1.4594e-01   1.3870e+03   5.0000e+00
+
+  Column 7
+
+   5.0000e+00
+
+  Columns 1 through 6
+
+   3.0000e+00   1.8334e+00   2.3469e-07   2.3987e+02   4.3321e+01   7.0000e+00
+
+  Column 7
+
+   7.0000e+00
+
+  Columns 1 through 6
+
+   4.0000e+00   1.9433e+00   2.1790e-07   2.6755e-02   8.5163e+04   9.0000e+00
+
+  Column 7
+
+   9.0000e+00
+
+  Columns 1 through 6
+
+   5.0000e+00   5.1381e-01   4.8324e-08   1.3791e+01   8.8753e+03   1.1000e+01
+
+  Column 7
+
+   1.1000e+01
+
+  Columns 1 through 6
+
+   6.0000e+00   3.7341e-01   3.5018e-08   3.1584e+00   6.3926e+05   1.3000e+01
+
+  Column 7
+
+   1.3000e+01
+
+  Columns 1 through 6
+
+   7.0000e+00   1.1865e-01   1.1124e-08   4.7656e+01   3.2567e+02   1.5000e+01
+
+  Column 7
+
+   1.5000e+01
+
+  Columns 1 through 6
+
+   8.0000e+00   2.0391e-03   1.9114e-10   6.0376e-02   3.1645e+04   1.7000e+01
+
+  Column 7
+
+   1.7000e+01
+
+  Columns 1 through 6
+
+   9.0000e+00   1.5920e-03   1.4923e-10   2.8796e+02   2.6057e+06   1.9000e+01
+
+  Column 7
+
+   1.9000e+01
+
+  Columns 1 through 6
+
+   1.0000e+01   9.6310e-04   9.0280e-11   4.2063e-01   2.0270e+05   2.1000e+01
+
+  Column 7
+
+   2.1000e+01
+
+Galerkin: Refinement: 5, Time to solve: 63.899557
+Testing the galerkin solution
+Getting solution: 50%
+Getting solution: 100%
+
+t =
+
+  6x5 table
+
+    refinements    iterGalerkin    timeGalerkin    errorGalerkin    solvingErrorGalerkin
+    ___________    ____________    ____________    _____________    ____________________
+
+    1.0000e+00      1.0000e+00      1.8706e-01      1.5709e-01           5.9937e-16     
+    2.0000e+00      2.0000e+00      3.7139e-02      1.2134e-01           6.1708e-16     
+    3.0000e+00      4.0000e+00      2.0529e-01      7.6241e-02           2.1733e-15     
+    4.0000e+00      8.0000e+00      1.1214e+00      4.7030e-02           2.3506e-14     
+    5.0000e+00      1.0000e+01      6.3900e+01      2.7566e-02           9.6310e-04     
+    6.0000e+00      0.0000e+00      0.0000e+00      0.0000e+00           0.0000e+00     
+
+Creating problem... Done!
+
+
+Size of the time matrices: 64 x 64
+Size of the space matrices: 262144 x 262144
+Starting Galerkin
+     iter        rel.res.   bckwrd er.res    sigma1      sigma2       dim(V)       dim(W)
+  Columns 1 through 6
+
+   1.0000e+00   2.7987e+01   7.2146e-08   1.0000e+00   1.0000e-02   3.0000e+00
+
+  Column 7
+
+   3.0000e+00
+
+  Columns 1 through 6
+
+   2.0000e+00   8.3038e+00   1.6686e-08   3.7552e-02   2.9528e+03   5.0000e+00
+
+  Column 7
+
+   5.0000e+00
+
+  Columns 1 through 6
+
+   3.0000e+00   3.7532e+00   6.2575e-09   9.9922e-03   2.8291e+01   7.0000e+00
+
+  Column 7
+
+   7.0000e+00
+
+  Columns 1 through 6
+
+   4.0000e+00   3.3063e+00   5.3902e-09   1.4432e+01   1.9138e+05   9.0000e+00
+
+  Column 7
+
+   9.0000e+00
+
+  Columns 1 through 6
+
+   5.0000e+00   2.9680e+00   3.2360e-09   3.5796e-03   4.0687e+02   1.1000e+01
+
+  Column 7
+
+   1.1000e+01
+
+  Columns 1 through 6
+
+   6.0000e+00   1.6248e+00   1.6799e-09   3.8974e+02   2.4030e+04   1.3000e+01
+
+  Column 7
+
+   1.3000e+01
+
+  Columns 1 through 6
+
+   7.0000e+00   7.6232e-01   7.8382e-10   1.5309e-01   2.3030e+06   1.5000e+01
+
+  Column 7
+
+   1.5000e+01
+
+  Columns 1 through 6
+
+   8.0000e+00   2.1530e-01   2.2129e-10   7.4767e-02   8.6247e+03   1.7000e+01
+
+  Column 7
+
+   1.7000e+01
+
+  Columns 1 through 6
+
+   9.0000e+00   3.0255e-01   3.1092e-10   4.8597e+01   6.7706e+05   1.9000e+01
+
+  Column 7
+
+   1.9000e+01
+
+  Columns 1 through 6
+
+   1.0000e+01   5.2731e-03   5.4176e-12   3.8505e-01   1.0807e+03   2.1000e+01
+
+  Column 7
+
+   2.1000e+01
+
+Galerkin: Refinement: 6, Time to solve: 3414.015256
+Testing the galerkin solution
+Getting solution: 50%
+Getting solution: 100%
+
+t =
+
+  6x5 table
+
+    refinements    iterGalerkin    timeGalerkin    errorGalerkin    solvingErrorGalerkin
+    ___________    ____________    ____________    _____________    ____________________
+
+    1.0000e+00      1.0000e+00      1.8706e-01      1.5709e-01           5.9937e-16     
+    2.0000e+00      2.0000e+00      3.7139e-02      1.2134e-01           6.1708e-16     
+    3.0000e+00      4.0000e+00      2.0529e-01      7.6241e-02           2.1733e-15     
+    4.0000e+00      8.0000e+00      1.1214e+00      4.7030e-02           2.3506e-14     
+    5.0000e+00      1.0000e+01      6.3900e+01      2.7566e-02           9.6310e-04     
+    6.0000e+00      1.0000e+01      3.4140e+03      1.7089e-02           5.2731e-03     
+

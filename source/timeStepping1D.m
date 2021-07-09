@@ -20,20 +20,20 @@ addpath('../Solvers');
 % dAlemebert = false;
 
 % Example 2
-% f_time = {@(t) 0*t};
-% f_space = {@(x) 0*x};
-% u0 = @(x) x .* (x < 0.5) + (1-x) .* (x >= 0.5);
-% u1 = @(x) 0.*x;
-% u_analytical = @(x,t) 0;
-% dAlemebert = true;
-
-% Example 3
 f_time = {@(t) 0*t};
 f_space = {@(x) 0*x};
-u0 = @(x) (x > 0.25 &&  x < 0.75);
+u0 = @(x) x .* (x < 0.5) + (1-x) .* (x >= 0.5);
 u1 = @(x) 0.*x;
 u_analytical = @(x,t) 0;
 dAlemebert = true;
+
+% Example 3
+% f_time = {@(t) 0*t};
+% f_space = {@(x) 0*x};
+% u0 = @(x) (x > 0.25 &&  x < 0.75);
+% u1 = @(x) 0.*x;
+% u_analytical = @(x,t) 0;
+% dAlemebert = true;
 
 
 % Example 3
@@ -58,7 +58,7 @@ splineOrder = 3;
 laplace = 0; % 0 =  trial equals test space, 2 = trial equals laplace(test)
 
 %% Define the resolutions to test
-space_refinements = 1:9;
+space_refinements = 1:6;
 %time_refinements = 1:7;
 
 % Define the resolution for the L2 error calculation (and plotting)
@@ -290,11 +290,11 @@ end
 % writetable(table(space_refinement,times, l2error), ...
 %            '../data/1Dexample2-timestepping','Delimiter',' ')
 
-refinement = space_refinements';
-time = diag(times);
-error = diag(l2error);
-writetable(table(refinement,time, error), ...
-           '../data/1Dexample3-timestepping','Delimiter',' ')
+% refinement = space_refinements';
+% time = diag(times);
+% error = diag(l2error);
+% writetable(table(refinement,time, error), ...
+%            '../data/1Dexample3-timestepping','Delimiter',' ')
 
 
 

@@ -67,7 +67,9 @@ addpath('../solvers');
 f_time = {@(t) 0*t};
 f_space_x = {@(x) 0*x};
 f_space_y = {@(y) 0*y};
-u0= @(x,y,z) .1 * ((x-0.5).^2 + (y-0.5).^2 + (z-0.5).^2<= 0.2^2);
+
+funR = @(x,y,z) sqrt((x-0.5).^2 + (y-0.5).^2 + (z-0.5).^2);  % Returns the radius
+u0= @(x,y,z)  (1-5 * funR(x,y,z)) .* ( funR(x,y,z) <= 0.2);
 % u0= @(x,y) 1 + 0.* x .*y;
 u1 = @(x,y,z)  0.*x.*y.*z;
 % u_analytical = @(x,y,t) 0.*t.*x.*y; % Not known
@@ -81,8 +83,8 @@ laplace = false;
 splineOrder = 3; % at least four if laplace is true, otherwise at least 3
 
 %% Define the resolutions to test
-space_refinements = 1:4;
-time_refinements = 1:6;
+% space_refinements = 1:4;
+% time_refinements = 1:6;
 
 
 
@@ -95,7 +97,7 @@ Kref = 2^6+1;
 
 % Compute the analytical solution
 [X, Y, Z,  T] = ndgrid(x, y, z, t);
-u0r = @(r) 0.1 * (r <= 0.2);
+u0r = @(r) (1-5*abs(r)) .*  (abs(r) <= 0.2);
 for i=1:2^6+1
     for j=1:2^6+1
         for k=1:2^6+1
@@ -106,7 +108,7 @@ for i=1:2^6+1
 end
 
 
-for refinement_space = 1:5%space_refinements
+for refinement_space = 1:4%space_refinements
     for refinement_time = refinement_space%time_refinements
         fprintf('#######################################\n')
         fprintf('Space refinement: %d, Time refinement: %d\n', ...
@@ -408,12 +410,12 @@ for refinement_space = 1:5%space_refinements
         [temp, flag] = pcg(M, U1, 1e-6, 1e5);
         
         if flag ~= 0
-            warning('GMRES did not converge')
+            warning('CG did not converge')
         end
         
         [temp2, flag] = pcg(M, Fvals(:,1)-funA(U(:,1)), 1e-6, 1e5);
         if flag ~= 0
-            warning('GMRES did not converge')
+            warning('CG did not converge')
         end
         
         U(:,2) = U(:,1) + tau*temp  + (tau*tau/2) * temp2;

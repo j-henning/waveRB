@@ -1,8 +1,12 @@
 % Evaluates the solution of a problem on with the desired resolution at all
 % query points in space and time on [0,1]^3 x [0,1]
-function [sol] = get3Dsolution(p, U,  resolution)
+function [sol] = get3Dsolution(p, U,  resolution, smoothing)
 if resolution.x ~= resolution.y || resolution.x ~= resolution.z
     error('x, y and z resolution should be the same for performance reasons!')
+end
+
+if nargin < 4
+    smoothing = false;
 end
 
 c = 1;
@@ -15,6 +19,12 @@ y = linspace(0, 1, 2^resolution.y + 1);
 z = linspace(0, 1, 2^resolution.z + 1);
 t = linspace(0, 1, 2^resolution.t + 1);
 
+if smoothing
+x = 0.5 * (x(2:end) + x(1:end-1));
+y = 0.5 * (y(2:end) + y(1:end-1));
+z = 0.5 * (z(2:end) + z(1:end-1));
+t = 0.5 * (t(2:end) + t(1:end-1));
+end
 
 
 % Todo: Check transpose

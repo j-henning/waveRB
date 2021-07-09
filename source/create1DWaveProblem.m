@@ -80,6 +80,9 @@ p.A_space = -mu * StiffMat(p.T_space, ... % Tsol
 
 
 
+
+
+
 %% rhs
 if length(p.f_time) ~= length(p.f_space)
     error('f_time and f_space should have the same dimensions')
@@ -126,7 +129,7 @@ if ~isempty(p.f_time)
     
     %% Add the inital condtions
     for i=1+p.offset_time_test(1):length(p.T_time) - p.bSplineOrder_time - p.offset_time_test(2)
-        
+
         if Ndiff(p.T_time, p.bSplineOrder_time,0,i,0) == 0 && ...
                  Ndiff(p.T_time, p.bSplineOrder_time,1,i,0) == 0
              break
@@ -139,9 +142,21 @@ if ~isempty(p.f_time)
         for j=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
             g1 = @(x) p.u_1_x(x) * Ndiff(p.T_time, p.bSplineOrder_time,0,i,0) ...
                 .* Ndiff(p.T_space, p.bSplineOrder_space,0,j,x);
-            g2 = @(x) -p.u_0_x(x) * Ndiff(p.T_time, p.bSplineOrder_time,1,i,0) ...
-                .* Ndiff(p.T_space, p.bSplineOrder_space,0,j,x);
+            g2 = @(x) -p.u_0_x(x) * Ndiff(p.T_space, p.bSplineOrder_space,0,j,x) * ...
+             Ndiff(p.T_time, p.bSplineOrder_time,1,i,0);
+            
+%                 int = 0;
+%                 xval = linspace(0, 1,100);
+%                 for ii=1:length(xval)
+%                     int = int + g2(xval(ii));
+%                 end
+%                 
+%                 int = int / length(xval);
+%                 %u1 is assumed to be zero
+%                 rhs_x_2(j-p.offset_space_test(1)) = rhs_x_2(j-p.offset_space_test(1)) + int;
             for step = 0:p.bSplineOrder_space-1
+
+
                 rhs_x_1(j-p.offset_space_test(1)) = rhs_x_1(j-p.offset_space_test(1)) ...
                     + Gaussq(p.T_space(j+step),p.T_space(j+step+1),g1,5);
                 rhs_x_2(j-p.offset_space_test(1)) = rhs_x_2(j-p.offset_space_test(1)) ...
@@ -151,7 +166,9 @@ if ~isempty(p.f_time)
 
         p.rhs(:,i) = p.rhs(:,i) + rhs_x_1 + rhs_x_2;
         
+       
     end
+    
     
      % Calculate some additional values
      p.nsol_time = length(p.T_time) - p.bSplineOrder_time;

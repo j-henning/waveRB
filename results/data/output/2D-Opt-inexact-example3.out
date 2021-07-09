@@ -1,0 +1,228 @@
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2020 The MathWorks, Inc.
+                  R2020a (9.8.0.1323502) 64-bit (glnxa64)
+                             February 25, 2020
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+Creating problem... Done!
+
+
+Size of the time matrices: 2 x 2
+Size of the space matrices: 4 x 4
+Starting CG optimal
+pcg (optimal)
+
+Dim space: 4 time: 2 .  CG its 2  backward error 5.517346e-17
+Refinement: 1, Time to solve: 0.555519
+Testing the cg_opt solution
+Plotting preparation: 25%
+Plotting preparation: 50%
+Plotting preparation: 75%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterCGopt    timeCGopt    errorCGopt    solvingErrorCGopt
+    ___________    _________    _________    __________    _________________
+
+         1             2         0.55552      0.28743          1.066e-15    
+         2             0               0            0                  0    
+         3             0               0            0                  0    
+         4             0               0            0                  0    
+         5             0               0            0                  0    
+         6             0               0            0                  0    
+         7             0               0            0                  0    
+         8             0               0            0                  0    
+
+Creating problem... Done!
+
+
+Size of the time matrices: 4 x 4
+Size of the space matrices: 16 x 16
+Starting CG optimal
+pcg (optimal)
+
+Dim space: 16 time: 4 .  CG its 12  backward error 1.522562e-14
+Refinement: 2, Time to solve: 0.377537
+Testing the cg_opt solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterCGopt    timeCGopt    errorCGopt    solvingErrorCGopt
+    ___________    _________    _________    __________    _________________
+
+         1             2         0.55552      0.28743          1.066e-15    
+         2            12         0.37754      0.22728         1.6715e-12    
+         3             0               0            0                  0    
+         4             0               0            0                  0    
+         5             0               0            0                  0    
+         6             0               0            0                  0    
+         7             0               0            0                  0    
+         8             0               0            0                  0    
+
+Creating problem... Done!
+
+
+Size of the time matrices: 8 x 8
+Size of the space matrices: 64 x 64
+Starting CG optimal
+pcg (optimal)
+
+Dim space: 64 time: 8 .  CG its 1000  backward error 2.591707e-07
+Refinement: 3, Time to solve: 41.272310
+Testing the cg_opt solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterCGopt    timeCGopt    errorCGopt    solvingErrorCGopt
+    ___________    _________    _________    __________    _________________
+
+         1              2        0.55552      0.28743          1.066e-15    
+         2             12        0.37754      0.22728         1.6715e-12    
+         3           1000         41.272      0.19526         0.00039066    
+         4              0              0            0                  0    
+         5              0              0            0                  0    
+         6              0              0            0                  0    
+         7              0              0            0                  0    
+         8              0              0            0                  0    
+
+Creating problem... Done!
+
+
+Size of the time matrices: 16 x 16
+Size of the space matrices: 256 x 256
+Starting CG optimal
+pcg (optimal)
+
+Dim space: 256 time: 16 .  CG its 1000  backward error 3.446899e-06
+Refinement: 4, Time to solve: 160.854294
+Testing the cg_opt solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterCGopt    timeCGopt    errorCGopt    solvingErrorCGopt
+    ___________    _________    _________    __________    _________________
+
+         1              2        0.55552      0.28743          1.066e-15    
+         2             12        0.37754      0.22728         1.6715e-12    
+         3           1000         41.272      0.19526         0.00039066    
+         4           1000         160.85       0.1677           0.077309    
+         5              0              0            0                  0    
+         6              0              0            0                  0    
+         7              0              0            0                  0    
+         8              0              0            0                  0    
+
+Creating problem... Done!
+
+
+Size of the time matrices: 32 x 32
+Size of the space matrices: 1024 x 1024
+Starting CG optimal
+pcg (optimal)
+
+Dim space: 1024 time: 32 .  CG its 1000  backward error 2.097237e-07
+Refinement: 5, Time to solve: 256.318464
+Testing the cg_opt solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterCGopt    timeCGopt    errorCGopt    solvingErrorCGopt
+    ___________    _________    _________    __________    _________________
+
+         1              2        0.55552      0.28743          1.066e-15    
+         2             12        0.37754      0.22728         1.6715e-12    
+         3           1000         41.272      0.19526         0.00039066    
+         4           1000         160.85       0.1677           0.077309    
+         5           1000         256.32      0.14453           0.072135    
+         6              0              0            0                  0    
+         7              0              0            0                  0    
+         8              0              0            0                  0    
+
+Creating problem... Done!
+
+
+Size of the time matrices: 64 x 64
+Size of the space matrices: 4096 x 4096
+Starting CG optimal
+pcg (optimal)
+
+Dim space: 4096 time: 64 .  CG its 1000  backward error 3.453816e-08
+Refinement: 6, Time to solve: 1009.262471
+Testing the cg_opt solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterCGopt    timeCGopt    errorCGopt    solvingErrorCGopt
+    ___________    _________    _________    __________    _________________
+
+         1              2        0.55552      0.28743          1.066e-15    
+         2             12        0.37754      0.22728         1.6715e-12    
+         3           1000         41.272      0.19526         0.00039066    
+         4           1000         160.85       0.1677           0.077309    
+         5           1000         256.32      0.14453           0.072135    
+         6           1000         1009.3      0.13266            0.20159    
+         7              0              0            0                  0    
+         8              0              0            0                  0    
+
+Creating problem... Done!
+
+
+Size of the time matrices: 128 x 128
+Size of the space matrices: 16384 x 16384
+Starting CG optimal
+pcg (optimal)
+
+Dim space: 16384 time: 128 .  CG its 1000  backward error 1.505223e-08
+Refinement: 7, Time to solve: 9408.187801
+Testing the cg_opt solution
+Plotting preparation: 50%
+Plotting preparation: 100%
+
+t =
+
+  8x5 table
+
+    refinements    iterCGopt    timeCGopt    errorCGopt    solvingErrorCGopt
+    ___________    _________    _________    __________    _________________
+
+         1              2        0.55552      0.28743          1.066e-15    
+         2             12        0.37754      0.22728         1.6715e-12    
+         3           1000         41.272      0.19526         0.00039066    
+         4           1000         160.85       0.1677           0.077309    
+         5           1000         256.32      0.14453           0.072135    
+         6           1000         1009.3      0.13266            0.20159    
+         7           1000         9408.2      0.15995             1.6048    
+         8              0              0            0                  0    
+
+Creating problem... Done!
+
+
+Size of the time matrices: 256 x 256
+Size of the space matrices: 65536 x 65536
+Starting CG optimal
