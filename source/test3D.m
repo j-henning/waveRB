@@ -9,8 +9,8 @@ addpath('../solvers');
 
 
 %% Specify all needed input data
-problemConfiguration.bSplineOrder_time = 3;
-problemConfiguration.bSplineOrder_space = 3;
+problemConfiguration.bSplineOrder_time = 5;
+problemConfiguration.bSplineOrder_space = 5;
 
 problemConfiguration.offset_time_ansatz = [0, 2];
 problemConfiguration.offset_time_test = [0, 2];
@@ -52,8 +52,9 @@ problemConfiguration.has_analytical_solution = true;
 % has_analytical_solution = false;
 % load('3D-example2.mat')
 
-tolerance = 1e-5; % For the CG or Galerkin method
-maxIt = 50;
+tolerance = 1e-10; % For the CG or Galerkin method
+tolerance2 = 1e-4;
+maxIt = 100;
 
 resolution.x = 5;
 resolution.y = 5;
@@ -73,7 +74,7 @@ l2error = true; % Calculate the l2 error'
 exactFlag = false;
 
 
-for refinementLevel_space = 1:6
+for refinementLevel_space = 1:4
     for refinementLevel_time = refinementLevel_space
         
         problemConfiguration.refinementLevel_space = refinementLevel_space;
@@ -182,7 +183,7 @@ for refinementLevel_space = 1:6
                         refinementLevel_time)]=Galerkin3(problem.M_space,...
                         2*problem.A_space,problem.Q_space,problem.Q_time, ...
                         (problem.D_time+problem.D_time')/2,...
-                        problem.M_time,rhs1,rhs2,maxitG,tolG,1e-2,info);
+                        problem.M_time,rhs1,rhs2,maxitG,tolG,tolerance2,info);
                     solvingTimes_Galerkin(refinementLevel_space, refinementLevel_time) = toc(tt);
                     U=X1*X2';
                     U_galerkin=U(:);
@@ -239,6 +240,8 @@ end
 errorCGopt = diag(errorCGopt);
 errorCGlyap = diag(errorCGlyap);
 errorGalerkin = diag(errorGalerkin);
+
+log(err0rGalerkin(end)/ errorGalerkin(end-1)) / log(1/2)
 
 solvingErrorCGopt = diag(solvingErrorCGopt);
 solvingErrorCGlyap = diag(solvingErrorCGlyap);

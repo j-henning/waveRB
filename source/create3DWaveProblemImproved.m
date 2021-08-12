@@ -1,4 +1,4 @@
-% Gets a problem configuration and creates a problem with all matrices, the
+ % Gets a problem configuration and creates a problem with all matrices, the
 % right hand side and various variables for retrieving the solution
 function [p] = create3DWaveProblemImproved(pC)
 

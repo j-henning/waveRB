@@ -110,7 +110,7 @@ tolerance = 1e-7;
 maxIt = 1000;
 exactFlag = false;
 
-space_refinement = 3;
+space_refinement = 4;
 for refinementLevel_space = space_refinement
     for refinementLevel_time = refinementLevel_space
         

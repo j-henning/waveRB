@@ -1,5 +1,5 @@
 % Gets a problem configuration and creates a problem with all matrices, the
-% right hand side and various variables for retrieving the solution
+% right hand side and various variables for retrieving the solution 
 function [p] = create1DWaveProblem(pC)
 mu = 1;
 if isfield(pC, 'mu')
@@ -25,7 +25,7 @@ p.M_time = StiffMat(p.T_time, ... % Tsol
     p.offset_time_ansatz,... %offsetsol
     p.offset_time_test, ... %offsettest
     [0, 0] ... %diff
-    );
+ );
 
 % D_time also known as N_time
 p.D_time = StiffMat(p.T_time, ... % Tsol
@@ -88,17 +88,12 @@ if length(p.f_time) ~= length(p.f_space)
     error('f_time and f_space should have the same dimensions')
 end
 
-
-
-p.ntest_time = length(p.T_time) - p.bSplineOrder_time;
-p.ntest_space = length(p.T_space) - p.bSplineOrder_space;
-
-p.rhs = zeros(p.ntest_time-(p.offset_time_test(1)+p.offset_time_test(2)), ...
-    p.ntest_space-(p.offset_space_test(1)+p.offset_space_test(2)));
+p.rhs = [];
 
 if ~isempty(p.f_time)
     
-    
+    p.ntest_time = length(p.T_time) - p.bSplineOrder_time;
+    p.ntest_space = length(p.T_space) - p.bSplineOrder_space;
     
     for i=1:length(p.f_time)
         
@@ -124,22 +119,20 @@ if ~isempty(p.f_time)
             end
         end
         
-        
+                
         if i == 1
             p.rhs = kron(rhs_time', rhs_space_x);
         else
             p.rhs = p.rhs + kron(rhs_time', rhs_space_x);
         end
     end
-end
-
-if ~isempty(p.u_0) || ~isempty(p.u_1)
+    
     %% Add the inital condtions
     for i=1+p.offset_time_test(1):length(p.T_time) - p.bSplineOrder_time - p.offset_time_test(2)
-        
+
         if Ndiff(p.T_time, p.bSplineOrder_time,0,i,0) == 0 && ...
-                Ndiff(p.T_time, p.bSplineOrder_time,1,i,0) == 0
-            break
+                 Ndiff(p.T_time, p.bSplineOrder_time,1,i,0) == 0
+             break
         end
         
         % space component
@@ -147,48 +140,40 @@ if ~isempty(p.u_0) || ~isempty(p.u_1)
         rhs_x_2 = zeros(p.ntest_space-(p.offset_space_test(1)+p.offset_space_test(2)),1);
         
         for j=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
+            g1 = @(x) p.u_1_x(x) * Ndiff(p.T_time, p.bSplineOrder_time,0,i,0) ...
+                .* Ndiff(p.T_space, p.bSplineOrder_space,0,j,x);
+            g2 = @(x) -p.u_0_x(x) * Ndiff(p.T_space, p.bSplineOrder_space,0,j,x) * ...
+             Ndiff(p.T_time, p.bSplineOrder_time,1,i,0);
             
-            if ~isempty(p.u_1)
-                g1 = @(x) p.u_1(x) * Ndiff(p.T_time, p.bSplineOrder_time,0,i,0) ...
-                    .* Ndiff(p.T_space, p.bSplineOrder_space,0,j,x);
-            end
-            if ~isempty(p.u_0)
-                g2 = @(x) -p.u_0(x) * Ndiff(p.T_space, p.bSplineOrder_space,0,j,x) * ...
-                    Ndiff(p.T_time, p.bSplineOrder_time,1,i,0);
-            end
-            
-            %                 int = 0;
-            %                 xval = linspace(0, 1,100);
-            %                 for ii=1:length(xval)
-            %                     int = int + g2(xval(ii));
-            %                 end
-            %
-            %                 int = int / length(xval);
-            %                 %u1 is assumed to be zero
-            %                 rhs_x_2(j-p.offset_space_test(1)) = rhs_x_2(j-p.offset_space_test(1)) + int;
+%                 int = 0;
+%                 xval = linspace(0, 1,100);
+%                 for ii=1:length(xval)
+%                     int = int + g2(xval(ii));
+%                 end
+%                 
+%                 int = int / length(xval);
+%                 %u1 is assumed to be zero
+%                 rhs_x_2(j-p.offset_space_test(1)) = rhs_x_2(j-p.offset_space_test(1)) + int;
             for step = 0:p.bSplineOrder_space-1
-                
-                if ~isempty(p.u_1)
-                    rhs_x_1(j-p.offset_space_test(1)) = rhs_x_1(j-p.offset_space_test(1)) ...
-                        + Gaussq(p.T_space(j+step),p.T_space(j+step+1),g1,5);
-                end
-                if ~isempty(p.u_0)
-                    rhs_x_2(j-p.offset_space_test(1)) = rhs_x_2(j-p.offset_space_test(1)) ...
-                        + Gaussq(p.T_space(j+step),p.T_space(j+step+1),g2,5);
-                end
+
+
+                rhs_x_1(j-p.offset_space_test(1)) = rhs_x_1(j-p.offset_space_test(1)) ...
+                    + Gaussq(p.T_space(j+step),p.T_space(j+step+1),g1,5);
+                rhs_x_2(j-p.offset_space_test(1)) = rhs_x_2(j-p.offset_space_test(1)) ...
+                    + Gaussq(p.T_space(j+step),p.T_space(j+step+1),g2,5);
             end
         end
-        
+
         p.rhs(:,i) = p.rhs(:,i) + rhs_x_1 + rhs_x_2;
         
-        
+       
     end
+    
+    
+     % Calculate some additional values
+     p.nsol_time = length(p.T_time) - p.bSplineOrder_time;
+     p.nsol_space = length(p.T_space) - p.bSplineOrder_space;
+     p.dim_time =  p.nsol_time-(p.offset_time_ansatz(1)+p.offset_time_ansatz(2));
+  
 end
-
-
-% Calculate some additional values
-p.nsol_time = length(p.T_time) - p.bSplineOrder_time;
-p.nsol_space = length(p.T_space) - p.bSplineOrder_space;
-p.dim_time =  p.nsol_time-(p.offset_time_ansatz(1)+p.offset_time_ansatz(2));
-
 end

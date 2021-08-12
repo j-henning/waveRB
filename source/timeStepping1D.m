@@ -247,7 +247,7 @@ for refinement_space = space_refinements
             end
         end
         toc
-        % Linearaly interpolate teh solution to match Kref time steps
+        % Linearaly interpolate the solution to match Kref time steps
         [X, Y] = meshgrid(x, linspace(0,1, K));
         [Xq, Yq] = meshgrid(x, linspace(0,1, Kref));
         solInt = interp2(X,Y,sol',Xq,Yq)';

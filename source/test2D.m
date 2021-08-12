@@ -9,8 +9,8 @@ addpath('../solvers');
 
 
 %% Specify all needed input data
-problemConfiguration.bSplineOrder_time = 3;
-problemConfiguration.bSplineOrder_space = 3;
+problemConfiguration.bSplineOrder_time = 5;
+problemConfiguration.bSplineOrder_space = 5;
 
 problemConfiguration.offset_time_ansatz = [0, 2]; %[0, 2]
 problemConfiguration.offset_time_test = [0, 2]; %[0, 2]
@@ -59,11 +59,12 @@ resolution.t = 7;
 
 l2error = true; % Calculate the l2 error
 
-tolerance = 1e-8;
-maxIt = 40;
+tolerance = 1e-13;
+tolerance2 = 1e-4;
+maxIt = 200;
 exactFlag = true;
 
-space_refinement = 2:5;
+space_refinement = 2:6;
 for refinementLevel_space = space_refinement
     for refinementLevel_time = refinementLevel_space
         
@@ -85,7 +86,7 @@ for refinementLevel_space = space_refinement
         %         condest(problem.M_time)
         %         return
         
-        for ii=4 % Test all three solutions
+        for ii=3 % Test all three solutions
             
             %% Sove the linear equation system
             
@@ -140,7 +141,7 @@ for refinementLevel_space = space_refinement
                         Galerkin3(problem.M_space,2*problem.A_space, ...
                         problem.Q_space,problem.Q_time, ...
                         (problem.D_time+problem.D_time')/2, ...
-                        problem.M_time,rhs1,rhs2,maxIt,tolerance,info);
+                        problem.M_time,rhs1,rhs2,maxIt,tolerance,tolerance2,info);
                     timeGalerkin(refinementLevel_space, refinementLevel_time) = toc(tt);
                     U=X1*X2';
                     U_galerkin = U(:);
@@ -232,19 +233,23 @@ for refinementLevel_space = space_refinement
             if l2error
                 switch ii
                     case 1
-                        errorCGopt(refinementLevel_space, refinementLevel_time) = calculate2DL2Error(problem, sol);
+                        errorVal(refinementLevel_space, refinementLevel_time) = calculate2DL2Error(problem, sol);
                     case 2
-                        errorCGlyap(refinementLevel_space, refinementLevel_time) = calculate2DL2Error(problem, sol);
+                        errorVal(refinementLevel_space, refinementLevel_time) = calculate2DL2Error(problem, sol);
                     case 3
-                        errorGalerkin(refinementLevel_space, refinementLevel_time) = calculate2DL2Error(problem, sol);
+                        errorVal(refinementLevel_space, refinementLevel_time) = calculate2DL2Error(problem, sol);
                     case 4
-                        errorBackslash(refinementLevel_space, refinementLevel_time) = calculate2DL2Error(problem, sol)
+                        errorVal(refinementLevel_space, refinementLevel_time) = calculate2DL2Error(problem, sol);
                 end
             end
             
         end
     end
 end
+
+err = diag(errorVal);
+log(err(end)/ err(end-1)) / log(1/2)
+semilogy(err, 'ro--'), grid on
 
 % errorCGopt = diag(l2errCG_opt);
 % errorCGlyap = diag(l2errCG_lyap);

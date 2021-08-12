@@ -108,7 +108,7 @@ for i=1:2^6+1
 end
 
 
-for refinement_space = 1:4%space_refinements
+for refinement_space = 6%space_refinements
     for refinement_time = refinement_space%time_refinements
         fprintf('#######################################\n')
         fprintf('Space refinement: %d, Time refinement: %d\n', ...

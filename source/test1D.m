@@ -7,13 +7,23 @@ addpath('../splines/Utilities');
 addpath('../solvers');
 
 %% Specify all needed input data
+% problemConfiguration.bSplineOrder_time = 3;
+% problemConfiguration.bSplineOrder_space = 3;
+% 
+% problemConfiguration.offset_time_ansatz = [0, 2];
+% problemConfiguration.offset_time_test = [0, 2];
+% 
+% problemConfiguration.offset_space_ansatz = [1, 1];
+% problemConfiguration.offset_space_test = [1, 1];
+
+
 problemConfiguration.bSplineOrder_time = 3;
 problemConfiguration.bSplineOrder_space = 3;
 
-problemConfiguration.offset_time_ansatz = [0, 0];
+problemConfiguration.offset_time_ansatz = [0, 2];
 problemConfiguration.offset_time_test = [0, 2];
 
-problemConfiguration.offset_space_ansatz = [0, 0];
+problemConfiguration.offset_space_ansatz = [1, 1];
 problemConfiguration.offset_space_test = [1, 1];
 
 problemConfiguration.d = 1; % Dimension
@@ -40,9 +50,10 @@ problemConfiguration.d = 1; % Dimension
 % Example 3
 problemConfiguration.f_time = {@(t) 0*t};
 problemConfiguration.f_space = {@(x) 0*x};
-% problemConfiguration.u_0_x = @(x) sin(4*pi*x);
+problemConfiguration.u_0_x = @(x) sin(4*pi*x);
+% problemConfiguration.u_0_x = @(x) x .*( x-1);
 % problemConfiguration.u_0_x = @(x) x * (x < 0.5) + (1-x) * (x >= 0.5);
-problemConfiguration.u_0_x = @(x)  1 * (x > 0.25 &&  x < 0.75);
+% problemConfiguration.u_0_x = @(x)  1 * (x > 0.25 &&  x < 0.75);
 problemConfiguration.u_1_x = @(x) 0*x;
 problemConfiguration.inital_conditions = true;
 
@@ -62,8 +73,8 @@ resolution.t = ref_plotting;
 
 l2error = true; % Calculate the l2 error
 
-tolerance = 1e-10;
-maxIt = 20000000;
+tolerance = 1e-13;
+maxIt = 200;
 exactFlag = true;
 
 sol_ana = dAlembert1D(problemConfiguration.u_0_x,...
@@ -72,7 +83,7 @@ sol_ana = dAlembert1D(problemConfiguration.u_0_x,...
 
 
 
-space_refinement = 5;
+space_refinement = 2:8;
 for refinementLevel_space = space_refinement
     for refinementLevel_time = refinementLevel_space
         
@@ -90,7 +101,7 @@ for refinementLevel_space = space_refinement
             + problem.A_space * X * problem.D_time ...
             + problem.Q_space * X * problem.M_time');
         
-        for ii=[2 4] % Test CG and backslash method
+        for ii=[3] % Test CG and backslash method
             
             %% Sove the linear equation system
             
@@ -139,7 +150,7 @@ for refinementLevel_space = space_refinement
                     tt=tic;
                     [X1,X2,restot,iterGalerkin(refinementLevel_space, refinementLevel_time)]= ...
                         Galerkin3(problem.M_space,2*problem.A_space,problem.Q_space,problem.Q_time,...
-                        (problem.D_time+problem.D_time')/2,problem.M_time,rhs1,rhs2,maxIt,tolG,1e-2,info);
+                        (problem.D_time+problem.D_time')/2,problem.M_time,rhs1,rhs2,maxIt,tolG,1e-4,info);
                     timeGalerkin(refinementLevel_space, refinementLevel_time) = toc(tt);
                     U=X1*X2';
                     U_galerkin=U(:);
@@ -255,13 +266,16 @@ for refinementLevel_space = space_refinement
                         %                         errorGalerkin(refinementLevel_space, refinementLevel_time) = calculate1DL2Error(problem, sol);
                         errorVal(refinementLevel_space, refinementLevel_time)  = sqrt(mean( (solGalerkin-sol_ana).^2, 'all'))
                     case 4            
-                        errorBackslash(refinementLevel_space, refinementLevel_time)  = sqrt(mean( (solMldive-sol_ana).^2, 'all'))
+                        errorVal(refinementLevel_space, refinementLevel_time)  = sqrt(mean( (solMldive-sol_ana).^2, 'all'))
                 end
             end
             
         end
     end
 end
+
+err = diag(errorVal);
+log(err(end)/ err(end-1)) / log(1/2)
 
 load('1D-example3-ts')
 load('1D-example3-ts-error')

@@ -1,12 +1,14 @@
 % Evaluates the solution of a problem on with the desired resolution at all
 % query points in space and time on [0,1] x [0,1]
-function [sol] = get1Dsolution(p, U,  resolution, splines)
+function [sol] = get1DsolutionSmart(p, U,  resolution,splines_time, splines_2_time, splines_space, splines_2_space)
 mu = 1;
 if isfield(p, 'mu')
     mu = p.mu;
 end
 
 
+x = linspace(0, 1, 2^resolution.x + 1);
+t = linspace(0, 1, 2^resolution.t + 1);
 
 
 
@@ -20,13 +22,14 @@ u_full(1+p.offset_space_ansatz(1):p.nsol_space-p.offset_space_ansatz(2),...
     1+p.offset_time_ansatz(1):p.nsol_time-p.offset_time_ansatz(2)) = u;
 
 
-sol = zeros(2^resolution.x + 1, 2^resolution.t + 1);
-
-
+sol = zeros(length(x), length(t));
 
 for i=1:size(u_full,1) % every space node in x
-    spline_x = splines.space(i,:);
-    spline_x_2 = splines.space2(i,:);
+    %     if mod(i, size(u_full,1)/8) == 0
+    %         disp(['Plotting preparation: ' num2str(i / size(u_full,1) * 100) '%'])
+    %     end
+    spline_x = splines_space(i,:);
+    spline_x_2 = splines_2_space(i,:);
     space_x_indices = min(find(spline_x, 1, 'first'), find(spline_x_2, 1, 'first')):...
         max(find(spline_x, 1, 'last'), find(spline_x_2, 1, 'last'));
     spline_x = spline_x(space_x_indices);
@@ -37,8 +40,8 @@ for i=1:size(u_full,1) % every space node in x
             continue;
         end
         
-        spline_t = splines.time(k,:);
-        spline_t_2 = splines.time2(k,:);
+        spline_t = splines_time(k,:);
+        spline_t_2 = splines_2_time(k,:);
         time_indices = min(find(spline_t, 1, 'first'), find(spline_t_2, 1, 'first')):...
             max(find(spline_t, 1, 'last'), find(spline_t_2, 1, 'last'));
         spline_t = spline_t(time_indices);
