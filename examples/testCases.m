@@ -3,9 +3,9 @@ close all
 clc
 
 
+addpath('../source');
 addpath('../splines');
-addpath('../splines/Utilities');
-% addpath('../solvers');
+
 
 %% 1D space time problem
 problemConfiguration = defineProblem(1, ... % Dimension
@@ -31,6 +31,7 @@ resolution.t = 6;
 figure
 plotSolution(solution, resolution);
 
+fprintf('Passed the 1D space time test\n')
 
 %% 3D space time problem
 funR = @(x,y,z) sqrt((x-0.5).^2 + (y-0.5).^2 + (z-0.5).^2);  % Returns the radius
@@ -40,8 +41,8 @@ problemConfiguration = defineProblem(3, ... % Dimension
     @(x,y,z) ( funR(x,y,z) <= 0.2), ... % u_0
     @(x,y,z) ( funR(x,y,z) <= 0.2), ... % u_1
     .1, ... % Wave speed, mu = c^2
-    5, ... % refinement_time
-    5); % refinement_space
+    4, ... % refinement_time
+    4); % refinement_space
 
 problem = createProblem(problemConfiguration);
 U = solveProblem(problem);
@@ -52,7 +53,7 @@ resolution.t = 6;
 
 solution = getSolution(problem, U, resolution, splines);
 plotSolution(solution, resolution);
-
+fprintf('Passed the 3D space time test\n')
 
 
 %% 1D time stepping problem
@@ -74,5 +75,6 @@ resolution.t = 6;
 solutionTS = getTSSolution(problemTS,UTS, resolution);
 figure
 plotSolution(solutionTS, resolution)
+fprintf('Passed the 1D time-stepping test\n')
 
 
