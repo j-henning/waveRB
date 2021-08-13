@@ -5,6 +5,6 @@ function [problem] = createProblem(problemConfiguration)
         case 2
             problem = create2DWaveProblemImproved(problemConfiguration);
         case 3
-            problem = create3DWaveProblemImproved(problemConfiguration);
+            problem = create3DWaveProblem(problemConfiguration);
     end
 end

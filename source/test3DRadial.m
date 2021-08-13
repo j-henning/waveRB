@@ -313,7 +313,7 @@ s = surf(squeeze(sol(:,:,floor(0.5 * 2^resolution.z), i)) - squeeze(sol_ref(:,:,
 title(num2str(i/size(sol_ref,4)));
 drawnow
 
-return
+
 
 end
 return

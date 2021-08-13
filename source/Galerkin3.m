@@ -73,9 +73,9 @@ for k=1:maxit
        else
            % DP: I needed to change sign
            L=ichol(C1+sigmanew1*A1);
-           Vnew(:,1) = pcg(C1+sigmanew1*A1,-V(:,k),1e-8,100, L, L');
+           [Vnew(:,1), ~] = pcg(C1+sigmanew1*A1,-V(:,k),1e-8,100, L, L');
            L=ichol(B1+(sigmanew1_2)*A1);
-           Vnew(:,2) = pcg(B1+(sigmanew1_2)*A1,-V(:,k),1e-8,100,L,L');
+           [Vnew(:,2), ~] = pcg(B1+(sigmanew1_2)*A1,-V(:,k),1e-8,100,L,L');
 
        end
        

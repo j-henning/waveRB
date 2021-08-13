@@ -1,14 +1,6 @@
 % Evaluates the solution of a problem on with the desired resolution at all
 % query points in space and time on [0,1] x [0,1]
 function [sol] = get1Dsolution(p, U,  resolution, splines)
-mu = 1;
-if isfield(p, 'mu')
-    mu = p.mu;
-end
-
-
-
-
 
 u = reshape(full(U), numel(U) / p.dim_time, p.dim_time);
 
@@ -46,7 +38,7 @@ for i=1:size(u_full,1) % every space node in x
         
         % Build the whole spline
         spline =  kron(spline_t_2, spline_x) ...
-            -  kron(spline_t, mu * spline_x_2);
+            -  kron(spline_t, p.mu * spline_x_2);
         
         spline = reshape(spline, ...
             [length(space_x_indices),  length(time_indices)]);
