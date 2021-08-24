@@ -29,19 +29,20 @@ problemTS.tau = 1 / (problemTS.K-1);
 
 % Compute the right hand side
 problemTS.ntest = length(problemTS.T_space) - problemTS.bSplineOrder;
-problemTS.Fvals = zeros(problemTS.ntest-2,problemTS.K);
+problemTS.Fvals = zeros(problemTS.ntest-sum(problemTS.offset_space),problemTS.K);
 
 if ~isempty(problemTS.f_time)
-    for k=1:problemTS.K
-        for i=1:length(problemTS.f_time)
-            temp = zeros(problemTS.ntest-2,1);
-            for j=1+problemTS.offset_space(1):problemTS.ntest-problemTS.offset_space(2)
-                g = @(x) problemTS.f_space{i}(x) * Ndiff(problemTS.T_space, problemTS.bSplineOrder,0,j,x);
-                for step = 0:problemTS.bSplineOrder-1
-                    temp(j-1) = temp(j-1) ...
-                        + Gaussq(problemTS.T_space(j+step),problemTS.T_space(j+step+1),g,3);
-                end
+    for i=1:length(problemTS.f_time)
+        temp = zeros(problemTS.ntest-2,1);
+        for j=1+problemTS.offset_space(1):problemTS.ntest-problemTS.offset_space(2)
+            g = @(x) problemTS.f_space{i}(x) * Ndiff(problemTS.T_space, problemTS.bSplineOrder,0,j,x);
+            for step = 0:problemTS.bSplineOrder-1
+                temp(j-1) = temp(j-1) ...
+                    + Gaussq(problemTS.T_space(j+step),problemTS.T_space(j+step+1),g,3);
             end
+        end
+        
+        for k=1:problemTS.K
             problemTS.Fvals(:, k) = problemTS.Fvals(:,k) + temp .* problemTS.f_time{i}((k-1)/(problemTS.K-1));
         end
     end

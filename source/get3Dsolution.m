@@ -34,72 +34,24 @@ u_full(1+p.offset_space_ansatz(1):p.nsol_space-p.offset_space_ansatz(2),...
     1+p.offset_time_ansatz(1):p.nsol_time-p.offset_time_ansatz(2)) = u;
 
 
-sol = zeros(2^resolution.x + 1, 2^resolution.y + 1, ...
-    2^resolution.z + 1, 2^resolution.t + 1);
+timeDim = size(splines.time,1);
+spaceDim = size(splines.space,1);
+
+% Define some shortcuts
+s = splines.space';
+s2 = splines.space2';
+t = splines.time';
+t2 = splines.time2';
+
+U = reshape(u_full, [spaceDim^2, spaceDim * timeDim]);
 
 
+sol = kron(s,s) * U * kron(t2, s)' ...
+    - p.mu * ( kron(s,s2) * U * kron(t,s)' ...
+    + kron(s2,s) * U * kron(t,s)' ...
+    + kron(s,s) * U * kron(t,s2)');
 
-
-for i=1:size(u_full,1) % every space node in x
-    spline_x = splines.space(i,:);
-    spline_x_2 = splines.space2(i,:);
-    space_x_indices = min(find(spline_x, 1, 'first'), find(spline_x_2, 1, 'first')):...
-        max(find(spline_x, 1, 'last'), find(spline_x_2, 1, 'last'));
-    spline_x = spline_x(space_x_indices);
-    spline_x_2 = spline_x_2(space_x_indices);
-    
-    for j=1:size(u_full, 2) % every space node in y
-        
-        spline_y = splines.space(j,:);
-        spline_y_2 = splines.space2(j,:);
-        space_y_indices = min(find(spline_y, 1, 'first'), find(spline_y_2, 1, 'first')):...
-            max(find(spline_y, 1, 'last'), find(spline_y_2, 1, 'last'));
-        spline_y = spline_y(space_y_indices);
-        spline_y_2 = spline_y_2(space_y_indices);
-        
-        for k=1:size(u_full, 3) % every space node in z
-            spline_z = splines.space(k,:);
-            spline_z_2 = splines.space2(k,:);
-            space_z_indices = min(find(spline_z, 1, 'first'), find(spline_z_2, 1, 'first')):...
-                max(find(spline_z, 1, 'last'), find(spline_z_2, 1, 'last'));
-            spline_z = spline_z(space_z_indices);
-            spline_z_2 = spline_z_2(space_z_indices);
-            
-            spl_space = kron(spline_z, kron(spline_y, spline_x));
-            spl_space_mixed = kron(spline_z, kron(spline_y, spline_x_2))...
-                + kron(spline_z, kron(spline_y_2, spline_x)) ...
-                + kron(spline_z_2, kron(spline_y, spline_x));
-            
-            for l=1:size(u_full,4) % every time node
-                
-                if abs(u_full(i,j,k,l)) < eps
-                    continue;
-                end
-                
-                spline_t = splines.time(l,:);
-                spline_t_2 = splines.time2(l,:);
-                time_indices = min(find(spline_t, 1, 'first'), find(spline_t_2, 1, 'first')):...
-                    max(find(spline_t, 1, 'last'), find(spline_t_2, 1, 'last'));
-                spline_t = spline_t(time_indices);
-                spline_t_2 = spline_t_2(time_indices);
-                
-                % Build the whole spline
-                %                     spline = kron(spline_t_2, kron(spline_z, kron(spline_y, spline_x))) ...
-                %                         - kron(spline_t, kron(spline_z, kron(spline_y, spline_x_2))) ...
-                %                         - kron(spline_t, kron(spline_z, kron(spline_y_2, spline_x))) ...
-                %                         - kron(spline_t, kron(spline_z_2, kron(spline_y, spline_x)));
-                spline = kron(spline_t_2, spl_space) - p.mu * kron(spline_t, spl_space_mixed);
-                
-                spline = reshape(spline, ...
-                    [length(space_x_indices), length(space_y_indices), ...
-                    length(space_z_indices), length(time_indices)]);
-                sol(space_x_indices, space_y_indices, space_z_indices, time_indices) = ...
-                    sol(space_x_indices, space_y_indices, space_z_indices, time_indices) + ...
-                    u_full(i,j,k,l) * spline;
-            end
-        end
-    end
-end
+sol = reshape(sol, [size(splines.space,2), size(splines.space,2), size(splines.space,2) size(splines.time,2)]);
 
 end
 

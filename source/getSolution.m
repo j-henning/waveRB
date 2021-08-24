@@ -9,7 +9,14 @@ if nargin < 4
     splines.space2 = zeros(problem.nsol_space, length(x));
     
     for i=1:size(splines.space,1)
-        for j=1:size(splines.space,2)
+        % Find the interval in which the splines 'lives'
+        intervalStart = problem.T_space(i);
+        intervalEnd = problem.T_space(i+problem.bSplineOrder_space);
+        
+        indices = find(x >= intervalStart, 1, 'first'):find(x <= intervalEnd,1, 'last');
+        
+        
+        for j=indices
             
             g = @(s) Ndiff(problem.T_space, problem.bSplineOrder_space,0,i,(s==0)*(s+eps) + (s==1)*(s-eps) + (s > 0 && s < 1)*s);
             h = @(s) Ndiff(problem.T_space, problem.bSplineOrder_space,2,i,(s==0)*(s+eps) + (s==1)*(s-eps) + (s > 0 && s < 1)*s);
@@ -41,8 +48,14 @@ if nargin < 4
             
         end
     end
-    
 end
+
+
+% 
+% splines.space = sparse(splines.space);
+% splines.space2 = sparse(splines.space2);
+% splines.time = sparse(splines.time);
+% splines.time2 = sparse(splines.time2);
 
 % Call the method for the right dimension
 switch problem.dimension

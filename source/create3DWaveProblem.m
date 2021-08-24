@@ -1,6 +1,6 @@
 % Gets a problem configuration and creates a problem with all matrices, the
 % right hand side and various variables for retrieving the solution
-function [p] = create3DWaveProblemImproved(pC)
+function [p] = create3DWaveProblem(pC)
 
 
 p = pC; % Copy all values from the problem configuration into the problem
@@ -64,6 +64,7 @@ p.M_space_local = StiffMat(p.T_space, ... % Tsol
 
 % A_space_local also known as N_space_local
 % IMPORTANT: FLIP THE SIGN
+% TODO: Check sign
 p.A_space_local = StiffMat(p.T_space, ... % Tsol
     p.T_space, ... % Ttest
     p.bSplineOrder_space, ... %ksol
@@ -102,106 +103,153 @@ p.rhs = zeros((p.ntest_space-sum(p.offset_space_test))^3,p.ntest_time - sum(p.of
 p.ntest_time = length(p.T_time) - p.bSplineOrder_time;
 p.ntest_space = length(p.T_space) - p.bSplineOrder_space;
 
-% p.rhs = zeros((p.ntest_space-sum(p.offset_space_test))^3, ...
-%     p.ntest_time-sum(p.offset_time_test));
 
 if ~isempty(p.f_time)
-    error('Not yet implemented')
-    %     for i=1:length(p.f_time)
-    %
-    %         % time component
-    %
-    %         rhs_time = zeros(p.ntest_time-(p.offset_time_test(1)+p.offset_time_test(2)),1);
-    %         for j=1+p.offset_time_test(1):p.ntest_time-p.offset_time_test(2)
-    %             g = @(t) p.f_time{i}(t) * Ndiff(p.T_time, p.bSplineOrder_time,0,j,(t==0)*(t+eps) + (t==1)*(t-eps) + (t > 0 && t < 1)*t);
-    %             for step = 0:p.bSplineOrder_time-1
-    %                 rhs_time(j-p.offset_time_test(1)) = rhs_time(j-p.offset_time_test(1)) ...
-    %                     + Gaussq(p.T_time(j+step),p.T_time(j+step+1),g,5);
-    %             end
-    %         end
-    %
-    %         % first space component
-    %         rhs_space_x = zeros(p.ntest_space-(p.offset_space_test(1)+p.offset_space_test(2)),1);
-    %
-    %         for j=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
-    %             g = @(x) p.f_space_x{i}(x) * Ndiff(p.T_space, p.bSplineOrder_space,0,j,(x==0)*(x+eps) + (x==1)*(x-eps) + (x > 0 && x < 1)*x);
-    %             for step = 0:p.bSplineOrder_space-1
-    %                 rhs_space_x(j-p.offset_space_test(1)) = rhs_space_x(j-p.offset_space_test(1)) ...
-    %                     + Gaussq(p.T_space(j+step),p.T_space(j+step+1),g,5);
-    %             end
-    %         end
-    %
-    %         % second space component
-    %         p.ntest_space = length(p.T_space) - p.bSplineOrder_space;
-    %         rhs_space_y = zeros(p.ntest_space-(p.offset_space_test(1)+p.offset_space_test(2)),1);
-    %
-    %         for j=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
-    %             g = @(y) p.f_space_y{i}(y) * Ndiff(p.T_space, p.bSplineOrder_space,0,j,(y==0)*(y+eps) + (y==1)*(y-eps) + (y > 0 && y < 1)*y);
-    %             for step = 0:p.bSplineOrder_space-1
-    %                 rhs_space_y(j-p.offset_space_test(1)) = rhs_space_y(j-p.offset_space_test(1)) ...
-    %                     + Gaussq(p.T_space(j+step),p.T_space(j+step+1),g,5);
-    %             end
-    %         end
-    %
-    %         if i == 1
-    %             p.rhs = kron(rhs_time', kron(rhs_space_x, rhs_space_y));
-    %         else
-    %             p.rhs = p.rhs + kron(rhs_time', kron(rhs_space_x, rhs_space_y));
-    %         end
-    %     end
+    
+    if size(p.f_space,2) == 3
+        % The right hand side is provided in a nested form, so we can use
+        % the much faster integration
+        
+        for i=1:length(p.f_time)
+            
+            % time component
+            
+            rhs_time = zeros(p.ntest_time-(p.offset_time_test(1)+p.offset_time_test(2)),1);
+            for j=1+p.offset_time_test(1):p.ntest_time-p.offset_time_test(2)
+                g = @(t) p.f_time{i}(t) * Ndiff(p.T_time, p.bSplineOrder_time,0,j,(t==0)*(t+eps) + (t==1)*(t-eps) + (t > 0 && t < 1)*t);
+                for step = 0:p.bSplineOrder_time-1
+                    rhs_time(j-p.offset_time_test(1)) = rhs_time(j-p.offset_time_test(1)) ...
+                        + Gaussq(p.T_time(j+step),p.T_time(j+step+1),g,5);
+                end
+            end
+            
+            % first space component
+            rhs_space_x = zeros(p.ntest_space-(p.offset_space_test(1)+p.offset_space_test(2)),1);
+            
+            for j=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
+                g = @(x) p.f_space{i,1}(x) * Ndiff(p.T_space, p.bSplineOrder_space,0,j,(x==0)*(x+eps) + (x==1)*(x-eps) + (x > 0 && x < 1)*x);
+                for step = 0:p.bSplineOrder_space-1
+                    rhs_space_x(j-p.offset_space_test(1)) = rhs_space_x(j-p.offset_space_test(1)) ...
+                        + Gaussq(p.T_space(j+step),p.T_space(j+step+1),g,5);
+                end
+            end
+            
+            % second space component
+            p.ntest_space = length(p.T_space) - p.bSplineOrder_space;
+            rhs_space_y = zeros(p.ntest_space-(p.offset_space_test(1)+p.offset_space_test(2)),1);
+            
+            for j=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
+                g = @(y) p.f_space{i,2}(y) * Ndiff(p.T_space, p.bSplineOrder_space,0,j,(y==0)*(y+eps) + (y==1)*(y-eps) + (y > 0 && y < 1)*y);
+                for step = 0:p.bSplineOrder_space-1
+                    rhs_space_y(j-p.offset_space_test(1)) = rhs_space_y(j-p.offset_space_test(1)) ...
+                        + Gaussq(p.T_space(j+step),p.T_space(j+step+1),g,5);
+                end
+            end
+            
+            % third space component
+            p.ntest_space = length(p.T_space) - p.bSplineOrder_space;
+            rhs_space_z = zeros(p.ntest_space-(p.offset_space_test(1)+p.offset_space_test(2)),1);
+            
+            for j=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
+                g = @(y) p.f_space{i,3}(y) * Ndiff(p.T_space, p.bSplineOrder_space,0,j,(y==0)*(y+eps) + (y==1)*(y-eps) + (y > 0 && y < 1)*y);
+                for step = 0:p.bSplineOrder_space-1
+                    rhs_space_z(j-p.offset_space_test(1)) = rhs_space_z(j-p.offset_space_test(1)) ...
+                        + Gaussq(p.T_space(j+step),p.T_space(j+step+1),g,5);
+                end
+            end
+            
+            if i == 1
+                p.rhs = kron(rhs_time', kron(rhs_space_z, kron(rhs_space_y, rhs_space_x)));
+            else
+                p.rhs = p.rhs + kron(rhs_time', kron(rhs_space_z, kron(rhs_space_y, rhs_space_x)));
+            end
+        end
+    
+        
+    
+    else % The right hand side is in nested form, so we have to do more work
+    for i=1:size(p.f_time,1)
+        
+        % time component
+        
+        rhs_time = zeros(p.ntest_time-(p.offset_time_test(1)+p.offset_time_test(2)),1);
+        for j=1+p.offset_time_test(1):p.ntest_time-p.offset_time_test(2)
+            g = @(t) p.f_time{i}(t) * Ndiff(p.T_time, p.bSplineOrder_time,0,j,(t==0)*(t+eps) + (t==1)*(t-eps) + (t > 0 && t < 1)*t);
+            for step = 0:p.bSplineOrder_time-1
+                rhs_time(j-p.offset_time_test(1)) = rhs_time(j-p.offset_time_test(1)) ...
+                    + Gaussq(p.T_time(j+step),p.T_time(j+step+1),g,5);
+            end
+        end
+        
+        % Space components
+        F_space = zeros(p.ntest_space-sum(p.offset_space_test), ...
+            p.ntest_space-sum(p.offset_space_test), ...
+            p.ntest_space-sum(p.offset_space_test));
+        
+        
+        for j=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
+            for k=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
+                for l=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
+                    
+                    
+                    g = @(z)@(y)@(x) p.f_space{i}(x,y,z) .* ...
+                        Ndiff(p.T_space, p.bSplineOrder_space,0,j,x) ...
+                        .* Ndiff(p.T_space, p.bSplineOrder_space,0,k,y) ...
+                        .* Ndiff(p.T_space, p.bSplineOrder_space,0,l,z);
+                    
+                    % Integrate
+                    for stepX = 0:p.bSplineOrder_space-1
+                        for stepY = 0:p.bSplineOrder_space-1
+                            for stepZ = 0:p.bSplineOrder_space-1
+                                
+                                a = [p.T_space(j+stepX), p.T_space(k+stepY), p.T_space(l+stepZ)];
+                                b = [p.T_space(j+stepX+1), p.T_space(k+stepY+1), p.T_space(l+stepZ+1)];
+                                
+                                
+                                % Check if u0 is zero in the center of the
+                                % inteval, as well as on the boundary
+                                % if yes assume that the integral is zero.
+                                % This is done for performance reasons
+                                center = 0.5 * (a+b);
+                                if abs(p.f_space{i}(center(1),center(2),center(3))) < eps && ...
+                                        abs(p.f_space{i}(a(1),a(2),a(3))) < eps && ...
+                                        abs(p.f_space{i}(a(1),a(2),b(3))) < eps && ...
+                                        abs(p.f_space{i}(a(1),b(2),a(3))) < eps && ...
+                                        abs(p.f_space{i}(a(1),b(2),b(3))) < eps && ...
+                                        abs(p.f_space{i}(b(1),b(2),b(3))) < eps && ...
+                                        abs(p.f_space{i}(b(1),b(2),a(3))) < eps && ...
+                                        abs(p.f_space{i}(b(1),a(2),b(3))) < eps && ...
+                                        abs(p.f_space{i}(b(1),a(2),a(3))) < eps
+                                    continue;
+                                end
+                                
+                                % Integrate from a to b
+                                F_space(j-p.offset_space_test(1), ...
+                                    k-p.offset_space_test(1), ...
+                                    l-p.offset_space_test(1)) = ...
+                                    F_space(j-p.offset_space_test(1), ...
+                                    k-p.offset_space_test(1), ...
+                                    l-p.offset_space_test(1))  + ...
+                                    Gaussq(a,b,g,3);
+                            end
+                        end
+                    end
+                    
+                end
+            end
+        end
+
+        p.rhs = p.rhs + kron(rhs_time', F_space(:));
+        
+    end
+    end
 end
 
 
-%
 
 
 
-%             %% Add the inital condtions
-%             for i=1+p.offset_time_test(1):length(p.T_time) - p.bSplineOrder_time - p.offset_time_test(2)
-%
-%                 if Ndiff(p.T_time, p.bSplineOrder_time,0,i,0) == 0 && ...
-%                         Ndiff(p.T_time, p.bSplineOrder_time,1,i,0) == 0
-%                     break
-%                 end
-%
-%                 % first space component
-%                 rhs_x_1 = zeros(p.ntest_space-(p.offset_space_test(1)+p.offset_space_test(2)),1);
-%                 rhs_x_2 = zeros(p.ntest_space-(p.offset_space_test(1)+p.offset_space_test(2)),1);
-%
-%                 for j=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
-%                     g1 = @(x) p.u_1_x(x) * Ndiff(p.T_time, p.bSplineOrder_time,0,i,0) ...
-%                         .* Ndiff(p.T_space, p.bSplineOrder_space,0,j,x);
-%                     g2 = @(x) -p.u_0_x(x) * Ndiff(p.T_time, p.bSplineOrder_time,1,i,0) ...
-%                         .* Ndiff(p.T_space, p.bSplineOrder_space,0,j,x);
-%                     for step = 0:p.bSplineOrder_space-1
-%                         rhs_x_1(j-p.offset_space_test(1)) = rhs_x_1(j-p.offset_space_test(1)) ...
-%                             + Gaussq(p.T_space(j+step),p.T_space(j+step+1),g1,5);
-%                         rhs_x_2(j-p.offset_space_test(1)) = rhs_x_2(j-p.offset_space_test(1)) ...
-%                             + Gaussq(p.T_space(j+step),p.T_space(j+step+1),g2,5);
-%                     end
-%                 end
-%
-%                 % second space component
-%                 rhs_y_1 = zeros(p.ntest_space-(p.offset_space_test(1)+p.offset_space_test(2)),1);
-%                 rhs_y_2 = zeros(p.ntest_space-(p.offset_space_test(1)+p.offset_space_test(2)),1);
-%
-%                 for j=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
-%                     g1 = @(y) p.u_1_y(y) .* Ndiff(p.T_space, p.bSplineOrder_space,0,j,y);
-%                     g2 = @(y) p.u_0_y(y) .* Ndiff(p.T_space, p.bSplineOrder_space,0,j,y);
-%                     for step = 0:p.bSplineOrder_space-1
-%                         rhs_y_1(j-p.offset_space_test(1)) = rhs_y_1(j-p.offset_space_test(1)) ...
-%                             + Gaussq(p.T_space(j+step),p.T_space(j+step+1),g1,5);
-%                         rhs_y_2(j-p.offset_space_test(1)) = rhs_y_2(j-p.offset_space_test(1)) ...
-%                             + Gaussq(p.T_space(j+step),p.T_space(j+step+1),g2,5);
-%                     end
-%                 end
-%
-%     %             p.rhs(:,i) = p.rhs(:,i) + kron(rhs_x_1, rhs_y_1) + kron(rhs_x_2, rhs_y_2);
-%              p.rhs(:,i) = p.rhs(:,i) + kron(rhs_x_1, rhs_y_1) + kron(rhs_x_2, rhs_y_2);
-%
-%             end
 
-% TODO: Reimplemente the rhs and u_1
 
 
 
@@ -216,8 +264,10 @@ if ~isempty(p.u_0)
         p.ntest_space-sum(p.offset_space_test));
     
     
-    %     U1 = zeros(ntest-sum(test_offset),ntest-sum(test_offset));
-    for j=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
+    parfor j=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
+        U0j = zeros(p.ntest_space-sum(p.offset_space_test), ...
+        p.ntest_space-sum(p.offset_space_test));
+    
         for k=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
             for l=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
                 
@@ -226,7 +276,7 @@ if ~isempty(p.u_0)
                     Ndiff(p.T_space, p.bSplineOrder_space,0,j,x) ...
                     .* Ndiff(p.T_space, p.bSplineOrder_space,0,k,y) ...
                     .* Ndiff(p.T_space, p.bSplineOrder_space,0,l,z);
-                 
+                
                 % Integrate
                 for stepX = 0:p.bSplineOrder_space-1
                     for stepY = 0:p.bSplineOrder_space-1
@@ -254,17 +304,23 @@ if ~isempty(p.u_0)
                             end
                             
                             % Integrate from a to b
-                            U0(j-p.offset_space_test(1), ...
-                                k-p.offset_space_test(1), ...
-                                l-p.offset_space_test(1)) = ...
-                                U0(j-p.offset_space_test(1), ...
-                                k-p.offset_space_test(1), ...
-                                l-p.offset_space_test(1))  + ...
-                                Gaussq(a,b,g,3);
+%                             U0(j-p.offset_space_test(1), ...
+%                                 k-p.offset_space_test(1), ...
+%                                 l-p.offset_space_test(1)) = ...
+%                                 U0(j-p.offset_space_test(1), ...
+%                                 k-p.offset_space_test(1), ...
+%                                 l-p.offset_space_test(1))  + ...
+%                                 Gaussq(a,b,g,3);
+
+U0j(k-p.offset_space_test(1), ...
+    l-p.offset_space_test(1)) = ...
+    U0j(k-p.offset_space_test(1), ...
+    l-p.offset_space_test(1))  + ...
+    Gaussq(a,b,g,3);
                         end
                     end
                 end
-                
+                U0(j,:,:) = U0j;
             end
         end
     end
@@ -286,14 +342,14 @@ end
 % different loops, with the drawback that we have to copy the whole
 % code
 
-if ~isempty(p.u_0)
+if ~isempty(p.u_1)
     
     
     
     U1 = zeros(p.ntest_space-sum(p.offset_space_test), ...
         p.ntest_space-sum(p.offset_space_test), ...
         p.ntest_space-sum(p.offset_space_test));
-
+    
     for j=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
         for k=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
             for l=1+p.offset_space_test(1):p.ntest_space-p.offset_space_test(2)
@@ -303,7 +359,7 @@ if ~isempty(p.u_0)
                     Ndiff(p.T_space, p.bSplineOrder_space,0,j,x) ...
                     .* Ndiff(p.T_space, p.bSplineOrder_space,0,k,y) ...
                     .* Ndiff(p.T_space, p.bSplineOrder_space,0,l,z);
-
+                
                 % Integrate
                 for stepX = 0:p.bSplineOrder_space-1
                     for stepY = 0:p.bSplineOrder_space-1
@@ -358,12 +414,6 @@ if ~isempty(p.u_0)
     end
     
 end
-
-
-
-
-
-
 
 % Calculate some additional values
 p.nsol_time = length(p.T_time) - p.bSplineOrder_time;

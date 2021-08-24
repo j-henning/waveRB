@@ -155,6 +155,6 @@ while ((backward_error > tol || res(k)/res0 > tol_res) && k<maxit)
 
 end	
 iter = k;
-disp(['pcg (',params.precond,')'])
-fprintf('\nDim space: %d time: %d .  CG its %d  backward error %d\n',n1,n2,k,backward_error)
+% disp(['pcg (',params.precond,')'])
+% fprintf('\nDim space: %d time: %d .  CG its %d  backward error %d\n',n1,n2,k,backward_error)
 

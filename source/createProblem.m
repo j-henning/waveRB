@@ -6,5 +6,8 @@ function [problem] = createProblem(problemConfiguration)
             problem = create2DWaveProblemImproved(problemConfiguration);
         case 3
             problem = create3DWaveProblem(problemConfiguration);
+        otherwise 
+            error([num2str(problemConfiguration.dimension) ...
+                ' dimensions are not supported'])
     end
 end

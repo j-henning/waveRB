@@ -5,6 +5,6 @@ function [problemTS] = createTSProblem(problemTSConfiguration)
         case 2
             error('Not yet implemented')
         case 3
-            error('Not yet implemented')
+            problemTS = create3DTSWaveProblem(problemTSConfiguration);
     end
 end
