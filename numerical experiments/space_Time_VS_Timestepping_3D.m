@@ -6,13 +6,13 @@ clc
 addpath('../source');
 addpath('../splines');
 
-resolution.x = 6; %6
+resolution.x = 6;
 resolution.y = 6;
 resolution.z = 6;
 resolution.t = 6;
 
 
-refinements = 1:5;
+refinements = 1:4;
 
 splineOrder = 5;
 
@@ -41,7 +41,7 @@ mu = 1;
 solutionAnalytical = u_analytical(X,Y,Z,T);
 name = '3D-smooth-5th-order.dat';
 
-totalTime = tic;
+
 %% Compute and test the numerical solutions
 for refinement = refinements
     fprintf("\n######################\n")
@@ -110,7 +110,7 @@ for refinement = refinements
     
 end
 
-totalTime = toc(totalTime)
+
 
 % errorTS
 % 

@@ -61,7 +61,7 @@ Xi = sort(Xi, 'ascend');
 XiTest = rand(1,200) * (muMax - muMin) + muMin;
 XiTest = sort(XiTest, 'ascend');
 
-Y_save = cell(maxIt,1); % save all Y_N (due to orthogonalization)
+
 
 
 

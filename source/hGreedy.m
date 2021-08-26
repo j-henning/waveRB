@@ -1,4 +1,4 @@
-function [muNew, muNewIndex, errorMax, Xi, solutions, U] = hGreedy(Xi, solutions, U, Y, N, muMin, muMax, pOne, resolution, splines)
+function [muNew, muNewIndex, errorMax, Xi, solutions, U] = hGreedy(Xi, solutions, U, Y, N, muMin, muMax, pOne, resolution, splines, solver, maxIt, tolerance1, tolerance2)
 % Sample new parameters to get barN parameters in the interval muMin, muMax
 newN = N - length(Xi);
 XiNew = rand(newN, 1) * (muMax - muMin) + muMin;
@@ -16,12 +16,9 @@ for i = 1:newN
     problem.Q_space = mu^2 * problem.Q_space;
     
     
-    UNew(:,i) = solveProblem(problem);
-    snapshotsNew{i} = get1DsolutionSmart(problem, UNew(:,i), ...
-        resolution, splines.splines_time, ...
-        splines.splines_2_time, ...
-        splines.splines_space, ...
-        splines.splines_2_space);
+    UNew(:,i) = solveProblem(problem, solver, maxIt, tolerance1, tolerance2);
+    snapshotsNew{i} = getSolution(problem, UNew(:,i), ...
+        resolution, splines);
 end
 
 % Concatinate the parameters and the snapshots
@@ -49,9 +46,8 @@ for i=1:length(Xi)
     u_N = B \ f;
     
     u_N_rec = Y * u_N;
-    sol_rec = get1DsolutionSmart(problem, u_N_rec, ...
-        resolution, splines.splines_time, splines.splines_2_time, ...
-        splines.splines_space, splines.splines_2_space);
+    sol_rec = getSolution(problem, u_N_rec, ...
+        resolution, splines);
     err = sqrt(mean( (solutions{i}-sol_rec).^2, 'all'));
     
     if err > errorMax

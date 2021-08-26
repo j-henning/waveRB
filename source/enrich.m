@@ -1,10 +1,10 @@
-function [tree] = enrich(tree, Np, pOne, splines, resolution)
-tree = enrichRecursive(tree, Np, 1, pOne, splines, resolution);
+function [tree] = enrich(tree, Np, pOne, splines, resolution, solver, maxIt, tolerance1, tolerance2)
+tree = enrichRecursive(tree, Np, 1, pOne, splines, resolution, solver, maxIt, tolerance1, tolerance2);
 
 end
 
 % Recursively search
-function [tree] = enrichRecursive(tree, Np, index, pOne, splines, resolution)
+function [tree] = enrichRecursive(tree, Np, index, pOne, splines, resolution, solver, maxIt, tolerance1, tolerance2)
 leftChild = 2 * index;
 rightChild = 2 * index + 1;
 if leftChild > length(tree) || isnan(tree{leftChild}.muMin)
@@ -18,26 +18,18 @@ if leftChild > length(tree) || isnan(tree{leftChild}.muMin)
     % Compute the new snapshots
     parfor k = 1:newN
         mu = XiNew(k);
-        problem = pOne;
-        
-        problem.mu = mu;
-        problem.A_space = mu * problem.A_space;
-        problem.Q_space = mu^2 * problem.Q_space;
-        
-        
-        UNew(:,k) = solveProblem(problem);
-        snapshotsNew{k} = get1DsolutionSmart(problem, UNew(:,k), ...
-            resolution, splines.splines_time, ...
-            splines.splines_2_time, ...
-            splines.splines_space, ...
-            splines.splines_2_space);
+        problem = changeWaveSpeed(pOne, mu);
+
+        UNew(:,k) = solveProblem(problem, solver, maxIt, tolerance1, tolerance2);
+        snapshotsNew{k} = getSolution(problem, UNew(:,k), ...
+            resolution, splines);
     end
     % Concatinate the parameters and the snapshots
     tree{index}.Xi = [tree{index}.Xi; XiNew];
     tree{index}.solutions = [tree{index}.solutions; snapshotsNew];
     tree{index}.U = horzcat(tree{index}.U, UNew);
 else
-    tree = enrichRecursive(tree, Np, leftChild, pOne, splines, resolution);
-    tree = enrichRecursive(tree, Np, rightChild, pOne, splines, resolution);
+    tree = enrichRecursive(tree, Np, leftChild, pOne, splines, resolution, solver, maxIt, tolerance1, tolerance2);
+    tree = enrichRecursive(tree, Np, rightChild, pOne, splines, resolution, solver, maxIt, tolerance1, tolerance2);
 end
 end

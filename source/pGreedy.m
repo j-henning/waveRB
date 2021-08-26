@@ -39,9 +39,8 @@ if leftChild > length(tree) || isnan(tree{leftChild}.muMin)
             % Compute the reduces solution u_N_rec
             u_N = B_N \ f_N;
             u_N_rec = tree{index}.Y * u_N;
-            sol_rec = get1DsolutionSmart(p, u_N_rec,  resolution, ...
-                splines.splines_time, splines.splines_2_time, ...
-                splines.splines_space, splines.splines_2_space);
+            sol_rec = getSolution(p, u_N_rec,  resolution, ...
+                splines);
             
             % Compute the error
             err(l) = sqrt(mean( (tree{index}.solutions{l}-sol_rec).^2, 'all'));

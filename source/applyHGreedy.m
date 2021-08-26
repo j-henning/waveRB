@@ -1,8 +1,8 @@
-function [tree] = applyHGreedy(tree, tolerance, N, pOne, resolution, splines)
-[tree] = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, 1);
+function [tree] = applyHGreedy(tree, tolerance, N, pOne, resolution, splines, solver, maxIt, tolerance1, tolerance2)
+[tree] = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, 1, solver, maxIt, tolerance1, tolerance2);
 end
 
-function [tree] = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, i)
+function [tree] = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, i, solver, maxIt, tolerance1, tolerance2)
 % Check if we are on a leaf node
 if isnan(tree{i}.muMin)
     return;
@@ -13,15 +13,14 @@ end
 
 if 2*i < length(tree) && ~isnan(tree{2*i}.muMin)
     % In this case, directly process the child nodes and skip anything else
-    tree = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, 2*i);
-    tree = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, 2*i+1);
+    tree = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, 2*i, solver, maxIt, tolerance1, tolerance2);
+    tree = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, 2*i+1, solver, maxIt, tolerance1, tolerance2);
     return
 end
 
 [muNew, muNewIndex, tree{i}.maxError, tree{i}.Xi, tree{i}.solutions, tree{i}.U] = ...
-    hGreedy(tree{i}.Xi, tree{i}.solutions, ...
-    tree{i}.U, tree{i}.Y, N, tree{i}.muMin, tree{i}.muMax, pOne, resolution, splines);
-
+    hGreedy(tree{i}.Xi, tree{i}.solutions, tree{i}.U, tree{i}.Y, N, tree{i}.muMin, tree{i}.muMax, pOne, resolution, splines, solver, maxIt, tolerance1, tolerance2);
+% hGreedy(Xi, solutions, U, Y, N, muMin, muMax, pOne, resolution, splines, solver, tolerance1, tolerance2)
 
 % Check if we reached the tolerance
 if tree{i}.maxError < tolerance
@@ -32,7 +31,7 @@ tree{i}.center = 0.5 * (tree{i}.S + muNew);
 
 % Check if we have space for children
 if 2*i > length(tree)
-    warning(['Can not refine further because there is not enough space in the tree. Error = ' num2str(tree{i}.maxError)])
+%     fprintf('Can not refine further because there is not enough space in the tree. Error = %e\n', tree{i}.maxError)
     return;
 end
 
@@ -70,8 +69,8 @@ else
 end
 
 % Recursion
-tree = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, 2*i);
-tree = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, 2*i+1);
+tree = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, 2*i, solver, maxIt, tolerance1, tolerance2);
+tree = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, 2*i+1, solver, maxIt, tolerance1, tolerance2);
 
 
 end
