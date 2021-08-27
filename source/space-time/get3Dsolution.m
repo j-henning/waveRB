@@ -5,19 +5,6 @@ if resolution.x ~= resolution.y || resolution.x ~= resolution.z
     error('x, y and z resolution should be the same for performance reasons!')
 end
 
-% x = linspace(0, 1, 2^resolution.x + 1);
-% y = linspace(0, 1, 2^resolution.y + 1);
-% z = linspace(0, 1, 2^resolution.z + 1);
-% t = linspace(0, 1, 2^resolution.t + 1);
-
-% if smoothing
-% x = 0.5 * (x(2:end) + x(1:end-1));
-% y = 0.5 * (y(2:end) + y(1:end-1));
-% z = 0.5 * (z(2:end) + z(1:end-1));
-% t = 0.5 * (t(2:end) + t(1:end-1));
-% end
-
-
 % Todo: Check transpose
 u = reshape(full(U), round((numel(U) / p.dim_time)^(1/3)), ...
     round((numel(U) / p.dim_time)^(1/3)), ...
@@ -47,11 +34,10 @@ U = reshape(u_full, [spaceDim^2, spaceDim * timeDim]);
 
 
 sol = kron(s,s) * U * kron(t2, s)' ...
-    - p.mu * ( kron(s,s2) * U * kron(t,s)' ...
-    + kron(s2,s) * U * kron(t,s)' ...
+    - p.mu * ( (kron(s,s2) + kron(s2,s))* U * kron(t,s)' ...
     + kron(s,s) * U * kron(t,s2)');
 
-sol = reshape(sol, [size(splines.space,2), size(splines.space,2), size(splines.space,2) size(splines.time,2)]);
+sol = reshape(sol, [size(splines.space,2), size(splines.space,2), size(splines.space,2), size(splines.time,2)]);
 
 end
 

@@ -96,9 +96,6 @@ p.ntest_time = length(p.T_time) - p.bSplineOrder_time;
 p.ntest_space = length(p.T_space) - p.bSplineOrder_space;
 p.rhs = zeros((p.ntest_space-sum(p.offset_space_test))^3,p.ntest_time - sum(p.offset_time_test));
 
-% if length(p.f_time) ~= length(p.f_space_x) || length(p.f_time) ~= length(p.f_space_y)
-%     error('f_time and f_space should have the same dimensions')
-% end
 
 p.ntest_time = length(p.T_time) - p.bSplineOrder_time;
 p.ntest_space = length(p.T_space) - p.bSplineOrder_space;
@@ -322,7 +319,6 @@ if ~isempty(p.u_0)
         if v_dot0 == 0
             continue;
         end
-        % TODO: Fix this!!!!
         p.rhs(:,i) = p.rhs(:,i) + reshape(-v_dot0 * U0, [numel(U0) 1]);
     end
     

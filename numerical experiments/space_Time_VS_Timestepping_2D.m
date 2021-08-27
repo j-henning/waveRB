@@ -3,43 +3,34 @@ close all
 clc
 
 
-addpath('../source');
-addpath('../splines');
-
-resolution.x = 6;
-resolution.y = 6;
-resolution.z = 6;
-resolution.t = 6;
+addpath(genpath('../source'), '../splines/')
+resolution.x = 8;
+resolution.y = 8;
+resolution.t = 8;
 
 
-refinements = 1:3;
+refinements = 1:5;
 
 splineOrder = 3;
 
-[X, Y, Z, T] = ndgrid(linspace(0,1, 2^resolution.x + 1), ...
+[X, Y, T] = ndgrid(linspace(0,1, 2^resolution.x + 1), ...
     linspace(0,1, 2^resolution.y + 1), ...
-    linspace(0,1, 2^resolution.z + 1), ...
     linspace(0,1, 2^resolution.t + 1));
 
 %% Define the problem
 
-dimension = 3;
-mm = 1;
-nn = 1;
-oo = 1;
-f_time = {@(t) 2+ 0.*t; @(t) (t.^2)*(mm^2 + nn^2 + oo^2)*(pi^2)};
-% f_space = {@(x,y,z) sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z); ...
-%     @(x,y,z) sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z)};
 
-f_space = {@(x) sin(mm*pi*x), @(y) sin(nn*pi*y), @(z) sin(oo*pi*z); ...
-    @(x) sin(mm*pi*x), @(y) sin(nn*pi*y), @(z) sin(oo*pi*z)};
-
+n = 1; m = 1;
+f_time = {@(t) 2+ 0*t + t.^2*(n^2 + m^2)*pi^2;};
+f_space = {@(x) sin(n*pi*x), @(y) sin(m*pi*y)};
 u_0 = [];
 u_1 = [];
-u_analytical = @(x,y,z,t) t.^2 .* sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z);
+u_analytical = @(x,y,t) t.^2 .* sin(n*pi*x).*sin(m*pi*y);
 mu = 1;
-solutionAnalytical = u_analytical(X,Y,Z,T);
-name = '3D-smooth-5th-order.dat';
+solutionAnalytical = u_analytical(X,Y,T);
+dimension = 2;
+name = '2D-smooth.dat';
+
 
 
 %% Compute and test the numerical solutions
@@ -161,7 +152,7 @@ errorTS = errorTS';
 t = table(refinements, unknowns, timeGalerkin, errorGalerkin, iterGalerkin, ...
     timeCGLyap, errorCGLyap, iterCGLyap, ...
     timeCGOpt, errorCGOpt, iterCGOpt, ...
-     timeTS, errorTS)
+      timeTS, errorTS)
 
 writetable(t, name, 'Delimiter', '\t')
 

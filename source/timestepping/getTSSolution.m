@@ -17,6 +17,7 @@ if nargin < 4
     
     for i=1:size(splines.space,1)
         for j=1:size(splines.space,2)     
+            % TODO: Optimize this
             g = @(s) Ndiff(p.T_space, p.bSplineOrder,0,i,(s==0)*(s+eps) + (s==1)*(s-eps) + (s > 0 && s < 1)*s);
             splines.space(i,j) = g(x(j));    
         end
@@ -28,7 +29,7 @@ switch problemTS.dimension
     case 1
         solutionTS = get1DTSSolution(problemTS, UTS, resolution, splines);
     case 2
-        error('Not yet implemented')
+        solutionTS = get2DTSSolution(problemTS, UTS, resolution, splines);
     case 3
         solutionTS = get3DTSSolution(problemTS, UTS, resolution, splines);
     

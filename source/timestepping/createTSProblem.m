@@ -3,7 +3,7 @@ function [problemTS] = createTSProblem(problemTSConfiguration)
         case 1
             problemTS = create1DTSWaveProblem(problemTSConfiguration);
         case 2
-            error('Not yet implemented')
+            problemTS = create2DTSWaveProblem(problemTSConfiguration);
         case 3
             problemTS = create3DTSWaveProblem(problemTSConfiguration);
     end

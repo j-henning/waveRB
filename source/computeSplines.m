@@ -46,4 +46,9 @@ else
         
     end
 end
+
+% splines.time = sparse(splines.time);
+% splines.time2 = sparse(splines.time2);
+% splines.space = sparse(splines.space);
+% splines.space2 = sparse(splines.space2);
 end
