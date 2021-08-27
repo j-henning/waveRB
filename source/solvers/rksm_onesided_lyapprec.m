@@ -229,11 +229,7 @@ return
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function r=ratfun(x,eH,s)
- 
-for j=1:length(x)
-r(j)=abs(prod( (x(j)-s)./(x(j)-eH) ));
-end
-
+r = abs(prod((x-s) ./(x-eH), 1));
 return
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

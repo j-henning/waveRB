@@ -3,24 +3,22 @@ close all
 clc
 
 
-addpath(genpath('../source'), '../splines/')
+addpath(genpath('../source'))
 resolution.x = 8;
 resolution.y = 8;
 resolution.t = 8;
 
 
-refinements = 1:5;
+refinements = 1:4;
 
-splineOrder = 3;
+splineOrder = 5;
 
 [X, Y, T] = ndgrid(linspace(0,1, 2^resolution.x + 1), ...
     linspace(0,1, 2^resolution.y + 1), ...
     linspace(0,1, 2^resolution.t + 1));
 
 %% Define the problem
-
-
-n = 1; m = 1;
+n = 3; m = 2;
 f_time = {@(t) 2+ 0*t + t.^2*(n^2 + m^2)*pi^2;};
 f_space = {@(x) sin(n*pi*x), @(y) sin(m*pi*y)};
 u_0 = [];

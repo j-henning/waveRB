@@ -3,8 +3,7 @@ close all
 clc
 
 
-addpath('../source');
-addpath('../splines');
+addpath(genpath('../source'))
 
 resolution.x = 6;
 resolution.y = 6;
@@ -12,7 +11,7 @@ resolution.z = 6;
 resolution.t = 6;
 
 
-refinements = 1:3;
+refinements = 1:4;
 
 splineOrder = 3;
 
@@ -39,7 +38,7 @@ u_1 = [];
 u_analytical = @(x,y,z,t) t.^2 .* sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z);
 mu = 1;
 solutionAnalytical = u_analytical(X,Y,Z,T);
-name = '3D-smooth-5th-order.dat';
+name = '3D-smooth-new.dat';
 
 
 %% Compute and test the numerical solutions
