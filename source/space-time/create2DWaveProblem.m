@@ -1,5 +1,9 @@
-% Gets a problem configuration and creates a problem with all matrices, the
-% right hand side and various variables for retrieving the solution
+% Gets a 2D problem configuration and creates a problem with all matrices,
+% the right hand side and various variables for retrieving the solution
+% Input:
+% pC - Problem configuration
+% Output:
+% p  - 2D problem
 function [p] = create2DWaveProblem(pC)
 mu = 1;
 if isfield(pC, 'mu')

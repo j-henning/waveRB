@@ -1,11 +1,17 @@
 % Evaluates the solution of a problem on with the desired resolution at all
 % query points in space and time on [0,1]^2 x [0,1]
+% Input:
+% p          - Problem
+% U          - Solution vector
+% resolution - Resolution
+% splines    - Splines calculated by computeSplines
+% Output:
+% sol        - Solution
 function [sol] = get2Dsolution(p, U,  resolution, splines)
-if resolution.x ~= resolution.y 
+if resolution.x ~= resolution.y
     error('x, y and z resolution should be the same for performance reasons!')
 end
 
-% Todo: Check transpose
 u = reshape(full(U), round((numel(U) / p.dim_time)^(1/2)), ...
     round((numel(U) / p.dim_time)^(1/2)), ...
     p.dim_time);
@@ -29,7 +35,6 @@ t = splines.time';
 t2 = splines.time2';
 
 U = reshape(u_full, [spaceDim * timeDim, spaceDim]);
-
 
 sol = kron(s,s) * U * t2' ...
     - p.mu * ((kron(s,s2) + kron(s2,s)) * U * t');

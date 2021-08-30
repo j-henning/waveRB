@@ -1,10 +1,11 @@
+% Benchmarks the space-time methods with all three solvers againts a
+% time-stepping scheme.
+
 clear
 close all
 clc
 
-
-addpath('../source');
-addpath('../splines');
+addpath(genpath('../source'))
 
 resolution.x = 11;
 resolution.t = 11;
@@ -12,7 +13,7 @@ resolution.t = 11;
 refinements = 1:9;
 
 [X, T] = ndgrid(linspace(0,1, 2^resolution.x + 1), ...
-        linspace(0,1, 2^resolution.t + 1));
+    linspace(0,1, 2^resolution.t + 1));
 
 %% Define the problem
 
@@ -44,57 +45,57 @@ problemConfiguration.u_analytical = @(x,t) t.^2 .* sin(2*pi*x);
 
 %% Compute and test the numerical solutions
 for refinement = refinements
-fprintf("Computing refinement %d\n", refinement)    
-% Space time   
-problemConfiguration = defineProblem(dimension, f_time, f_space, u_0, ...
-    u_1, mu, refinement, refinement, splineOrder, splineOrder); 
-
-problem = createProblem(problemConfiguration);
-
-% Galerkin
-tic;
-[UGalerkin, iterGalerkin(refinement)] = solveProblem(problem, 'galerkin');
-timeGalerkin(refinement) = toc;
-solutionGalerkin = getSolution(problem, UGalerkin, resolution);
-
-% CG Lyapunov
-tic;
-[UCGLyap, iterCGLyap(refinement)] = solveProblem(problem, 'cg-lyap');
-timeCGLyap(refinement) = toc;
-solutionCGLyap = getSolution(problem, UCGLyap, resolution);
-
-% CG Optimal
-tic;
-[UCGOpt, iterCGOpt(refinement)] = solveProblem(problem, 'cg-opt');
-timeCGOpt(refinement) = toc;
-solutionCGOpt = getSolution(problem, UCGOpt, resolution);
-
-% Backslash
-tic;
-UBackslash = solveProblem(problem, 'backslash');
-timeBackslash(refinement) = toc;
-solutionBackslash = getSolution(problem, UBackslash, resolution);
-
-% Time-Stepping 
-problemTSConfiguration = defineTSProblem(dimension, f_time, f_space, ...
-    u_0, u_1, mu, refinement, refinement, splineOrder); 
-
-problemTS = createTSProblem(problemTSConfiguration);
-
-tic;
-UTS = solveTSProblem(problemTS);
-timeTS(refinement) = toc;
-
-solutionTS = getTSSolution(problemTS,UTS, resolution);
-
-% Compute the errors
-errorGalerkin(refinement) = sqrt(mean( (solutionGalerkin-solutionAnalytical).^2, 'all'));
-errorCGLyap(refinement) = sqrt(mean( (solutionCGLyap-solutionAnalytical).^2, 'all'));
-errorCGOpt(refinement) = sqrt(mean( (solutionCGOpt-solutionAnalytical).^2, 'all'));
-errorBackslash(refinement) = sqrt(mean( (solutionBackslash-solutionAnalytical).^2, 'all'));
-errorTS(refinement) = sqrt(mean( (solutionTS-solutionAnalytical).^2, 'all'));
-
-
+    fprintf("Computing refinement %d\n", refinement)
+    % Space time
+    problemConfiguration = defineProblem(dimension, f_time, f_space, u_0, ...
+        u_1, mu, refinement, refinement, splineOrder, splineOrder);
+    
+    problem = createProblem(problemConfiguration);
+    
+    % Galerkin
+    tic;
+    [UGalerkin, iterGalerkin(refinement)] = solveProblem(problem, 'galerkin');
+    timeGalerkin(refinement) = toc;
+    solutionGalerkin = getSolution(problem, UGalerkin, resolution);
+    
+    % CG Lyapunov
+    tic;
+    [UCGLyap, iterCGLyap(refinement)] = solveProblem(problem, 'cg-lyap');
+    timeCGLyap(refinement) = toc;
+    solutionCGLyap = getSolution(problem, UCGLyap, resolution);
+    
+    % CG Optimal
+    tic;
+    [UCGOpt, iterCGOpt(refinement)] = solveProblem(problem, 'cg-opt');
+    timeCGOpt(refinement) = toc;
+    solutionCGOpt = getSolution(problem, UCGOpt, resolution);
+    
+    % Backslash
+    tic;
+    UBackslash = solveProblem(problem, 'backslash');
+    timeBackslash(refinement) = toc;
+    solutionBackslash = getSolution(problem, UBackslash, resolution);
+    
+    % Time-Stepping
+    problemTSConfiguration = defineTSProblem(dimension, f_time, f_space, ...
+        u_0, u_1, mu, refinement, refinement, splineOrder);
+    
+    problemTS = createTSProblem(problemTSConfiguration);
+    
+    tic;
+    UTS = solveTSProblem(problemTS);
+    timeTS(refinement) = toc;
+    
+    solutionTS = getTSSolution(problemTS,UTS, resolution);
+    
+    % Compute the errors
+    errorGalerkin(refinement) = sqrt(mean( (solutionGalerkin-solutionAnalytical).^2, 'all'));
+    errorCGLyap(refinement) = sqrt(mean( (solutionCGLyap-solutionAnalytical).^2, 'all'));
+    errorCGOpt(refinement) = sqrt(mean( (solutionCGOpt-solutionAnalytical).^2, 'all'));
+    errorBackslash(refinement) = sqrt(mean( (solutionBackslash-solutionAnalytical).^2, 'all'));
+    errorTS(refinement) = sqrt(mean( (solutionTS-solutionAnalytical).^2, 'all'));
+    
+    
 end
 
 %% Write the data into a file

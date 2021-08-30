@@ -1,3 +1,9 @@
+% Creates a 2D time-stepping problem
+% Input:
+% problemTSConfiguration - Configuration containing all the needed data
+% Output:
+% problemTS              - Time-stepping problem containing all matrices,
+%                          initial values as well as a rhs
 function [problemTS] = create2DTSWaveProblem(problemConfiguration)
 problemTS = problemConfiguration;
 problemTS.T_space = InitUniNodes(problemTS.refinementLevel_space, ...

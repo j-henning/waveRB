@@ -1,18 +1,18 @@
+% Creates a 3D problem which is parameter dependant and builds an hp-RB
+% space for that problem. Afterwords, the space as well an error estimator
+% is tested on a set of test points.
+
 clear
 close all
 clc
 
-
-addpath('../source');
-addpath('../splines');
-
-
+addpath(genpath('../source'))
 
 % Define the parameter range
 muMin = .01;
 muMax = 4;
 
-% Define the resolution 
+% Define the resolution
 resolution.x = 4;
 resolution.y = 4;
 resolution.z = 4;
@@ -55,7 +55,7 @@ splineOrder = 3;
 
 
 problemConfiguration = defineProblem(dimension, f_time, f_space, u_0, ...
-        u_1, mu, refinement, refinement, splineOrder, splineOrder);
+    u_1, mu, refinement, refinement, splineOrder, splineOrder);
 
 
 
@@ -64,7 +64,7 @@ problemConfiguration = defineProblem(dimension, f_time, f_space, u_0, ...
 
 % Calculate the hp-RB and the error estimator
 t = tic;
-[tree, treeEstimator] = rb1DOffline(problemConfiguration, ...
+[tree, treeEstimator] = rbOffline(problemConfiguration, ...
     resolution, muMin, muMax, Nh, Np, hTolerance, height,...
     NhEst, NpEst,hToleranceEst, heightEst, Xi, ...
     solver, maxIt, tolerance1, tolerance2);
@@ -99,8 +99,8 @@ parfor j=1:length(XiTest)
     u_N_rec = getRBhpSolutionVector(tree, mu, p);
     timesRB(j) = toc;
     u_M_rec = getRBhpSolutionVector(treeEstimator, mu, p);
-
-   
+    
+    
     sol_rec_N = getSolution(p, u_N_rec,  resolution, ...
         splines);
     
@@ -108,9 +108,9 @@ parfor j=1:length(XiTest)
         splines);
     
     tic;
-     Utest = solveProblem(p, solver, maxIt, tolerance1, tolerance2);
-     timesNormal(j) = toc;
-     
+    Utest = solveProblem(p, solver, maxIt, tolerance1, tolerance2);
+    timesNormal(j) = toc;
+    
     solTest{j} = getSolution(p, Utest,  resolution, ...
         splines);
     errorTest(j) = sqrt(mean( (solTest{j}-sol_rec_N).^2, 'all'));
@@ -124,7 +124,6 @@ fprintf(' Done!\n')
 fprintf('Maximum test error: %e\n', max(errorTest))
 
 errorEstTest = errorEstTest ./ (1 - theta);
-
 
 % Plotting
 figure

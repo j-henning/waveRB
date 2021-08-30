@@ -1,3 +1,9 @@
+% Creates a 3D time-stepping problem
+% Input: 
+% problemTSConfiguration - Configuration containing all the needed data
+% Output:
+% problemTS              - Time-stepping problem containing all matrices,
+%                          initial values as well as a rhs
 function [problemTS] = create3DTSWaveProblem(problemConfiguration)
 problemTS = problemConfiguration;
 

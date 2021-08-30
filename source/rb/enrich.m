@@ -1,9 +1,23 @@
+% Recursively enriches a tree with new snapshots such that each interval
+% contains Np snapshots. If one interval already contains Np or more
+% snapshots, nothing is done.
+% Input:
+% tree       - Reduced Basis model
+% Np         - Number of desired snapshots
+% pOne       - Problem to copy from
+% splines    - spline data
+% resolution - Resolution of the splines
+% solver     - Name of the solver
+% maxIt      - Maximum number of iterations
+% tolerance1 - First tolerance
+% tolerance2 - Second tolerance
+% Output:
+% tree       - Enriched Reduced Basis model
 function [tree] = enrich(tree, Np, pOne, splines, resolution, solver, maxIt, tolerance1, tolerance2)
 tree = enrichRecursive(tree, Np, 1, pOne, splines, resolution, solver, maxIt, tolerance1, tolerance2);
-
 end
 
-% Recursively search
+% Recursive version of enrich
 function [tree] = enrichRecursive(tree, Np, index, pOne, splines, resolution, solver, maxIt, tolerance1, tolerance2)
 leftChild = 2 * index;
 rightChild = 2 * index + 1;
@@ -19,7 +33,7 @@ if leftChild > length(tree) || isnan(tree{leftChild}.muMin)
     parfor k = 1:newN
         mu = XiNew(k);
         problem = changeWaveSpeed(pOne, mu);
-
+        
         UNew(:,k) = solveProblem(problem, solver, maxIt, tolerance1, tolerance2);
         snapshotsNew{k} = getSolution(problem, UNew(:,k), ...
             resolution, splines);

@@ -1,3 +1,9 @@
+% Creates a 1D time-stepping problem
+% Input:
+% problemTSConfiguration - Configuration containing all the needed data
+% Output:
+% problemTS              - Time-stepping problem containing all matrices,
+%                          initial values as well as a rhs
 function [problemTS] = create1DTSWaveProblem(problemConfiguration)
 problemTS = problemConfiguration;
 
@@ -53,7 +59,7 @@ problemTS.U0 = zeros(problemTS.ntest-2,1);
 problemTS.U1 = zeros(problemTS.ntest-2,1);
 
 if ~isempty(problemTS.u_0)
-    for j=1+problemTS.offset_space(1):problemTS.ntest-problemTS.offset_space(2) 
+    for j=1+problemTS.offset_space(1):problemTS.ntest-problemTS.offset_space(2)
         g = @(x) problemTS.u_0(x) .* Ndiff(problemTS.T_space, problemTS.bSplineOrder,0,j,x);
         for step = 0:problemTS.bSplineOrder-1
             problemTS.U0(j-1) = problemTS.U0(j-1) ...

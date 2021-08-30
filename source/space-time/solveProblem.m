@@ -1,4 +1,14 @@
-% Todo: Return the number of iterations
+% Solves the linear system of a space time problem
+% Input:
+% problem    - Problem struct
+% method     - 'Galerkin' (default), 'cg-lyap', or 'cg-opt'
+% maxIt      - Maximum number of iterations
+% tolerance1 - Backward error tolerance (default 1e-10)
+% tolerance2 - Residual error tolerance (default 1e-2)
+% info       - Display info during the solving procedure (default 0)
+% Output:
+% U          - Solution vector
+% iterations - Number of iterations
 function [U, iterations] = solveProblem(problem, method, maxIt, tolerance1, tolerance2, info)
 if nargin < 2
     method = 'galerkin';
@@ -29,7 +39,7 @@ switch method
         rhs2=vv(:,1)*sqrt(ss(1,1));
         
         [X1,X2, ~, iterations]= ...
-            Galerkin3(problem.M_space,2*problem.A_space,problem.Q_space,problem.Q_time,...
+            Galerkin(problem.M_space,2*problem.A_space,problem.Q_space,problem.Q_time,...
             (problem.D_time+problem.D_time')/2,problem.M_time,rhs1,rhs2,maxIt,tolerance1,tolerance2,info);
         U=X1*X2';
         U=U(:);
@@ -38,18 +48,18 @@ switch method
         problem.precond='lyap';
         rhsfull=reshape(problem.rhs, [numel(problem.rhs) 1]);
         rhsfull=rhsfull/norm(rhsfull);
-        [U, iterations] = pcg_fun4(funA,rhsfull,0*rhsfull,problem,maxIt,tolerance1, tolerance2,...
+        [U, iterations] = pcg_fun(funA,rhsfull,0*rhsfull,problem,maxIt,tolerance1, tolerance2,...
             size(problem.M_space,1),size(problem.M_time,2),0);
         U = U(:)*norm(problem.rhs(:));
     case 'cg-opt'
         problem.precond='optimal';
         rhsfull=reshape(problem.rhs, [numel(problem.rhs) 1]);
         rhsfull=rhsfull/norm(rhsfull);
-        [U, iterations] = pcg_fun4(funA,rhsfull,0*rhsfull,problem,maxIt,tolerance1, tolerance2,...
+        [U, iterations] = pcg_fun(funA,rhsfull,0*rhsfull,problem,maxIt,tolerance1, tolerance2,...
             size(problem.M_space,1),size(problem.M_time,2),0);
         U = U(:)*norm(problem.rhs(:));
         
-    case 'backslash'    
+    case 'backslash'
         B = kron(problem.Q_time, problem.M_space) ...
             + kron(problem.D_time, problem.A_space') ...
             + kron(problem.D_time', problem.A_space) ...
@@ -58,9 +68,4 @@ switch method
         U = B \ problem.rhs(:);
         
 end
-
-
-
-
-
 end

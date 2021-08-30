@@ -1,7 +1,23 @@
+% Applies the hGreedy recursivly on all subintervals of the tree until the
+% desired tolerance is reached or there is not enough space in the tree
+% Input:
+% tree       - tree object for the RB
+% tolerance  - tolerance of the h refinement
+% N          - number of snapshots per interval
+% pOne       - space-time problem with mu = 1
+% resolution - evaluation resolution struct
+% splines    - precomputed splines
+% solver     - which solver to use
+% maxIt      - maximum number of iterations
+% tolerance1 - first tolerance for the specified solver
+% tolerance2 - second tolerance for the specified solver
+% Output:
+% tree       - refined tree
 function [tree] = applyHGreedy(tree, tolerance, N, pOne, resolution, splines, solver, maxIt, tolerance1, tolerance2)
 [tree] = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, 1, solver, maxIt, tolerance1, tolerance2);
 end
 
+% Recursive version of applyHGreedy
 function [tree] = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, i, solver, maxIt, tolerance1, tolerance2)
 % Check if we are on a leaf node
 if isnan(tree{i}.muMin)
@@ -31,10 +47,9 @@ tree{i}.center = 0.5 * (tree{i}.S + muNew);
 
 % Check if we have space for children
 if 2*i > length(tree)
-%     fprintf('Can not refine further because there is not enough space in the tree. Error = %e\n', tree{i}.maxError)
+    %     fprintf('Can not refine further because there is not enough space in the tree. Error = %e\n', tree{i}.maxError)
     return;
 end
-
 
 % Save the left subinterval
 leftIndices = find(tree{i}.Xi < tree{i}.center);
@@ -71,6 +86,4 @@ end
 % Recursion
 tree = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, 2*i, solver, maxIt, tolerance1, tolerance2);
 tree = appylyHGreedyRecursive(tree, tolerance, N, pOne, resolution, splines, 2*i+1, solver, maxIt, tolerance1, tolerance2);
-
-
 end

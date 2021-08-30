@@ -1,7 +1,9 @@
+% Benchmarks the space-time methods with all three solvers againts a
+% time-stepping scheme.
+
 clear
 close all
 clc
-
 
 addpath(genpath('../source'))
 resolution.x = 8;
@@ -9,9 +11,9 @@ resolution.y = 8;
 resolution.t = 8;
 
 
-refinements = 1:4;
+refinements = 1:7;
 
-splineOrder = 5;
+splineOrder = 3;
 
 [X, Y, T] = ndgrid(linspace(0,1, 2^resolution.x + 1), ...
     linspace(0,1, 2^resolution.y + 1), ...
@@ -93,7 +95,7 @@ for refinement = refinements
     errorGalerkin(refinement) = sqrt(mean( (solutionGalerkin-solutionAnalytical).^2, 'all'));
     errorCGLyap(refinement) = sqrt(mean( (solutionCGLyap-solutionAnalytical).^2, 'all'));
     errorCGOpt(refinement) = sqrt(mean( (solutionCGOpt-solutionAnalytical).^2, 'all'));
-%     errorBackslash(refinement) = sqrt(mean( (solutionBackslash-solutionAnalytical).^2, 'all'));
+    %     errorBackslash(refinement) = sqrt(mean( (solutionBackslash-solutionAnalytical).^2, 'all'));
     errorTS(refinement) = sqrt(mean( (solutionTS-solutionAnalytical).^2, 'all'));
     
     
@@ -102,7 +104,7 @@ end
 
 
 % errorTS
-% 
+%
 % figure
 % subplot(2,2,1)
 % surf(squeeze(solutionTS(32,:,:,end) - solutionAnalytical(32,:,:,end)))
@@ -150,7 +152,7 @@ errorTS = errorTS';
 t = table(refinements, unknowns, timeGalerkin, errorGalerkin, iterGalerkin, ...
     timeCGLyap, errorCGLyap, iterCGLyap, ...
     timeCGOpt, errorCGOpt, iterCGOpt, ...
-      timeTS, errorTS)
+    timeTS, errorTS)
 
 writetable(t, name, 'Delimiter', '\t')
 

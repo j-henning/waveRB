@@ -1,3 +1,12 @@
+% Displays the space-time solution in an easy manner, depending of the
+% dimension:
+% 1D: Surf plot
+% 2D: TBD
+% 3D: Animation of a surf plot for which the third dimension gets only
+%     shown in the center
+% Input:
+% solution   - Solution vector
+% Resolution - Resolution used
 function [] = plotSolution(solution, resolution)
 
 switch ndims(solution)
@@ -16,11 +25,10 @@ switch ndims(solution)
         f = figure('WindowState','maximized');
         for i=1:size(solution,4)
             s = surf(squeeze(solution(:,:,floor(0.5 * 2^resolution.z), i))); s.EdgeColor = 'none';
-            title(num2str(i/size(solution,4))); 
+            title(num2str(i/size(solution,4)));
             pause(0.1)
-            drawnow   
+            drawnow
         end
         
 end
-
 end

@@ -1,12 +1,8 @@
-clear
-close all
-clc
+% Creates a 1D problem which is parameter dependant and builds an hp-RB
+% space for that problem. Afterwords, the space as well an error estimator
+% is tested on a set of test points.
 
-
-addpath('../source');
-addpath('../splines');
-
-
+addpath(genpath('../source'))
 
 % Define the parameter range
 muMin = .01;
@@ -36,9 +32,6 @@ maxIt = 100;
 tolerance1 = 1e-10;
 tolerance2 = 1e-2;
 
-
-
-
 % Define one prototype problem with a wave speed of one
 problemConfiguration = defineProblem(1, ... % Dimension
     [], ... % f_time
@@ -54,10 +47,9 @@ problemConfiguration = defineProblem(1, ... % Dimension
     );
 
 %% Offline phase
-
 % Calculate the hp-RB and the error estimator
 t = tic;
-[tree, treeEstimator] = rb1DOffline(problemConfiguration, ...
+[tree, treeEstimator] = rbOffline(problemConfiguration, ...
     resolution, muMin, muMax, Nh, Np, hTolerance, height,...
     NhEst, NpEst,hToleranceEst, heightEst, Xi, ...
     solver, maxIt, tolerance1, tolerance2);
@@ -71,11 +63,7 @@ toc(t)
 
 
 %% Online phase
-
 solTest = cell(length(XiTest),1);
-
-
-
 pOne = createProblem(problemConfiguration);
 splines = computeSplines(pOne, resolution);
 fprintf('Testing all solutions')
@@ -106,8 +94,8 @@ parfor j=1:length(XiTest)
     
     solTest{j} = getSolution(p, Utest,  resolution, ...
         splines);
-    errorTest(j) = sqrt(mean( (solTest{j}-sol_rec_N).^2, 'all'));
-    errorEstTest(j) = sqrt(mean( (sol_rec_M-sol_rec_N).^2, 'all'));
+    errorTest(j) = sqrt(mean( (solTest{j}-sol_rec_N).^2, [1 2]));
+    errorEstTest(j) = sqrt(mean( (sol_rec_M-sol_rec_N).^2, [1 2]));
 end
 
 fprintf('Time RB:          %f\n', sum(timesRB))

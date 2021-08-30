@@ -1,3 +1,7 @@
+% ???
+% NOTE:
+% This code was provided by Valeria Simoncini 
+% http://www.dm.unibo.it/~simoncin/welcome.html
 function [Z,nrmrestot]=rksm_onesided_lyapprec(A,E,EL,B,C1,C2,m,s1,emax,ch)
 %function [Z,nrmrestot]=rksm(A,E,EL,B,m,tol,s1,emax,ch,tolY)
 %      

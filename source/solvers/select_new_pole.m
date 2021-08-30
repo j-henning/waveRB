@@ -1,3 +1,7 @@
+% ???
+% NOTE:
+% This code was provided by Valeria Simoncini 
+% http://www.dm.unibo.it/~simoncin/welcome.html
 function snew=select_new_pole(eH,s,s1,emax,ch,p,ih);
 
 

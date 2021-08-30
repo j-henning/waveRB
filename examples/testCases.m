@@ -1,11 +1,11 @@
+% Runs various test cases for finding bugs inside the code. Very helpful,
+% if code inside the source folder is changed.
+
 clear
 close all
 clc
 
-
-addpath('../source');
-addpath('../splines');
-
+addpath(genpath('../source'))
 
 %% 1D space time problem
 problemConfiguration = defineProblem(1, ... % Dimension
@@ -102,4 +102,3 @@ figure
 plotSolution(solutionTS, resolution)
 
 fprintf('Passed the 3D time-stepping test\n')
-

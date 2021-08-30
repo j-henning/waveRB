@@ -1,3 +1,10 @@
+% Changes the size of a tree by either throwing some data away or by adding
+% new empty data
+% Input:
+% tree      - Old tree
+% newHeight - New desired height
+% Output
+% tree      - New tree with the old data and the height newHeight
 function [tree] = resizeTree(tree, newHeight)
 currentHeight = floor( log(length(tree)) / log(2))+1;
 
@@ -11,5 +18,4 @@ elseif currentHeight < newHeight
         i = i - 1;
     end
 end
-
 end

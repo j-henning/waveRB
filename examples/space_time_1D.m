@@ -1,10 +1,10 @@
+% Creates and solves a 1D wave problem in the space-time setting.
+
 clear
 close all
 clc
 
-
-addpath('../source');
-addpath('../splines');
+addpath(genpath('../source'))
 
 problemConfiguration = defineProblem(1, ... % Dimension
     {@(t) t.^2}, ... % f_time

@@ -1,3 +1,12 @@
+% Precompute the time and space splines as well as their second derivatives
+% Input:
+% problem    - A problem which specifies all dimension
+% resolution - Resolution of the space and time splines. The splines get
+%              evaluated on x = linspace(0, 1, 2^resolution.x + 1) and
+%              t = linspace(0, 1, 2^resolution.t + 1);
+% Output:
+% splines    - Struct consisting of splines.space, splines.space2 as well
+%              as splines.time, splines.time2
 function [splines] = computeSplines(problem, resolution)
 % Compute the splines if not provided
 x = linspace(0, 1, 2^resolution.x + 1);
@@ -46,9 +55,4 @@ else
         
     end
 end
-
-% splines.time = sparse(splines.time);
-% splines.time2 = sparse(splines.time2);
-% splines.space = sparse(splines.space);
-% splines.space2 = sparse(splines.space2);
 end

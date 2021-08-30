@@ -1,3 +1,13 @@
+% Evaluates the solution of a problem on with the desired resolution at all
+% query points in space and time
+% Input:
+% problem    - Problem
+% U          - Solution vector
+% resolution - Resolution
+% splines    - Splines calculated by computeSplines (optional)
+% Output:
+% solution   - Solution
+% splines    - Spline data
 function [solution, splines] = getSolution(problem, U, resolution, splines)
 
 if nargin < 4

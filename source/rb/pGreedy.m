@@ -1,9 +1,19 @@
+% Apply the pGreedy algorithm on all leaf nodes of the tree
+% Input:
+% tree       - Reduced Basis model
+% Np         - Maximum number of snapshots
+% tolerance  - Desired tolerance
+% pOne       - Problem to copy from
+% splines    - Spline data
+% resolution - Resolution for the evaluation
+% Ouput:
+% tree       - 'Fitted' RB model
 function [tree] = pGreedy(tree, Np, tolerance, pOne, splines, resolution)
 tree = pGreedyRecursive(tree, Np, tolerance, 1, pOne, splines, resolution);
 
 end
 
-% Recursively search
+% Recursive version of pGreedy
 function [tree] = pGreedyRecursive(tree, Np, tolerance, index, pOne, splines, resolution)
 leftChild = 2 * index;
 rightChild = 2 * index + 1;
@@ -50,20 +60,16 @@ if leftChild > length(tree) || isnan(tree{leftChild}.muMin)
         if maxError(k) < tolerance || k == Np
             tree{index}.maxError = maxError(k);
             %             maxErrors = [maxErrors, maxError];
-%             semilogy(maxError), hold on
+            %             semilogy(maxError), hold on
             break;
         end
         
         tree{index}.S = [tree{index}.S, tree{index}.Xi(indMax)];
         
-        % GramSchmidt
+        
         snapshot = tree{index}.U(:,indMax);
-%         snapshot = snapshot - tree{index}.Y * tree{index}.Y' *...
-%             kron(pOne.M_time, pOne.M_space) * snapshot;
-%         snapshot = snapshot / norm(snapshot);
         tree{index}.Y = [tree{index}.Y, snapshot];
-%         tree{index}.Y = [tree{index}.Y, tree{index}.U(:,indMax)];
-        tree{index}.Y = orth(tree{index}.Y); % Todo: Improve this
+        tree{index}.Y = orth(tree{index}.Y);
     end
 else
     tree = pGreedyRecursive(tree, Np, tolerance, leftChild, pOne, splines, resolution);

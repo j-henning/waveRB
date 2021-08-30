@@ -1,15 +1,14 @@
 % Calculates the d'Alembert solution of the wave equation on the interval
 % [0,1]
 % Input:
-%       u0 - function for the initial position
-%       V0 - integrated function for the initial velocity v0
-%       c  - wave speed
-%       N  - number of points
-%       T  - length of the time interval [0,T]
-%       K  - number of time steps
-%
+% u0 - function for the initial position
+% V0 - integrated function for the initial velocity v0
+% c  - wave speed
+% N  - number of points
+% T  - length of the time interval [0,T]
+% K  - number of time steps
 % Output:
-%       U  - solution matrix (N x K)
+% U  - solution matrix (N x K)
 function U = dAlembert1D (u0, V0, c, N, T, K)
 tau = T/(K-1);
 
