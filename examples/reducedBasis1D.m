@@ -49,7 +49,7 @@ problemConfiguration = defineProblem(1, ... % Dimension
 %% Offline phase
 % Calculate the hp-RB and the error estimator
 t = tic;
-[tree, treeEstimator] = rbOffline(problemConfiguration, ...
+[tree, treeEstimator, pOne, splines] = rbOffline(problemConfiguration, ...
     resolution, muMin, muMax, Nh, Np, hTolerance, height,...
     NhEst, NpEst,hToleranceEst, heightEst, Xi, ...
     solver, maxIt, tolerance1, tolerance2);
@@ -58,14 +58,14 @@ toc(t)
 
 % Calculate the theta value for the error estimator
 t = tic;
-theta = thetaCalculation(problemConfiguration, muMin, muMax, 1000, 100, 0.05, tree, treeEstimator, resolution, solver, maxIt, tolerance1, tolerance2);
+theta = thetaCalculation(problemConfiguration, muMin, muMax, 1000, ...
+    100, 0.05, tree, treeEstimator, pOne, splines, resolution, solver, ...
+    maxIt, tolerance1, tolerance2);
 toc(t)
 
 
 %% Online phase
 solTest = cell(length(XiTest),1);
-pOne = createProblem(problemConfiguration);
-splines = computeSplines(pOne, resolution);
 fprintf('Testing all solutions')
 
 timesRB = zeros(length(XiTest),1);

@@ -10,6 +10,8 @@
 % percentage           - Percentage of points that get exactly calculated
 % tree                 - Reduced Basis Model
 % treeEstimator        - Reduced Basis Model for the error estimation
+% pOne                 - Problem to copy from
+% splines              - Spline data
 % resolution           - Evaluation resolution
 % solver               - Name of the solver
 % maxIt                - Maximum number of iterations
@@ -17,9 +19,10 @@
 % tolerance2           - Second tolerance for the solver
 % Ouput:
 % theta                - Estimation of the theta value
-function theta = thetaCalculation(problemConfiguration, muMin, muMax, Nmu, Ntheta, percentage, tree, treeEstimator, resolution,  solver, maxIt, tolerance1, tolerance2)
-pOne = createProblem(problemConfiguration);
-splines = computeSplines(pOne, resolution);
+function theta = thetaCalculation(problemConfiguration, muMin, muMax, ...
+    Nmu, Ntheta, percentage, tree, treeEstimator, pOne, splines, resolution, ...
+    solver, maxIt, tolerance1, tolerance2)
+pOne = changeWaveSpeed(pOne,1);
 fprintf('Calculating theta ...')
 
 % Split the interval from muMin to muMax into several subintervals and find

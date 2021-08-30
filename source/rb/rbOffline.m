@@ -23,7 +23,9 @@
 % Output:
 % tree                 - Reduced Basis Model
 % treeEstimator        - Reduced Basis Model for the error estimation
-function [tree, treeEstimator] = rbOffline(problemConfiguration, ...
+% pOne                 - Problem that can be copied
+% splines              - Computed spline data
+function [tree, treeEstimator, pOne, splines] = rbOffline(problemConfiguration, ...
     resolution, muMin, muMax, Nh, Np, hTolerance, height, NhEst, NpEst, ...
     hToleranceEst, heightEst, Xi, solver, maxIt, tolerance1, tolerance2)
 
@@ -44,7 +46,7 @@ fprintf("Calculating the solutions for mu = %e, ..., %e", Xi(1), Xi(end));
 parfor i=1:length(Xi) % TODO: Par for
     mu = Xi(i);
     problem = changeWaveSpeed(pOne, mu)
-    U(:,i) = solveProblem(problem, solver, maxIt, tolerance1, tolerance2); % TODO: Make this variable
+    U(:,i) = solveProblem(problem, solver, maxIt, tolerance1, tolerance2);
     sol{i} = getSolution(problem, U(:,i), resolution, splines);
 end
 fprintf(' Done!\n')

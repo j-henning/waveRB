@@ -61,10 +61,9 @@ problemConfiguration = defineProblem(dimension, f_time, f_space, u_0, ...
 
 
 %% Offline phase
-
 % Calculate the hp-RB and the error estimator
 t = tic;
-[tree, treeEstimator] = rbOffline(problemConfiguration, ...
+[tree, treeEstimator, pOne, splines] = rbOffline(problemConfiguration, ...
     resolution, muMin, muMax, Nh, Np, hTolerance, height,...
     NhEst, NpEst,hToleranceEst, heightEst, Xi, ...
     solver, maxIt, tolerance1, tolerance2);
@@ -73,18 +72,14 @@ toc(t)
 
 % Calculate the theta value for the error estimator
 t = tic;
-theta = thetaCalculation(problemConfiguration, muMin, muMax, 1000, 100, 0.05, tree, treeEstimator, resolution, solver, maxIt, tolerance1, tolerance2);
+theta = thetaCalculation(problemConfiguration, muMin, muMax, 1000, ...
+    100, 0.05, tree, treeEstimator, pOne, splines, resolution, solver, ...
+    maxIt, tolerance1, tolerance2);
 toc(t)
 
 
 %% Online phase
-
 solTest = cell(length(XiTest),1);
-
-
-
-pOne = createProblem(problemConfiguration);
-splines = computeSplines(pOne, resolution);
 fprintf('Testing all solutions')
 
 timesRB = zeros(length(XiTest),1);
@@ -113,8 +108,8 @@ parfor j=1:length(XiTest)
     
     solTest{j} = getSolution(p, Utest,  resolution, ...
         splines);
-    errorTest(j) = sqrt(mean( (solTest{j}-sol_rec_N).^2, 'all'));
-    errorEstTest(j) = sqrt(mean( (sol_rec_M-sol_rec_N).^2, 'all'));
+    errorTest(j) = sqrt(mean( (solTest{j}-sol_rec_N).^2, [1 2 3 4]));
+    errorEstTest(j) = sqrt(mean( (sol_rec_M-sol_rec_N).^2, [1 2 3 4]));
 end
 
 fprintf('Time RB:          %f\n', sum(timesRB))
@@ -124,6 +119,7 @@ fprintf(' Done!\n')
 fprintf('Maximum test error: %e\n', max(errorTest))
 
 errorEstTest = errorEstTest ./ (1 - theta);
+
 
 % Plotting
 figure
