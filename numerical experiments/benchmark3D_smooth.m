@@ -7,15 +7,15 @@ clc
 
 addpath(genpath('../source'))
 
-resolution.x = 5;
-resolution.y = 5;
-resolution.z = 5;
-resolution.t = 5;
+resolution.x = 8;
+resolution.y = 8;
+resolution.z = 8;
+resolution.t = 8;
 
 
-refinements = 1:4;
+refinements = 1:6;
 
-splineOrder = 5;
+splineOrder = 3;
 
 [X, Y, Z, T] = ndgrid(linspace(0,1, 2^resolution.x + 1), ...
     linspace(0,1, 2^resolution.y + 1), ...
@@ -40,7 +40,7 @@ u_1 = [];
 u_analytical = @(x,y,z,t) t.^2 .* sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z);
 mu = 1;
 solutionAnalytical = u_analytical(X,Y,Z,T);
-name = '3D-smooth-new.dat';
+name = '3D-smooth.dat';
 
 
 %% Compute and test the numerical solutions
