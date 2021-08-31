@@ -31,13 +31,18 @@ muInt = linspace(muMin, muMax, Nmu);
 thetaInt = linspace(0, 1, Ntheta);
 theta = 0;
 
+matrices = {kron(pOne.Q_time, pOne.M_space); ...
+    kron(pOne.D_time, pOne.A_space') + kron(pOne.D_time', pOne.A_space); ...
+    kron(pOne.M_time, pOne.Q_space)};
+coefficients = {@(mu) 1; @(mu) mu; @(mu) mu.^2};    
+
 differenceVectors = zeros(size(muInt));
 for i=1:length(muInt)
     
     problem = changeWaveSpeed(pOne, muInt(i));
     
-    u_N_rec = getRBhpSolutionVector(tree, muInt(i), problem);
-    u_M_rec = getRBhpSolutionVector(treeEstimator, muInt(i), problem);
+    u_N_rec = getRBhpSolutionVector(tree, muInt(i));
+    u_M_rec = getRBhpSolutionVector(treeEstimator, muInt(i));
     differenceVectors(i) = norm(u_N_rec - u_M_rec);
 end
 
@@ -46,11 +51,13 @@ indices = indices(1:ceil(percentage * length(muInt)));
 muInt = muInt(indices);
 thetaLoc = zeros(size(muInt));
 
+
+
 for i=1:length(muInt)
     problem = changeWaveSpeed(pOne, muInt(i));
     
-    u_N_rec = getRBhpSolutionVector(tree, muInt(i), problem);
-    u_M_rec = getRBhpSolutionVector(treeEstimator, muInt(i), problem);
+    u_N_rec = getRBhpSolutionVector(tree, muInt(i));
+    u_M_rec = getRBhpSolutionVector(treeEstimator, muInt(i));
     
     sol_rec_N = getSolution(problem, u_N_rec,  resolution, ...
         splines);

@@ -27,7 +27,7 @@ Xi = sort(Xi, 'ascend');
 XiTest = rand(1,200) * (muMax - muMin) + muMin;
 XiTest = sort(XiTest, 'ascend');
 
-solver = 'galerkin';
+solver = 'cg-opt';
 maxIt = 100;
 tolerance1 = 1e-10;
 tolerance2 = 1e-2;
@@ -54,7 +54,18 @@ t = tic;
     NhEst, NpEst,hToleranceEst, heightEst, Xi, ...
     solver, maxIt, tolerance1, tolerance2);
 toc(t)
-% TODO: Return splines and pOne for the theta Calculation
+
+
+matrices = {kron(pOne.Q_time, pOne.M_space); ...
+    kron(pOne.D_time, pOne.A_space') + kron(pOne.D_time', pOne.A_space); ...
+    kron(pOne.M_time, pOne.Q_space)};
+coefficients = {@(mu) 1; @(mu) mu; @(mu) mu.^2};  
+
+tic;
+tree = computeReducedMatrices(tree, pOne, matrices, coefficients);
+treeEstimator = computeReducedMatrices(treeEstimator, pOne, matrices, coefficients);
+toc
+
 
 % Calculate the theta value for the error estimator
 t = tic;
@@ -70,16 +81,16 @@ fprintf('Testing all solutions')
 
 timesRB = zeros(length(XiTest),1);
 timesNormal = zeros(length(XiTest),1);
-parfor j=1:length(XiTest)
+for j=1:length(XiTest)
     
     mu = XiTest(j);
     
     p = changeWaveSpeed(pOne, mu);
     
     tic;
-    u_N_rec = getRBhpSolutionVector(tree, mu, p);
+    u_N_rec = getRBhpSolutionVector(tree, mu);
     timesRB(j) = toc;
-    u_M_rec = getRBhpSolutionVector(treeEstimator, mu, p);
+    u_M_rec = getRBhpSolutionVector(treeEstimator, mu);
     
     
     sol_rec_N = getSolution(p, u_N_rec,  resolution, ...
