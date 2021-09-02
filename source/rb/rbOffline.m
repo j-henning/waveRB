@@ -10,10 +10,12 @@
 % Nh                   - Maximum number of snapshots for the h refinement
 % Np                   - Maximum number of snapshots for the p refinement
 % hTolerance           - Tolerance for the h refinement
+% pTolerance           - Tolerance for the p refinement
 % height               - Maximum height of the tree
 % NhEst                - Nh value for the error estimator
 % NpEst                - Np value for the error estimator
 % hToleranceEst        - hTolerance value for the error estimator
+% pToleranceEst        - pTolerance value for the error estimator
 % heightEst            - height parameter for the estimator
 % Xi                   - Initial paramter set
 % solver               - Name of the solver
@@ -26,8 +28,8 @@
 % pOne                 - Problem that can be copied
 % splines              - Computed spline data
 function [tree, treeEstimator, pOne, splines] = rbOffline(problemConfiguration, ...
-    resolution, muMin, muMax, Nh, Np, hTolerance, height, NhEst, NpEst, ...
-    hToleranceEst, heightEst, Xi, solver, maxIt, tolerance1, tolerance2)
+    resolution, muMin, muMax, Nh, Np, hTolerance, pTolerance, height, NhEst, NpEst, ...
+    hToleranceEst, pToleranceEst, heightEst, Xi, solver, maxIt, tolerance1, tolerance2)
 
 % Create one problem which can be scaled
 pOne = createProblem(problemConfiguration);
@@ -86,7 +88,7 @@ fprintf('Enriching leaf nodes ...')
 fprintf(' Done!\n')
 
 
-tree = pGreedy(tree, Np, 1e-3,  pOne, splines, resolution);
+tree = pGreedy(tree, Np, pTolerance,  pOne, splines, resolution);
 
 figure
 subplot(1,2,1)
@@ -97,7 +99,7 @@ title('RB model')
 fprintf('Error estimator ...\n')
 fprintf('Computing h refinement for the error estimator...\n')
 [treeEstimator] = enrich(treeEstimator, NpEst, pOne, splines, resolution, solver, maxIt, tolerance1, tolerance2);
-[treeEstimator] = pGreedy(treeEstimator, Np*3, 1e-7,pOne, splines, resolution);
+[treeEstimator] = pGreedy(treeEstimator, Np*3, pToleranceEst,pOne, splines, resolution);
 fprintf(' Done!\n')
 
 subplot(1,2,2)

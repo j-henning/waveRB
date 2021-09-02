@@ -2,6 +2,10 @@
 % space for that problem. Afterwords, the space as well an error estimator
 % is tested on a set of test points.
 
+clear
+close all
+clc
+
 addpath(genpath('../source'))
 
 % Define the parameter range
@@ -15,21 +19,23 @@ resolution.t = 7;
 Nh = 5; % Number of snapshots during the h refinement
 Np = 10; % Number of snapshots during the p refinement (Np >= Nh)
 hTolerance = 1e-1; % Tolerance for the h refinement
+pTolerance = 1e-3; % Tolerance for the p refinement
 height = 3; % Tree height
 
 NhEst = 10; % Number of snapshots during the h refinement for the Estimator
 NpEst = 15; % Number of snapshots during the p refinement (Np >= Nh) for the Estimator
 hToleranceEst = 1e-2; % Tolerance for the h refinement for the Estimator
+pToleranceEst = 1e-7; %Tolerance for the p refinement for the Estimator
 heightEst = 5; % Tree height for the Estimator
 
 Xi = rand(1,Nh) * (muMax - muMin) + muMin;
 Xi = sort(Xi, 'ascend');
-XiTest = rand(1,200) * (muMax - muMin) + muMin;
+XiTest = rand(1,2000) * (muMax - muMin) + muMin;
 XiTest = sort(XiTest, 'ascend');
 
-solver = 'cg-opt';
+solver = 'backslash';
 maxIt = 100;
-tolerance1 = 1e-10;
+tolerance1 = 1e-5;
 tolerance2 = 1e-2;
 
 % Define one prototype problem with a wave speed of one
@@ -50,8 +56,8 @@ problemConfiguration = defineProblem(1, ... % Dimension
 % Calculate the hp-RB and the error estimator
 t = tic;
 [tree, treeEstimator, pOne, splines] = rbOffline(problemConfiguration, ...
-    resolution, muMin, muMax, Nh, Np, hTolerance, height,...
-    NhEst, NpEst,hToleranceEst, heightEst, Xi, ...
+    resolution, muMin, muMax, Nh, Np, hTolerance, pTolerance, height,...
+    NhEst, NpEst,hToleranceEst, pToleranceEst, heightEst, Xi, ...
     solver, maxIt, tolerance1, tolerance2);
 toc(t)
 
@@ -121,8 +127,8 @@ errorEstTest = errorEstTest ./ (1 - theta);
 % Plotting
 figure
 subplot(1,2,1)
-semilogy(XiTest, errorTest, '*-'), hold on, grid on
-semilogy(XiTest, errorEstTest, 'd:')
+semilogy(XiTest, errorTest, '-'), hold on, grid on
+semilogy(XiTest, errorEstTest, ':')
 % semilogy(S, 0.5*min(errorTest)*ones(size(S)), 'k*')
 xlabel('\mu')
 ylabel('Error')
@@ -137,3 +143,13 @@ semilogy(XiTest(errorEstTest./errorTest < 1), ...
 title('Error Estimator / Error')
 legend('Estimator / Error', 'Values smaller than 1')
 grid on
+
+
+
+% mu = XiTest';
+% errEst = errorEstTest';
+% err = errorTest';
+% factor = errEst ./ err;
+% t = table(mu, err, errEst, factor);
+% 
+% writetable(t, 'RB-1D.dat', 'Delimiter', '\t')

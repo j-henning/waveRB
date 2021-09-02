@@ -2,6 +2,7 @@
 % Input:
 % tree - Reduced basis model
 function [] = plotIntervals(tree)
+colors = {'b', 'r', 'g', 'm', 'y'};
 hold on
 height = floor( log(length(tree)) / log(2))+1;
 for i=1:length(tree)
@@ -10,8 +11,9 @@ for i=1:length(tree)
     end
     
     level = floor( log(i) / log(2));
-    plot([tree{i}.muMin, tree{i}.muMax], [level, level], 'o-', 'LineWidth', 2)
-    plot(tree{i}.Xi, level*ones(length(tree{i}.Xi),1), 'k*')
+    plot([tree{i}.muMin, tree{i}.muMax], [level, level], ...
+        strcat(colors{mod((level), length(colors))+1 }, '+-'), 'LineWidth', 3)
+    plot(tree{i}.Xi, level*ones(length(tree{i}.Xi),1), 'k|', 'LineWidth', 2)
     
     if level > 0
         plot([tree{i}.muMin, tree{i}.muMin], [level, level-1], 'k-', 'LineWidth', 2)
@@ -24,7 +26,9 @@ for i=1:length(tree)
         end
     end
 end
-xlabel('\mu')
-ylabel('Refinement level')
+xlabel('\mu', 'FontSize', 20)
+ylabel('Refinement level', 'FontSize',13)
+curtick = get(gca, 'yTick');
+yticks(unique(round(curtick)));
 drawnow
 end

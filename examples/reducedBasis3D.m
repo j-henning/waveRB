@@ -21,12 +21,15 @@ resolution.t = 4;
 Nh = 5; % Number of snapshots during the h refinement
 Np = 10; % Number of snapshots during the p refinement (Np >= Nh)
 hTolerance = 1e-1; % Tolerance for the h refinement
-height = 2; % Tree height
+pTolerance = 1e-3; % Tolerance for the p refinement
+height = 3; % Tree height
 
 NhEst = 10; % Number of snapshots during the h refinement for the Estimator
 NpEst = 15; % Number of snapshots during the p refinement (Np >= Nh) for the Estimator
 hToleranceEst = 1e-2; % Tolerance for the h refinement for the Estimator
+pToleranceEst = 1e-7; %Tolerance for the p refinement for the Estimator
 heightEst = 5; % Tree height for the Estimator
+
 
 Xi = rand(1,Nh) * (muMax - muMin) + muMin;
 Xi = sort(Xi, 'ascend');
@@ -64,8 +67,8 @@ problemConfiguration = defineProblem(dimension, f_time, f_space, u_0, ...
 % Calculate the hp-RB and the error estimator
 t = tic;
 [tree, treeEstimator, pOne, splines] = rbOffline(problemConfiguration, ...
-    resolution, muMin, muMax, Nh, Np, hTolerance, height,...
-    NhEst, NpEst,hToleranceEst, heightEst, Xi, ...
+    resolution, muMin, muMax, Nh, Np, hTolerance, pTolerance, height,...
+    NhEst, NpEst,hToleranceEst, pToleranceEst, heightEst, Xi, ...
     solver, maxIt, tolerance1, tolerance2);
 toc(t)
 
