@@ -90,19 +90,20 @@ fprintf(' Done!\n')
 
 tree = pGreedy(tree, Np, pTolerance,  pOne, splines, resolution);
 
-figure
-subplot(1,2,1)
-plotIntervals(tree)
-title('RB model')
 
+% figure
+% subplot(1,2,1)
+% plotIntervals(tree)
+% title('RB model')
 
+% treeEstimator = [];
 fprintf('Error estimator ...\n')
-fprintf('Computing h refinement for the error estimator...\n')
+fprintf('Computing p refinement for the error estimator...\n')
 [treeEstimator] = enrich(treeEstimator, NpEst, pOne, splines, resolution, solver, maxIt, tolerance1, tolerance2);
 [treeEstimator] = pGreedy(treeEstimator, Np*3, pToleranceEst,pOne, splines, resolution);
 fprintf(' Done!\n')
 
-subplot(1,2,2)
-plotIntervals(treeEstimator)
-title('Estimator Estimator')
+% subplot(1,2,2)
+% plotIntervals(treeEstimator)
+% title('Estimator Estimator')
 end

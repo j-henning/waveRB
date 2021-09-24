@@ -9,7 +9,7 @@
 % sol        - Solution
 function [sol] = get2Dsolution(p, U,  resolution, splines)
 if resolution.x ~= resolution.y
-    error('x, y and z resolution should be the same for performance reasons!')
+    error('x and y resolution should be the same for performance reasons!')
 end
 
 u = reshape(full(U), round((numel(U) / p.dim_time)^(1/2)), ...
@@ -34,10 +34,12 @@ s2 = splines.space2';
 t = splines.time';
 t2 = splines.time2';
 
-U = reshape(u_full, [spaceDim * timeDim, spaceDim]);
+U = reshape(u_full, [spaceDim * spaceDim, timeDim]);
 
 sol = kron(s,s) * U * t2' ...
     - p.mu * ((kron(s,s2) + kron(s2,s)) * U * t');
+
+
 
 sol = reshape(sol, [size(splines.space,2), size(splines.space,2), size(splines.time,2)]);
 

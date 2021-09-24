@@ -67,8 +67,6 @@ p.M_space_local = StiffMat(p.T_space, ... % Tsol
 
 
 % A_space_local also known as N_space_local
-% IMPORTANT: FLIP THE SIGN
-% TODO: Check sign
 p.A_space_local = StiffMat(p.T_space, ... % Tsol
     p.T_space, ... % Ttest
     p.bSplineOrder_space, ... %ksol

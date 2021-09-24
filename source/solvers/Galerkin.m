@@ -69,11 +69,10 @@ restot=[];
 if info
     disp('     iter        rel.res.   bckwrd er.res    sigma1      sigma2       dim(V)       dim(W)')
 end
-tol_trunc=1e-8;
+tol_trunc=1e-8; 
 %[eig(full(C1),full(A1)),eig(full(B1),full(A1))],pause
 for k=1:maxit
     iter = k; % JH
-    
     % increase left space
     j=j+1;
     if n<1e3
@@ -81,10 +80,9 @@ for k=1:maxit
     else
         % DP: I needed to change sign
         L=ichol(C1+sigmanew1*A1);
-        [Vnew(:,1), ~] = pcg(C1+sigmanew1*A1,-V(:,k),1e-8,100, L, L');
+        [Vnew(:,1), ~] = pcg(C1+sigmanew1*A1,-V(:,k),1e-8,100,L,L');
         L=ichol(B1+(sigmanew1_2)*A1);
         [Vnew(:,2), ~] = pcg(B1+(sigmanew1_2)*A1,-V(:,k),1e-8,100,L,L');
-        
     end
     
     %Vnew = [(-C1-sigmanew1*A1)\V(:,k),(-B1-sqrt(sigmanew1)*A1)\V(:,k)];

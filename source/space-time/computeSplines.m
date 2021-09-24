@@ -35,9 +35,11 @@ for i=1:size(splines.space,1)
     end
 end
 
-if (problem.T_space == problem.T_time)
+if length(problem.T_space) == length(problem.T_time)
+    if problem.T_space == problem.T_time
     splines.time = splines.space;
     splines.time2 = splines.space2;
+    end
 else
     
     splines.time = zeros(problem.nsol_time, length(t));
@@ -55,4 +57,9 @@ else
         
     end
 end
+
+splines.time = sparse(splines.time);
+splines.space = sparse(splines.space);
+splines.time2 = sparse(splines.time2);
+splines.space2 = sparse(splines.space2);
 end

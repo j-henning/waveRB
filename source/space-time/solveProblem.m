@@ -2,8 +2,8 @@
 % Input:
 % problem    - Problem struct
 % method     - 'Galerkin' (default), 'cg-lyap', or 'cg-opt'
-% maxIt      - Maximum number of iterations
-% tolerance1 - Backward error tolerance (default 1e-10)
+% maxIt      - Maximum number of iterations (default: 1000)
+% tolerance1 - Backward error tolerance (default 1e-5)
 % tolerance2 - Residual error tolerance (default 1e-2)
 % info       - Display info during the solving procedure (default 0)
 % Output:
@@ -14,10 +14,10 @@ if nargin < 2
     method = 'galerkin';
 end
 if nargin < 3
-    maxIt = 100;
+    maxIt = 1000;
 end
 if nargin < 4
-    tolerance1 = 1e-10;
+    tolerance1 = 1e-6; 
 end
 if nargin < 5
     tolerance2 = 1e-2;

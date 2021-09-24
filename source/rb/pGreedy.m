@@ -60,7 +60,7 @@ if leftChild > length(tree) || isnan(tree{leftChild}.muMin)
         if maxError(k) < tolerance || k == Np
             tree{index}.maxError = maxError(k);
             %             maxErrors = [maxErrors, maxError];
-            %             semilogy(maxError), hold on
+%                         semilogy(maxError), hold on
             break;
         end
         
