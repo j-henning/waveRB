@@ -3,9 +3,14 @@
 % tree  - Reduced basis model
 % mu    - parameter to search for
 % Output
-% index - Index of the interval containing mu
+% index - Index of the interval containing mu (-1 is mu is lies not inside
+%         the tree)
 function [index] = findInterval(tree, mu)
-index = findIntervalRecursive(tree, 1, mu);
+if mu < tree{1}.muMin || mu > tree{1}.muMax
+    index =  -1;
+else
+    index = findIntervalRecursive(tree, 1, mu);
+end
 end
 
 % Recursive version of findInterval
