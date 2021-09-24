@@ -7,7 +7,7 @@ clc
 
 addpath(genpath('../source'))
 
-resolution.x = 7;
+resolution.x = 7; 
 resolution.y = 7;
 resolution.z = 7;
 resolution.t = 7;
@@ -17,30 +17,42 @@ refinements = 1:5;
 
 splineOrder = 3;
 
-[X, Y, Z, T] = ndgrid(linspace(0,1, 2^resolution.x + 1), ...
-    linspace(0,1, 2^resolution.y + 1), ...
-    linspace(0,1, 2^resolution.z + 1), ...
-    linspace(0,1, 2^resolution.t + 1));
+
 
 %% Define the problem
 
 dimension = 3;
-mm = 3;
-nn = 2;
-oo = 1;
-f_time = {@(t) 2+ 0.*t; @(t) (t.^2)*(mm^2 + nn^2 + oo^2)*(pi^2)};
-% f_space = {@(x,y,z) sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z); ...
-%     @(x,y,z) sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z)};
-
-f_space = {@(x) sin(mm*pi*x), @(y) sin(nn*pi*y), @(z) sin(oo*pi*z); ...
-    @(x) sin(mm*pi*x), @(y) sin(nn*pi*y), @(z) sin(oo*pi*z)};
-
-u_0 = [];
+f_time = [];
+f_space = [];
+funR = @(x,y,z) sqrt((x-0.5).^2 + (y-0.5).^2 + (z-0.5).^2);  % Returns the radius
+u0r = @(r) (1 - 5 * abs(r)).*(abs(r) <= 0.2);
+u_0 = @(x,y,z) u0r(funR(x,y,z));
 u_1 = [];
-u_analytical = @(x,y,z,t) t.^2 .* sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z);
-mu = 1;
-solutionAnalytical = u_analytical(X,Y,Z,T);
-name = '3D-smooth.dat';
+mu = .01;
+name = '3D-continuous.dat';
+
+% Compute the analytical solution
+x = linspace(0,1, 2^resolution.x + 1);
+y = linspace(0,1, 2^resolution.y + 1);
+z = linspace(0,1, 2^resolution.z + 1);
+t = linspace(0,1, 2^resolution.t + 1);
+
+[X, Y, Z, T] = ndgrid(x,y,z,t);
+
+
+
+solutionAnalytical = zeros(2^resolution.x+1, 2^resolution.y+1, ...
+    2^resolution.z+1, 2^resolution.t+1);
+
+for i=1:2^resolution.x+1
+    for j=1:2^resolution.y+1
+        for k=1:2^resolution.z+1
+            r = funR(x(i), y(j), z(k));
+            solutionAnalytical(i,j,k,:) = dAlembertSphere(r,t,sqrt(mu), u0r);
+        end
+    end
+end
+
 
 
 %% Compute and test the numerical solutions
@@ -80,12 +92,6 @@ for refinement = refinements
     fprintf('Getting the solution\n')
     solutionCGOpt = getSolution(problem, UCGOpt, resolution);
     
-    % Backslash
-    %     tic;
-    %     UBackslash = solveProblem(problem, 'backslash');
-    %     timeBackslash(refinement) = toc;
-    %     solutionBackslash = getSolution(problem, UBackslash, resolution);
-    
     % Time-Stepping
     fprintf('Creating Time-Stepping problem\n')
     problemTSConfiguration = defineTSProblem(dimension, f_time, f_space, ...
@@ -102,15 +108,13 @@ for refinement = refinements
     
     % Compute the errors
     fprintf('Computing the L2 errors\n')
-    errorGalerkin(refinement) = sqrt(mean( (solutionGalerkin-solutionAnalytical).^2, 'all'));
-    errorCGLyap(refinement) = sqrt(mean( (solutionCGLyap-solutionAnalytical).^2, 'all'));
-    errorCGOpt(refinement) = sqrt(mean( (solutionCGOpt-solutionAnalytical).^2, 'all'));
-    %     errorBackslash(refinement) = sqrt(mean( (solutionBackslash-solutionAnalytical).^2, 'all'));
-    errorTS(refinement) = sqrt(mean( (solutionTS-solutionAnalytical).^2, 'all'));
+    errorGalerkin(refinement) = sqrt(mean( (solutionGalerkin-solutionAnalytical).^2, 'all', 'omitnan'));
+    errorCGLyap(refinement) = sqrt(mean( (solutionCGLyap-solutionAnalytical).^2, 'all', 'omitnan'));
+    errorCGOpt(refinement) = sqrt(mean( (solutionCGOpt-solutionAnalytical).^2, 'all', 'omitnan'));
+    errorTS(refinement) = sqrt(mean( (solutionTS-solutionAnalytical).^2, 'all', 'omitnan'));
     
     
 end
-
 
 %% Write the data into a file
 
@@ -140,3 +144,5 @@ t = table(refinements, unknowns, timeGalerkin, errorGalerkin, iterGalerkin, ...
 
 writetable(t, name, 'Delimiter', '\t')
 
+
+plotSolution(solutionGalerkin , resolution)

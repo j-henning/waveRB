@@ -7,40 +7,33 @@ clc
 
 addpath(genpath('../source'))
 
-resolution.x = 7;
-resolution.y = 7;
-resolution.z = 7;
-resolution.t = 7;
+resolution.x = 8; 
+resolution.y = 8;
+resolution.t = 8;
 
 
-refinements = 1:5;
+refinements = 1:6; 
 
 splineOrder = 3;
 
-[X, Y, Z, T] = ndgrid(linspace(0,1, 2^resolution.x + 1), ...
+[X, Y, T] = ndgrid(linspace(0,1, 2^resolution.x + 1), ...
     linspace(0,1, 2^resolution.y + 1), ...
-    linspace(0,1, 2^resolution.z + 1), ...
     linspace(0,1, 2^resolution.t + 1));
 
 %% Define the problem
 
-dimension = 3;
-mm = 3;
-nn = 2;
-oo = 1;
-f_time = {@(t) 2+ 0.*t; @(t) (t.^2)*(mm^2 + nn^2 + oo^2)*(pi^2)};
-% f_space = {@(x,y,z) sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z); ...
-%     @(x,y,z) sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z)};
-
-f_space = {@(x) sin(mm*pi*x), @(y) sin(nn*pi*y), @(z) sin(oo*pi*z); ...
-    @(x) sin(mm*pi*x), @(y) sin(nn*pi*y), @(z) sin(oo*pi*z)};
-
+dimension = 2;
+n = 3; m = 2;
+f_time = {@(t) 2+ 0*t; @(t) t.^2*(n^2 + m^2)*pi^2;};
+f_space = {@(x) sin(n*pi*x),@(y) sin(m*pi*y); ...
+    @(x) sin(n*pi*x) , @(y) sin(m*pi*y)};
 u_0 = [];
 u_1 = [];
-u_analytical = @(x,y,z,t) t.^2 .* sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z);
 mu = 1;
-solutionAnalytical = u_analytical(X,Y,Z,T);
-name = '3D-smooth.dat';
+u_analytical = @(x,y,t) t.^2 .* sin(n*pi*x).*sin(m*pi*y);
+has_analytical_solution = true;
+solutionAnalytical = u_analytical(X,Y,T);
+name = '2D-smooth.dat';
 
 
 %% Compute and test the numerical solutions

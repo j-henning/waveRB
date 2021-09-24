@@ -7,40 +7,29 @@ clc
 
 addpath(genpath('../source'))
 
-resolution.x = 7;
-resolution.y = 7;
-resolution.z = 7;
-resolution.t = 7;
+resolution.x = 10;
+resolution.t = 10;
 
 
-refinements = 1:5;
+refinements = 1:8;
 
-splineOrder = 3;
+splineOrder = 4;
 
-[X, Y, Z, T] = ndgrid(linspace(0,1, 2^resolution.x + 1), ...
-    linspace(0,1, 2^resolution.y + 1), ...
-    linspace(0,1, 2^resolution.z + 1), ...
+[X, T] = ndgrid(linspace(0,1, 2^resolution.x + 1), ...
     linspace(0,1, 2^resolution.t + 1));
 
 %% Define the problem
 
-dimension = 3;
-mm = 3;
-nn = 2;
-oo = 1;
-f_time = {@(t) 2+ 0.*t; @(t) (t.^2)*(mm^2 + nn^2 + oo^2)*(pi^2)};
-% f_space = {@(x,y,z) sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z); ...
-%     @(x,y,z) sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z)};
-
-f_space = {@(x) sin(mm*pi*x), @(y) sin(nn*pi*y), @(z) sin(oo*pi*z); ...
-    @(x) sin(mm*pi*x), @(y) sin(nn*pi*y), @(z) sin(oo*pi*z)};
-
+dimension = 1;
+f_time = {@(t) 2+0*t, @(t) t.^2};
+f_space = {@(x) sin(2*pi*x), @(x) 4*pi^2*sin(2*pi*x)};
 u_0 = [];
 u_1 = [];
-u_analytical = @(x,y,z,t) t.^2 .* sin(mm*pi*x).*sin(nn*pi*y).*sin(oo*pi*z);
 mu = 1;
-solutionAnalytical = u_analytical(X,Y,Z,T);
-name = '3D-smooth.dat';
+u_analytical = @(x,t) t.^2 .* sin(2*pi*x);
+
+solutionAnalytical = u_analytical(X,T);
+name = '1D-smoothOrder4.dat';
 
 
 %% Compute and test the numerical solutions
@@ -81,10 +70,10 @@ for refinement = refinements
     solutionCGOpt = getSolution(problem, UCGOpt, resolution);
     
     % Backslash
-    %     tic;
-    %     UBackslash = solveProblem(problem, 'backslash');
-    %     timeBackslash(refinement) = toc;
-    %     solutionBackslash = getSolution(problem, UBackslash, resolution);
+    tic;
+    UBackslash = solveProblem(problem, 'backslash');
+    timeBackslash(refinement) = toc;
+    solutionBackslash = getSolution(problem, UBackslash, resolution);
     
     % Time-Stepping
     fprintf('Creating Time-Stepping problem\n')
@@ -105,7 +94,7 @@ for refinement = refinements
     errorGalerkin(refinement) = sqrt(mean( (solutionGalerkin-solutionAnalytical).^2, 'all'));
     errorCGLyap(refinement) = sqrt(mean( (solutionCGLyap-solutionAnalytical).^2, 'all'));
     errorCGOpt(refinement) = sqrt(mean( (solutionCGOpt-solutionAnalytical).^2, 'all'));
-    %     errorBackslash(refinement) = sqrt(mean( (solutionBackslash-solutionAnalytical).^2, 'all'));
+    errorBackslash(refinement) = sqrt(mean( (solutionBackslash-solutionAnalytical).^2, 'all'));
     errorTS(refinement) = sqrt(mean( (solutionTS-solutionAnalytical).^2, 'all'));
     
     
@@ -129,6 +118,8 @@ timeCGOpt = timeCGOpt';
 errorCGOpt = errorCGOpt';
 iterCGOpt = iterCGOpt';
 
+timeBackslash = timeBackslash';
+errorBackslash = errorBackslash';
 
 timeTS = timeTS';
 errorTS = errorTS';
@@ -136,6 +127,7 @@ errorTS = errorTS';
 t = table(refinements, unknowns, timeGalerkin, errorGalerkin, iterGalerkin, ...
     timeCGLyap, errorCGLyap, iterCGLyap, ...
     timeCGOpt, errorCGOpt, iterCGOpt, ...
+    timeBackslash, errorBackslash, ...
     timeTS, errorTS)
 
 writetable(t, name, 'Delimiter', '\t')
