@@ -51,12 +51,27 @@ end
 
 % Linearaly interpolate the solution to match Kref time steps
 
-x = linspace(0,1, 2^resolution.x+1);
-y = linspace(0,1, 2^resolution.y+1);
-z = linspace(0,1, 2^resolution.z+1);
-[X, Y, Z, T] = ndgrid(x, y, z, linspace(0,1, problemTS.K));
-[Xq, Yq, Zq, Tq] = ndgrid(x, y, z, linspace(0,1,2^resolution.t+1));
-solutionTS = interpn(X, Y, Z, T, solutionTS, Xq, Yq, Zq, Tq);
+% x = linspace(0,1, 2^resolution.x+1);
+% y = linspace(0,1, 2^resolution.y+1);
+% z = linspace(0,1, 2^resolution.z+1);
+% [X, Y, Z, T] = ndgrid(x, y, z, linspace(0,1, problemTS.K));
+% [Xq, Yq, Zq, Tq] = ndgrid(x, y, z, linspace(0,1,2^resolution.t+1));
+% solutionTS = interpn(X, Y, Z, T, solutionTS, Xq, Yq, Zq, Tq);
+
+t_problem = linspace(0,1, problemTS.K);
+t_evaluation = linspace(0,1,2^resolution.t+1);
+
+solutionTSFull = solutionTS;
+solutionTS = zeros(2^resolution.x+1, 2^resolution.y+1, 2^resolution.z+1, ...
+    2^resolution.t+1);
+
+for i=1:2^resolution.t+1
+    [~, index_closest] = min(abs(t_problem-t_evaluation(i)));
+    solutionTS(:,:,:,i) = solutionTSFull(:,:,:,index_closest);
+
+end
+
+
 
 
 

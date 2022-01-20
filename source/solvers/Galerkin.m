@@ -79,30 +79,48 @@ for k=1:maxit
         Vnew = [(-C1-sigmanew1*A1)\V(:,k),(-B1-(sigmanew1_2)*A1)\V(:,k)];
     else
         % DP: I needed to change sign
-        L=ichol(C1+sigmanew1*A1);
-        [Vnew(:,1), ~] = pcg(C1+sigmanew1*A1,-V(:,k),1e-8,100,L,L');
-        L=ichol(B1+(sigmanew1_2)*A1);
-        [Vnew(:,2), ~] = pcg(B1+(sigmanew1_2)*A1,-V(:,k),1e-8,100,L,L');
+        CsA=C1+sigmanew1*A1;
+        L=ichol(CsA);   %C1+sigmanew1*A1);
+        [Vnew(:,1), ~] = pcg(CsA,-V(:,k),1e-8,100,L,L');
+       %[Vnew(:,1), ~] = pcg(C1+sigmanew1*A1,-V(:,k),1e-8,100,L,L');
+        BsA=B1+(sigmanew1_2)*A1;
+        L=ichol(BsA);  %B1+(sigmanew1_2)*A1);
+        [Vnew(:,2), ~] = pcg(BsA,-V(:,k),1e-8,100,L,L');
+       %[Vnew(:,2), ~] = pcg(B1+(sigmanew1_2)*A1,-V(:,k),1e-8,100,L,L');
     end
     
     %Vnew = [(-C1-sigmanew1*A1)\V(:,k),(-B1-sqrt(sigmanew1)*A1)\V(:,k)];
     Vnew = Vnew - V*(V'*Vnew); Vnew = Vnew - V*(V'*Vnew);
     [uu,ss,vv] = svd(Vnew,0);
+diag(ss);
     ns=sum(diag(ss)/ss(1,1)>tol_trunc); Vnew=uu(:,1:ns);
     
     % compute the projection of the coefficient matrices
     p1=size(Vnew,2);
-    A1r(1:p1old,p1old+1:p1old+p1)=V'*(A1*Vnew);
-    A1r(p1old+1:p1old+p1,1:p1old)=(Vnew'*A1)*V;
-    A1r(p1old+1:p1old+p1,p1old+1:p1old+p1)=(Vnew'*A1)*Vnew;
+    wrkV=Vnew'*A1;
+    A1r(1:p1old,p1old+1:p1old+p1)=V'*wrkV';  %(A1*Vnew);
+    A1r(p1old+1:p1old+p1,1:p1old)=A1r(1:p1old,p1old+1:p1old+p1)';  %wrkV'*V;
+   %A1r(p1old+1:p1old+p1,1:p1old)=wrkV'*V;
+    A1r(p1old+1:p1old+p1,p1old+1:p1old+p1)=wrkV*Vnew;
+   %A1r(1:p1old,p1old+1:p1old+p1)=V'*(A1*Vnew);
+   %A1r(p1old+1:p1old+p1,1:p1old)=(Vnew'*A1)*V;
+   %A1r(p1old+1:p1old+p1,p1old+1:p1old+p1)=(Vnew'*A1)*Vnew;
     
-    B1r(1:p1old,p1old+1:p1old+p1)=V'*(B1*Vnew);
-    B1r(p1old+1:p1old+p1,1:p1old)=(Vnew'*B1)*V;
-    B1r(p1old+1:p1old+p1,p1old+1:p1old+p1)=(Vnew'*B1)*Vnew;
+    wrkV=B1*Vnew;
+    B1r(1:p1old,p1old+1:p1old+p1)=V'*wrkV;   
+    B1r(p1old+1:p1old+p1,1:p1old)=B1r(1:p1old,p1old+1:p1old+p1)'; %wrkV'*V;
+    B1r(p1old+1:p1old+p1,p1old+1:p1old+p1)=wrkV'*Vnew;
+   %B1r(1:p1old,p1old+1:p1old+p1)=V'*(B1*Vnew);
+   %B1r(p1old+1:p1old+p1,1:p1old)=(Vnew'*B1)*V;
+   %B1r(p1old+1:p1old+p1,p1old+1:p1old+p1)=(Vnew'*B1)*Vnew;
     
-    C1r(1:p1old,p1old+1:p1old+p1)=V'*(C1*Vnew);
-    C1r(p1old+1:p1old+p1,1:p1old)=(Vnew'*C1)*V;
-    C1r(p1old+1:p1old+p1,p1old+1:p1old+p1)=(Vnew'*C1)*Vnew;
+    wrkV=C1*Vnew;
+    C1r(1:p1old,p1old+1:p1old+p1)=V'*wrkV; 
+    C1r(p1old+1:p1old+p1,1:p1old)=C1r(1:p1old,p1old+1:p1old+p1)';  %(Vnew'*C1)*V;
+    C1r(p1old+1:p1old+p1,p1old+1:p1old+p1)=wrkV'*Vnew;
+   %C1r(1:p1old,p1old+1:p1old+p1)=V'*(C1*Vnew);
+   %C1r(p1old+1:p1old+p1,1:p1old)=(Vnew'*C1)*V;
+   %C1r(p1old+1:p1old+p1,p1old+1:p1old+p1)=(Vnew'*C1)*Vnew;
     
     V = [V, Vnew];
     rhs1_projected=[rhs1_projected;zeros(size(Vnew,2),size(rhs1,2))];
@@ -112,26 +130,40 @@ for k=1:maxit
     %A1r=V'*A1*V; B1r=V'*(B1*V); C1r=V'*(C1*V);
     
     % increase right space
-    if k <= size(W,2)
+[n1W,n2W]=size(W);
+    if k < n1W & n2W < n1W
         Wnew = [(-A2-sigmanew2*C2)\W(:,k),(-B2-sqrt(sigmanew2)*C2)\W(:,k)];
         Wnew = Wnew - W*(W'*Wnew); Wnew = Wnew - W*(W'*Wnew);
         [uu,ss,vv] = svd(Wnew,0);
+diag(ss);
         if ss(1,1)>tol_trunc,
             ns=sum(diag(ss)/ss(1,1)>tol_trunc); Wnew=uu(:,1:ns);
             
             % compute the projection of the coefficient matrices
             p2=size(Wnew,2);
-            A2r(1:p2old,p2old+1:p2old+p2)=W'*(A2*Wnew);
-            A2r(p2old+1:p2old+p2,1:p2old)=(Wnew'*A2)*W;
-            A2r(p2old+1:p2old+p2,p2old+1:p2old+p2)=(Wnew'*A2)*Wnew;
+            wrkW=A2*Wnew;
+            A2r(1:p2old,p2old+1:p2old+p2)=W'*wrkW;
+            A2r(p2old+1:p2old+p2,1:p2old)=A2r(1:p2old,p2old+1:p2old+p2)'; 
+            A2r(p2old+1:p2old+p2,p2old+1:p2old+p2)=wrkW'*Wnew;
+           %A2r(1:p2old,p2old+1:p2old+p2)=W'*(A2*Wnew);
+           %A2r(p2old+1:p2old+p2,1:p2old)=(Wnew'*A2)*W;
+           %A2r(p2old+1:p2old+p2,p2old+1:p2old+p2)=(Wnew'*A2)*Wnew;
             
-            B2r(1:p2old,p2old+1:p2old+p2)=W'*(B2*Wnew);
-            B2r(p2old+1:p2old+p2,1:p2old)=(Wnew'*B2)*W;
-            B2r(p2old+1:p2old+p2,p2old+1:p2old+p2)=(Wnew'*B2)*Wnew;
+            wrkW=B2*Wnew;
+            B2r(1:p2old,p2old+1:p2old+p2)=W'*wrkW;
+            B2r(p2old+1:p2old+p2,1:p2old)=B2r(1:p2old,p2old+1:p2old+p2)'; 
+            B2r(p2old+1:p2old+p2,p2old+1:p2old+p2)=wrkW'*Wnew;
+           %B2r(1:p2old,p2old+1:p2old+p2)=W'*(B2*Wnew);
+           %B2r(p2old+1:p2old+p2,1:p2old)=(Wnew'*B2)*W;
+           %B2r(p2old+1:p2old+p2,p2old+1:p2old+p2)=(Wnew'*B2)*Wnew;
             
-            C2r(1:p2old,p2old+1:p2old+p2)=W'*(C2*Wnew);
-            C2r(p2old+1:p2old+p2,1:p2old)=(Wnew'*C2)*W;
-            C2r(p2old+1:p2old+p2,p2old+1:p2old+p2)=(Wnew'*C2)*Wnew;
+            wrkW=C2*Wnew;
+            C2r(1:p2old,p2old+1:p2old+p2)=W'*wrkW;
+            C2r(p2old+1:p2old+p2,1:p2old)=C2r(1:p2old,p2old+1:p2old+p2)';
+            C2r(p2old+1:p2old+p2,p2old+1:p2old+p2)=wrkW'*Wnew;
+           %C2r(1:p2old,p2old+1:p2old+p2)=W'*(C2*Wnew);
+           %C2r(p2old+1:p2old+p2,1:p2old)=(Wnew'*C2)*W;
+           %C2r(p2old+1:p2old+p2,p2old+1:p2old+p2)=(Wnew'*C2)*Wnew;
             
             W = [W, Wnew];
             rhs2_projected=[rhs2_projected;zeros(size(Wnew,2),size(rhs2,2))];
@@ -147,18 +179,27 @@ for k=1:maxit
         +kron(C2r(1:p2old,1:p2old)',C1r(1:p1old,1:p1old));
     y = T\rhsr(:);
     Y = reshape(y,nV,nW);
+[uY,sY,vY]=svd(Y);  isY=sum(diag(sY)/sY(1,1)>1e-13);
     
     % compute the residual norm
-    VY=V*Y;
+    VY=V*(uY(:,1:isY)*sY(1:isY,1:isY));
     fact1=[A1*(VY),B1*(VY),C1*(VY),-rhs1];
     [~,R1]=qr(fact1,0);
-    fact2=[A2'*W,B2'*W,C2'*W,rhs2];
+    WYt=W*vY(:,1:isY);
+    fact2=[A2'*WYt,B2'*WYt,C2'*WYt,rhs2];
     [~,R2]=qr(fact2,0);
+   %VY=V*Y;
+   %fact1=[A1*(VY),B1*(VY),C1*(VY),-rhs1];
+   %[~,R1]=qr(fact1,0);
+   %fact2=[A2'*W,B2'*W,C2'*W,rhs2];
+   %[~,R2]=qr(fact2,0);
     
     %res_bw=norm(R1*R2','fro')/(norm(Y,'fro')*norm(A1,'fro')*norm(A2,'fro')+norm_init);
-    res_bw=norm(R1*R2','fro')/(2*norm(Y,'fro')*normterm+norm_init);
-    res_rel=norm(R1*R2','fro')/norm_init;
+    normR1R2=norm(R1*R2','fro');
+    res_bw=normR1R2/(2*norm(diag(sY))*normterm+norm_init);  %(2*norm(Y,'fro')*normterm+norm_init);
+    res_rel=normR1R2/norm_init;
     restot=[restot,res_rel];
+
     if info
         %[norm_init,norm(R1*R2','fro'),norm(Y,'fro'),normterm]
         disp([k,res_rel,res_bw,sigmanew1,sigmanew2,nV,nW])

@@ -31,6 +31,7 @@ ts4 = problemTS.tau*problemTS.tau/4;
 
 % Calculate the other steps:
 for k=3:problemTS.K
+%    fprintf("Progress: %d/%d\n", k, problemTS.K)
     Fpp = problemTS.Fvals(:,k-2); % penultimate time step
     Fp = problemTS.Fvals(:,k-1); % last time step
     F = problemTS.Fvals(:,k); % current time step

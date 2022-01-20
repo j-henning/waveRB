@@ -100,7 +100,8 @@ while i < m
             newAv=A1*LVnew;  %(L2'\(L2\V));
             %newAv=A1*(A2\V);
             D = kron(spdiag(s(2:end)),I);
-            g = VV'*newAv; g1 = g; g2 = V'*(A1*LV); g3 = V'*newAv; %(A1*(A2\V));
+            g = VV'*newAv; g1 = g; g2 = (V'*A1)*LV; g3 = V'*newAv; %(A1*(A2\V));
+           %g = VV'*newAv; g1 = g; g2 = V'*(A1*LV); g3 = V'*newAv; %(A1*(A2\V));
             %g = VV'*newAv; g1 = g; g2 = V'*(A1*(L2'\(L2\VV))); g3 = V'*newAv; %(A1*(A2\V));
             K = [K g1; g2, g3];
             VV=[VV,V];
@@ -113,10 +114,11 @@ while i < m
     
     ih1=i1; ih=i;
     %newAv=A1*(A2\V);
-    LVnew=L2'\(L2\V);
-    newAv=A1*LVnew; %(L2'\(L2\V));
-    D = kron(diag(s(2:end)),I);
-    g = VV'*newAv;
+%VS dec 22,2021
+ %  LVnew=L2'\(L2\V);
+ %  newAv=A1*LVnew; %(L2'\(L2\V));
+ %  D = kron(diag(s(2:end)),I);
+ %  g = VV'*newAv;
     
     
     if (rem(i,period)==0 | i >= m | max(js,js) >= n)
@@ -201,7 +203,11 @@ while i < m
     if (imag(snew) ~=0), cmplxflag=1;end
     s=[s,snew];
     LVnew=L2'\(L2\V);
-    g1 = g; g2 = V'*(A1*LV); g3 = V'*(A1*LVnew);
+    newAv=A1*LVnew; %(L2'\(L2\V));
+    Vwrk=V'*A1;
+   g = VV'*newAv;
+    g1 = g; g2 = Vwrk*LV; g3 = Vwrk*LVnew;
+   %g1 = g; g2 = V'*(A1*LV); g3 = V'*(A1*LVnew);
     %g1 = g; g2 = V'*(A1*(A2\VV)); g3 = V'*(A1*(A2\V));
     K = [K g1; g2, g3];
     VV=[VV,V];

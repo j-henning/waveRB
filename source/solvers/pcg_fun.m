@@ -96,13 +96,13 @@ while ((backward_error > tol || res(k)/res0 > tol_res) && k<maxit)
             Z=U1*( (V1*R*V2).*LL)*U2;
         else
             % low-rank truncation of the rhs
-            nr=4; droptol=1e-5; tol_inner=1e-10;
+            nr=20; droptol=1e-5; tol_inner=1e-8;maxit_inner=20;
             [uu,ss,vv]=svds(R,min([nr,n1])); is = sum(diag(ss)/ss(1,1)>droptol);
             R1=uu(:,1:is)*sqrt(ss(1:is,1:is)); R2=vv(:,1:is)*sqrt(ss(1:is,1:is));
             %[Z1,Z2,~,~]=arn_adapt_SylvMRHS_oneside(-AA,speye(n1),speye(n1),-BB,Ls\R1,Lt\R2,10,tol_inner,eAmin,eAmax,0,1);
             %[Z1,Z2,~,~]=arn_adapt_SylvMRHS_oneside(-params.Q_space,params.M_space,Ls,-BB,Ls\R1,Lt\R2,20,tol_inner,eAmin,eAmax,0,1);
             %Z=(Ls'\Z1)*(Z2'/Lt);
-            [Z]=rksm_onesided_lyapprec(-params.Q_space,params.M_space,Ls,-BB,R1,Lt\R2,10,eAmin,eAmax,0);
+            [Z]=rksm_onesided_lyapprec(-params.Q_space,params.M_space,Ls,-BB,R1,Lt\R2,maxit_inner,eAmin,eAmax,0,tol_inner);
             Z=Z/Lt;
         end
         
@@ -117,17 +117,17 @@ while ((backward_error > tol || res(k)/res0 > tol_res) && k<maxit)
             % Inexact preconditioner (one-sided rational krylov iteration)
             
             % low-rank truncation of the rhs of the firs Sylvetser eq.
-            nr=4; droptol=1e-5; tol_inner=1e-10;
+            nr=20; droptol=1e-5; tol_inner=1e-8; maxit_inner=20;
             [uu,ss,vv]=svds(R,min([nr,n1])); is = sum(diag(ss)/ss(1,1)>droptol);
             R1=uu(:,1:is)*sqrt(ss(1:is,1:is)); R2=vv(:,1:is)*sqrt(ss(1:is,1:is));
             % solve the first equation
-            [Z1,Z2,~,~]=arn_adapt_SylvMRHS_oneside(-hatA,params.M_space,LM,-BB1,R1,R2,10,tol_inner,eAmin,eAmax,0,1);
+            [Z1,Z2,~,~]=arn_adapt_SylvMRHS_oneside(-hatA,params.M_space,LM,-BB1,R1,R2,maxit_inner,tol_inner,eAmin,eAmax,0,1);
             % Further reduce the rank of Z1*Z2' to make the solution of the
             % second equation cheaper
             [uu,ss,vv]=svds(Z1*Z2',min([nr,size(Z1,2)])); is=sum(diag(ss)/ss(1,1)>droptol);
             Z1=uu(:,1:is)*sqrt(ss(1:is,1:is)); Z2=vv(:,1:is)*sqrt(ss(1:is,1:is));
             % solve the second equation
-            [Z1,Z2,~,~]=arn_adapt_SylvMRHS_oneside(-hatA,params.M_space,LM,-BB2,Z1,Z2,10,tol_inner,eAmin,eAmax,0,1);
+            [Z1,Z2,~,~]=arn_adapt_SylvMRHS_oneside(-hatA,params.M_space,LM,-BB2,Z1,Z2,maxit_inner,tol_inner,eAmin,eAmax,0,1);
             Z=(LM'\(LM\Z1))*(Z2'/params.M_time);
         end
     end
@@ -149,12 +149,17 @@ while ((backward_error > tol || res(k)/res0 > tol_res) && k<maxit)
     res(k)=full(sqrt(sum(sum(R.*R))));
     backward_error=res(k)/(res0+2*norm(X,'fro')*normterm);
     %backward_error=res(k)/(sqrt(res0^2+min(svd(full(X)))^2*ccc));
+%       disp([k,res(k),backward_error]) %JH
     
     if params.info
         disp([k,res(k),backward_error]) %JH
     end
     
 end
+% figure
+% semilogy(res)
+% grid on
+% drawnow
 iter = k;
 % disp(['pcg (',params.precond,')'])
 % fprintf('\nDim space: %d time: %d .  CG its %d  backward error %d\n',n1,n2,k,backward_error)

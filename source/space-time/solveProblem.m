@@ -17,7 +17,7 @@ if nargin < 3
     maxIt = 1000;
 end
 if nargin < 4
-    tolerance1 = 1e-6; 
+    tolerance1 = 1e-5; 
 end
 if nargin < 5
     tolerance2 = 1e-2;

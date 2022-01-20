@@ -203,7 +203,9 @@ while i < m
     if (imag(snew) ~=0), cmplxflag=1;end
     s=[s,snew];
     %LVnew=L2'\(L2\V);
-    g1 = g; g2 = ((V'/L2)*A1/L2')*VV; g3 = V'*(L2\(A1*(L2'\V)));
+    newAv=L2\(A1*(L2'\V)); %(L2'\(L2\V));
+    g1 = g; g2 = g1'; g3 = V'*newAv;  %(L2\(A1*(L2'\V)));
+   %g1 = g; g2 = ((V'/L2)*A1/L2')*VV; g3 = V'*(L2\(A1*(L2'\V)));
     %g1 = g; g2 = V'*(A1*(A2\VV)); g3 = V'*(A1*(A2\V));
     K = [K g1; g2, g3];
     VV=[VV,V];

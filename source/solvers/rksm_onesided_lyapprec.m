@@ -2,7 +2,7 @@
 % NOTE:
 % This code was provided by Valeria Simoncini 
 % http://www.dm.unibo.it/~simoncin/welcome.html
-function [Z,nrmrestot]=rksm_onesided_lyapprec(A,E,EL,B,C1,C2,m,s1,emax,ch)
+function [Z,nrmrestot]=rksm_onesided_lyapprec(A,E,EL,B,C1,C2,m,s1,emax,ch,tol)
 %function [Z,nrmrestot]=rksm(A,E,EL,B,m,tol,s1,emax,ch,tolY)
 %      
 % Approximately Solve  
@@ -81,16 +81,17 @@ VV(1:n,1:p)=V;
 H=zeros(p*(m+2),p*(m+1));
 nrmrestot=[];
 nrma=norm(A,'fro');
-if (norm(E-speye(n),'fro')>1e-14)
-  condestE=condest(E);
-  singE=condestE/norm(E,'fro');
-else
-  singE=1;
-end
+%if (norm(E-speye(n),'fro')>1e-14)
+%  condestE=condest(E);
+%  singE=condestE/norm(E,'fro');
+%else
+%  singE=1;
+%end
 
 if (norm(A-E-(A-E)',1)<1e-14), symm=1; else symm=0;end
 
  newAv=EL\(A*(EL'\V));
+    Q=newAv;
  K=V'*newAv;
  s(1)=s1;
  eH=eig(K);
@@ -103,6 +104,7 @@ if (norm(A-E-(A-E)',1)<1e-14), symm=1; else symm=0;end
 cmplxflag=0;
 
 i=0;
+
 while i < m
 
   i=i+1;
@@ -129,10 +131,14 @@ while i < m
     if (cmplxflag), 
     snew=conj(snew); s(i+2)=snew;cmplxflag=0;
     newAv=EL\(A*(EL'\V));
+    Q=[Q, newAv];
     g = VV(1:n,1:js)'*newAv;
     g1 = g; 
-    g2 = V'*(EL\(A*(EL'\VV(1:n,1:js))));
-    g3 = V'*(EL\(A*(EL'\V)));
+    Vwrk=newAv; %EL\(A*(EL'\V));
+    g2 = Vwrk'*VV(1:n,1:js);
+   %g2 = V'*(EL\(A*(EL'\VV(1:n,1:js))));
+    g3 = V'*Vwrk;
+   %g3 = V'*(EL\(A*(EL'\V)));
     K = [K g1; g2, g3];
     VV(1:n,js+1:j1s)=V;  
     i=i+1;
@@ -141,12 +147,24 @@ while i < m
 
     ih1=i1; ih=i;
     newAv=EL\(A*(EL'\V));
+    Q=[Q, newAv];
     g = VV(1:n,1:js)'*newAv;
 
-   if (symm), K=(K+K')/2; end
-     %rhs2=speye(ih*p,p)*beta2*speye(ih*p,p)';
-     rhs2=speye(ih*p,p)*beta2;
-     Y = lyap(K,B,rhs2);
+    if (symm), K=(K+K')/2; end
+   %rhs2=speye(ih*p,p)*beta2*speye(ih*p,p)';
+    rhs2=speye(ih*p,p)*beta2;
+    Y = lyap(K,B,rhs2);
+jY=size(Y,1);
+%X=VV(:,1:size(Y,1))*Y;
+%WW=EL\(A*(EL'\X))+X*B+Lres*C2';
+%nrmres=norm(WW,'fro')/nrmb;
+%      [qq,rr]=qr([EL\(A*(EL'\VV(:,1:jY))),VV(:,1:jY), Lres],0);
+       [qq,rr]=qr([Q(:,1:jY),VV(:,1:jY), Lres],0);
+        %[qq,rr]=qr([VV(:,1:js),A1*(L2'\(L2\VV(:,1:js)))],0);
+        nrmres=norm(rr*sparse([Y; Y*B; C2' ]),'fro')/norm(Lres,'fro')/norm(C2,'fro');
+%disp([i,nrmres])
+
+if (nrmres<tol), break,end
 %      nrmx = norm(Y,'fro');
 % 
 % % computed residual   (exact, in exact arithmetic)
@@ -156,9 +174,9 @@ while i < m
 %      rr=qr(full(U),0); rr=triu(rr(1:size(rr,2),:));
 %      nrmres=norm(rr*sparse([O I O; I O I; O I O ])*rr','fro')/(nrmb+singE*nrma*nrmx);
 %      nrmrestot=[nrmrestot,nrmres];
-% 
+  
 %      disp([i,nrmres]) 
- %    if (nrmres<tol), break,end
+%     if (nrmres<tol), break,end
 
 % New poles and zeros
     eH=sort(eig(K)); eHorig=eH;
@@ -206,9 +224,14 @@ while i < m
  if (imag(snew) ~=0), cmplxflag=1;end
  s(i+2)=snew; 
 
+   %newAv=EL\(A*(EL'\V));
+   %g = VV(1:n,1:js)'*newAv;
  g1 = g; 
- g2 = V'*(EL\(A*(EL'\VV(1:n,1:js))));
- g3 = V'*(EL\(A*(EL'\V)));
+    Vwrk=newAv;  %EL\(A*(EL'\V));
+ %g2 = V'*(EL\(A*(EL'\VV(1:n,1:js))));
+    g2 = g1'; % Vwrk'*VV(1:n,1:js);
+ %g3 = V'*(EL\(A*(EL'\V)));
+    g3 = V'*Vwrk;
  K = [K g1; g2, g3];
  VV(1:n,js+1:j1s)=V;  
 
